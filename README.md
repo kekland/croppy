@@ -5,6 +5,7 @@ An image cropper that Flutter deserves.
 Big difference of this package from other popular ones (such as `image_cropper`) is that `croppy` runs completely in Flutter, so there's no need to launch a separate activity/view when you want to crop an image. Another benefit is that `croppy` can be completely customized to fit any of your image cropping needs.
 
 <p float="left">
+  <img src="./doc/assets/video.gif" width="200" />
   <img src="./doc/assets/image1.png" width="200" />
   <img src="./doc/assets/image3.png" width="200" />
 </p>
@@ -19,6 +20,8 @@ In progress:
 
 - Material image cropper (something similar to Google Photos)
 - Image editing module (?) (brightness, contrast, etc)
+- Fixed aspect ratios
+- Custom cropping shapes
 - Localization
 - Kickass animations
 

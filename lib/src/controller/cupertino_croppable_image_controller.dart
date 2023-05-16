@@ -157,7 +157,9 @@ class CupertinoCroppableImageController extends CroppableImageController
   @override
   void onPanAndScaleEnd() {
     super.onPanAndScaleEnd();
-    normalizeWithAnimation();
+
+    final normalizedRect = normalizeWithAnimation();
+    setViewportScaleWithAnimation(overrideCropRect: normalizedRect);
   }
 
   @override
@@ -208,14 +210,14 @@ class CupertinoCroppableImageController extends CroppableImageController
     );
   }
 
-  void normalizeWithAnimation() {
+  Rect normalizeWithAnimation() {
     final normalizedAabb = FitAabbInQuadSolver.solve(
       data.cropAabb,
       data.transformedImageQuad,
     );
 
     if (normalizedAabb == data.cropAabb) {
-      return;
+      return normalizedAabb.rect;
     }
 
     _imageDataTween = CroppableImageDataTween(
@@ -226,6 +228,7 @@ class CupertinoCroppableImageController extends CroppableImageController
     );
 
     _imageDataAnimationController.forward(from: 0.0);
+    return normalizedAabb.rect;
   }
 
   @override

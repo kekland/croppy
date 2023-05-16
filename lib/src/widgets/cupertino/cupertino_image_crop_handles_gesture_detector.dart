@@ -36,7 +36,7 @@ class _CupertinoImageCropHandlesGestureDetectorState
     );
   }
 
-  void _onScaleEnd(ScaleEndDetails details) {
+  void _onScaleEnd() {
     widget.controller.onPanAndScaleEnd();
   }
 
@@ -46,7 +46,7 @@ class _CupertinoImageCropHandlesGestureDetectorState
       behavior: HitTestBehavior.opaque,
       onScaleStart: _onScaleStart,
       onScaleUpdate: _onScaleUpdate,
-      onScaleEnd: _onScaleEnd,
+      onScaleEnd: (_) => _onScaleEnd(),
       child: ResizableGestureDetector(
         controller: widget.controller,
         gesturePadding: widget.gesturePadding,
