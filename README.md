@@ -1,27 +1,58 @@
 ## croppy
 
-Image cropping for Flutter.
+An image cropper that Flutter deserves.
+
+Big difference of this package from other popular ones (such as `image_cropper`) is that `croppy` runs completely in Flutter, so there's no need to launch a separate activity/view when you want to crop an image. Another benefit is that `croppy` can be completely customized to fit any of your image cropping needs.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- iOS Photos app-like image cropper
+- Supports any linear transformations on the image: scaling, rotating, skewing, flipping, etc
+- Completely customizable (will create documentation with later releases)
+
+In progress:
+
+- Material image cropper (something similar to Google Photos)
+- Image editing module (?) (brightness, contrast, etc)
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Install `croppy` from `pub`:
+
+```yaml
+dependencies:
+  croppy: <latest_version>
+```
+
+Enjoy using it :)
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Currently `croppy` supports an iOS-like image cropper:
 
 ```dart
-const like = 'sample';
+final result = await showCupertinoImageCropper(
+  context,
+  imageProvider: const NetworkImage('MY_IMAGE_URL'), // Or any other image provider
+  initialData: CroppableImageData.initial(imageSize: const Size(1080, 1080)),
+);
 ```
+
+The image size has to be known before launching the cropper. One way to obtain it is to use `obtainImage`:
+
+```dart
+final image = await obtainImage(myProvider);
+final size = (image.width, image.height);
+```
+
+In the future this will be a bit more streamlined. Still thinking of a clean way of doing this.
+
+The return value of `showCupertinoImageCropper` is `CropImageResult`, which contains the image data encoded with the `image` package. To convert it to `dart:ui`'s `Image`, you can use `await result.asUiImage`. Check out the `image` package to convert the image to any of the supported formats (png, jpg, etc).
+
+For a complete runnable example, see `./example`.
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+This package is still WIP, so expect some major updates along the way. Feel free to report bugs/issues on GitHub.
+
+If you have questions, you can contact me directly at `kk.erzhan@gmail.com`.

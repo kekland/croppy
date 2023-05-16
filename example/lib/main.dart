@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
   }
@@ -46,8 +47,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (_croppedImage != null)
-              RawImage(
-                image: _croppedImage,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: RawImage(image: _croppedImage),
               )
             else
               const SizedBox(
@@ -56,17 +58,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('No image'),
                 ),
               ),
-            const SizedBox(height: 16),
             TextButton(
               onPressed: () async {
                 final result = await showCupertinoImageCropper(
                   context,
                   imageProvider: const NetworkImage(
-                    'https://test-photos-qklwjen.s3.eu-west-3.amazonaws.com/image28.jpg',
+                    'https://test-photos-qklwjen.s3.eu-west-3.amazonaws.com/image11.jpg',
                   ),
                   initialData: _data ??
                       CroppableImageData.initial(
-                        imageSize: const Size(1620, 1080),
+                        imageSize: const Size(1080, 1080),
                       ),
                 );
 
