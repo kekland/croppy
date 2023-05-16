@@ -11,6 +11,7 @@ class CroppableImageWidget extends RenderObjectWidget
     required this.controller,
     required this.image,
     required this.cropHandles,
+    this.overlayOpacity = 1.0,
     this.gesturePadding = 0.0,
   });
 
@@ -18,6 +19,7 @@ class CroppableImageWidget extends RenderObjectWidget
   final Widget cropHandles;
   final CroppableImageController controller;
   final double gesturePadding;
+  final double overlayOpacity;
 
   @override
   CroppableImageRenderObject createRenderObject(BuildContext context) {
@@ -29,6 +31,7 @@ class CroppableImageWidget extends RenderObjectWidget
       controller.data,
       controller.viewportScale,
       gesturePadding,
+      overlayOpacity,
       staticCropRect,
     );
   }
@@ -41,6 +44,7 @@ class CroppableImageWidget extends RenderObjectWidget
     renderObject.imageData = controller.data;
     renderObject.viewportScale = controller.viewportScale;
     renderObject.gesturePadding = gesturePadding;
+    renderObject.overlayOpacity = overlayOpacity;
     renderObject.staticCropRect = (controller is ResizeStaticLayoutMixin)
         ? (controller as ResizeStaticLayoutMixin).staticCropRect
         : null;
@@ -70,12 +74,14 @@ class CroppableImageRenderObject extends RenderBox
   CroppableImageRenderObject(
     CroppableImageData imageData,
     double viewportScale,
-    double gestureSafeArea, [
+    double gestureSafeArea,
+    double overlaysOpacity, [
     Rect? staticCropRect,
   ])  : _imageData = imageData,
         _viewportScale = viewportScale,
         _gesturePadding = gestureSafeArea,
-        _staticCropRect = staticCropRect;
+        _staticCropRect = staticCropRect,
+        _overlayOpacity = overlaysOpacity;
 
   CroppableImageData _imageData;
   CroppableImageData get imageData => _imageData;
@@ -108,6 +114,16 @@ class CroppableImageRenderObject extends RenderBox
     _staticCropRect = value;
     markNeedsLayout();
   }
+
+  double _overlayOpacity;
+  double get overlayOpacity => _overlayOpacity;
+  set overlayOpacity(double value) {
+    if (value == _overlayOpacity) return;
+    _overlayOpacity = value;
+    markNeedsPaint();
+  }
+
+  int get _overlayAlpha => (overlayOpacity * 255).round();
 
   RenderBox? get image => childForSlot(EditableImageSlot.image);
   RenderBox? get handles => childForSlot(EditableImageSlot.handles);
@@ -147,6 +163,7 @@ class CroppableImageRenderObject extends RenderBox
     size = layoutSizeWithPadding;
   }
 
+  final _backgroundOpacityLayer = LayerHandle<OpacityLayer>();
   final _backgroundTransformLayer = LayerHandle<TransformLayer>();
   void paintBackgroundImage(
     PaintingContext context,
@@ -179,18 +196,27 @@ class CroppableImageRenderObject extends RenderBox
     //   Offset.zero,
     // );
 
-    _backgroundTransformLayer.layer = context.pushTransform(
-      false,
+    _backgroundOpacityLayer.layer = context.pushOpacity(
       offset,
-      transform,
+      _overlayAlpha,
       (context, offset) {
-        context.paintChild(image!, offset);
+        _backgroundTransformLayer.layer = context.pushTransform(
+          false,
+          offset,
+          transform,
+          (context, offset) {
+            context.paintChild(image!, offset);
+          },
+          oldLayer: _backgroundTransformLayer.layer,
+        );
       },
-      oldLayer: _backgroundTransformLayer.layer,
+      oldLayer: _backgroundOpacityLayer.layer,
     );
   }
 
   void paintBackgroundImageForeground(PaintingContext context, Path path) {
+    if (_overlayOpacity == 0.0) return;
+
     context.canvas.drawPath(
       path,
       Paint()..color = Colors.black.withOpacity(0.8),
@@ -205,6 +231,8 @@ class CroppableImageRenderObject extends RenderBox
     Rect clipRect,
     Matrix4 transform,
   ) {
+    if (_overlayOpacity == 0.0) return;
+
     _clipRectLayer.layer = context.pushClipRect(
       false,
       offset,
@@ -225,10 +253,15 @@ class CroppableImageRenderObject extends RenderBox
     );
   }
 
+  final _handlesOpacityLayer = LayerHandle<OpacityLayer>();
   void paintHandles(PaintingContext context, Offset offset) {
-    context.paintChild(
-      handles!,
+    _handlesOpacityLayer.layer = context.pushOpacity(
       offset,
+      _overlayAlpha,
+      (context, offset) {
+        context.paintChild(handles!, offset);
+      },
+      oldLayer: _handlesOpacityLayer.layer,
     );
   }
 
@@ -269,6 +302,7 @@ class CroppableImageRenderObject extends RenderBox
       additionalOffset & (imageData.cropRect.size * viewportScale),
       matrix,
     );
+
     paintHandles(context, offset + additionalOffset);
   }
 

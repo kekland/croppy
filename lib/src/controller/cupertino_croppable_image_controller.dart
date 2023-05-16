@@ -11,6 +11,7 @@ class CupertinoCroppableImageController extends CroppableImageController
     required TickerProvider vsync,
     required super.data,
     required super.imageProvider,
+    super.postProcessFn,
   }) {
     _initAnimationControllers(vsync);
   }
@@ -120,7 +121,7 @@ class CupertinoCroppableImageController extends CroppableImageController
               begin: staticCropRect,
               end: cropRect,
             )
-          : MaterialRectArcTween(
+          : MaterialRectCenterArcTween(
               begin: staticCropRect,
               end: cropRect,
             );
@@ -140,9 +141,23 @@ class CupertinoCroppableImageController extends CroppableImageController
   void onStraighten({
     required double angleRad,
   }) {
-    super.onStraighten(angleRad: angleRad);
-    normalize();
-    setViewportScale();
+    if (isRotating) {
+      super.onStraighten(angleRad: angleRad);
+      normalize();
+      setViewportScale();
+    } else {
+      final oldData = data.copyWith();
+      super.onStraighten(angleRad: angleRad);
+      normalize();
+
+      _imageDataTween = CroppableImageDataTween(
+        begin: oldData,
+        end: data,
+      );
+
+      _imageDataAnimationController.forward(from: 0.0);
+      setViewportScaleWithAnimation(overrideCropRect: data.cropRect);
+    }
   }
 
   @override

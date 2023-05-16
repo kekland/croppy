@@ -1,10 +1,11 @@
 import 'dart:ui';
 
 import 'package:croppy/src/geometry/_geometry.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
 @immutable
-class CroppableImageData {
+class CroppableImageData extends Equatable {
   const CroppableImageData({
     required this.imageSize,
     required this.cropRect,
@@ -18,7 +19,7 @@ class CroppableImageData {
   })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
-        baseTransformations = BaseTransformations.initial();
+        baseTransformations = const BaseTransformations.initial();
 
   /// The size of the image to be cropped.
   final Size imageSize;
@@ -108,9 +109,9 @@ class CroppableImageData {
     return CroppableImageData(
       imageSize: Size.lerp(a.imageSize, b.imageSize, t)!,
       cropRect: Rect.lerp(a.cropRect, b.cropRect, t)!,
-      imageTransform: t > 0.5 ? b.imageTransform : a.imageTransform,
+      imageTransform: lerpMatrix4(a.imageTransform, b.imageTransform, t),
       currentImageTransform:
-          t > 0.5 ? b.currentImageTransform : a.currentImageTransform,
+          lerpMatrix4(a.currentImageTransform, b.currentImageTransform, t),
       baseTransformations: BaseTransformations.lerp(
         a.baseTransformations,
         b.baseTransformations,
@@ -118,11 +119,20 @@ class CroppableImageData {
       )!,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        imageSize,
+        cropRect,
+        imageTransform,
+        currentImageTransform,
+        baseTransformations,
+      ];
 }
 
 /// A set of base transformations that can be applied to an image.
-class BaseTransformations {
-  BaseTransformations({
+class BaseTransformations extends Equatable {
+  const BaseTransformations({
     required this.rotationX,
     required this.rotationY,
     required this.rotationZ,
@@ -130,7 +140,7 @@ class BaseTransformations {
     required this.scaleY,
   });
 
-  BaseTransformations.initial()
+  const BaseTransformations.initial()
       : this(rotationX: 0, rotationY: 0, rotationZ: 0, scaleX: 1, scaleY: 1);
 
   final double rotationX;
@@ -193,6 +203,15 @@ class BaseTransformations {
       scaleY: lerpDouble(a.scaleY, b.scaleY, t)!,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        rotationX,
+        rotationY,
+        rotationZ,
+        scaleX,
+        scaleY,
+      ];
 }
 
 /// A tween that interpolates between two [CroppableImageData]s.

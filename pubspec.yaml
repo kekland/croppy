@@ -1,5 +1,5 @@
 name: croppy
-description: Image cropper that Flutter deserves
+description: A fully customizable image cropper for Flutter.
 version: 0.0.2
 homepage: https://github.com/kekland/croppy
 
@@ -13,6 +13,8 @@ dependencies:
 
   cassowary: ^0.4.2
   cupertino_icons: ^1.0.5
+
+  equatable: ^2.0.5
 
   image: ^4.0.17
   path_provider: ^2.0.15

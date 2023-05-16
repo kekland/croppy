@@ -3,15 +3,25 @@ import 'dart:typed_data';
 import 'package:croppy/src/src.dart';
 import 'package:flutter/widgets.dart';
 
+typedef CroppableImagePostProcessFn = Future<CropImageResult> Function(
+  CropImageResult result,
+);
+
 /// A base class for controllers that can be used with this package.
 abstract class BaseCroppableImageController extends ChangeNotifier {
   BaseCroppableImageController({
     required this.imageProvider,
     required CroppableImageData data,
+    this.postProcessFn,
   }) : data = data.copyWith();
 
   /// The image provider that represents the image to be cropped.
   final ImageProvider imageProvider;
+
+  /// A function that is called in [crop] as a post-processing function. Use it
+  /// to, for example, compress the image, or update the state in the preview
+  /// page.
+  final CroppableImagePostProcessFn? postProcessFn;
 
   /// The current crop data.
   CroppableImageData data;
@@ -19,6 +29,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   /// The scale of the viewport.
   double get viewportScale;
 
+  /// The state at the start of a transformation.
   CroppableImageData? transformationInitialData;
 
   Size? _viewportSize;
@@ -70,7 +81,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   }
 
   /// Returns the transformation matrix that is needed to transform the crop
-  /// rect from the current base transformations to the new base 
+  /// rect from the current base transformations to the new base
   /// transformations.
   Matrix4 getMatrixForBaseTransformations(
     BaseTransformations newBaseTransformations,
@@ -87,7 +98,13 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   @mustCallSuper
   Future<CropImageResult> crop() async {
     final image = await obtainImage(imageProvider);
-    return cropImageBilinear(image, data);
+    final result = await cropImageBilinear(image, data);
+
+    if (postProcessFn != null) {
+      return postProcessFn!(result);
+    } else {
+      return result;
+    }
   }
 }
 
@@ -101,7 +118,8 @@ abstract class CroppableImageController extends BaseCroppableImageController
         RotateTransformation,
         MirrorTransformation {
   CroppableImageController({
-    required ImageProvider imageProvider,
-    required CroppableImageData data,
-  }) : super(imageProvider: imageProvider, data: data);
+    required super.imageProvider,
+    required super.data,
+    super.postProcessFn,
+  });
 }

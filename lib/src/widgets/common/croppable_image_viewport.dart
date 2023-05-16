@@ -7,23 +7,45 @@ class CroppableImageViewport extends StatelessWidget {
     required this.controller,
     required this.child,
     required this.gesturePadding,
+    this.heroTag,
+    this.heroChild,
   });
 
   final CroppableImageController controller;
   final double gesturePadding;
   final Widget child;
+  final Object? heroTag;
+  final Widget? heroChild;
+
+  Offset get _sizeDelta => Offset(
+        -gesturePadding * 2,
+        -gesturePadding * 2,
+      );
+
+  Widget _buildHeroChild(BuildContext context) => FittedBox(child: heroChild!);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final size = constraints.biggest +
-            Offset(-gesturePadding * 2, -gesturePadding * 2);
-
+        final size = constraints.biggest + _sizeDelta;
         controller.viewportSize = size;
 
-        return Center(
-          child: FittedBox(child: child),
+        return Stack(
+          children: [
+            if (heroTag != null)
+              Center(
+                child: Hero(
+                  tag: heroTag!,
+                  flightShuttleBuilder: (flightContext, animation,
+                      flightDirection, fromHeroContext, toHeroContext) {
+                    return _buildHeroChild(context);
+                  },
+                  child: _buildHeroChild(context),
+                ),
+              ),
+            Center(child: FittedBox(child: child)),
+          ],
         );
       },
     );

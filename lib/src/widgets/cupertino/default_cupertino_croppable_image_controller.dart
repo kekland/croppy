@@ -7,10 +7,12 @@ class DefaultCupertinoCroppableImageController extends StatefulWidget {
     required this.builder,
     required this.imageProvider,
     required this.initialData,
+    this.postProcessFn,
   });
 
   final ImageProvider imageProvider;
   final CroppableImageData initialData;
+  final CroppableImagePostProcessFn? postProcessFn;
 
   final Widget Function(
     BuildContext context,
@@ -35,6 +37,7 @@ class _DefaultCupertinoCroppableImageControllerState
       vsync: this,
       imageProvider: widget.imageProvider,
       data: widget.initialData,
+      postProcessFn: widget.postProcessFn,
     );
   }
 

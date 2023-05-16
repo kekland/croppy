@@ -15,7 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Croppy Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.orange,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
@@ -32,55 +35,79 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _imageProvider = const NetworkImage(
+    'https://test-photos-qklwjen.s3.eu-west-3.amazonaws.com/image11.jpg',
+  );
+
   CroppableImageData? _data;
   ui.Image? _croppedImage;
+
+  final _heroTag = 'hello';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Croppy Demo'),
-      ),
+      backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (_croppedImage != null)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: RawImage(image: _croppedImage),
-              )
-            else
-              const SizedBox(
-                height: 200,
-                child: Center(
-                  child: Text('No image'),
-                ),
+            Hero(
+              tag: _heroTag,
+              placeholderBuilder: (context, size, child) => Visibility.maintain(
+                visible: false,
+                child: child,
               ),
+              child: _croppedImage != null
+                  ? RawImage(image: _croppedImage)
+                  : Image(image: _imageProvider),
+            ),
             TextButton(
               onPressed: () async {
-                final result = await showCupertinoImageCropper(
+                await showCupertinoImageCropper(
                   context,
-                  imageProvider: const NetworkImage(
-                    'https://test-photos-qklwjen.s3.eu-west-3.amazonaws.com/image11.jpg',
-                  ),
+                  heroTag: _heroTag,
+                  imageProvider: _imageProvider,
+                  postProcessFn: (result) async {
+                    final uiImage = await result.asUiImage;
+
+                    setState(() {
+                      _croppedImage = uiImage;
+                      _data = result.transformationsData;
+                    });
+
+                    return result;
+                  },
                   initialData: _data ??
                       CroppableImageData.initial(
                         imageSize: const Size(1080, 1080),
                       ),
                 );
-
-                if (result != null) {
-                  final uiImage = await result.asUiImage;
-
-                  setState(() {
-                    _croppedImage = uiImage;
-                    _data = result.transformationsData;
-                  });
-                }
               },
-              child: const Text('Crop'),
+              child: const Text('Crop (Hero)'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await showCupertinoImageCropper(
+                  context,
+                  imageProvider: _imageProvider,
+                  postProcessFn: (result) async {
+                    final uiImage = await result.asUiImage;
+
+                    setState(() {
+                      _croppedImage = uiImage;
+                      _data = result.transformationsData;
+                    });
+
+                    return result;
+                  },
+                  initialData: _data ??
+                      CroppableImageData.initial(
+                        imageSize: const Size(1080, 1080),
+                      ),
+                );
+              },
+              child: const Text('Crop (Without Hero)'),
             ),
           ],
         ),

@@ -4,9 +4,14 @@ import 'package:flutter/services.dart';
 
 class CupertinoImageCropperAppBar extends StatelessWidget
     implements ObstructingPreferredSizeWidget {
-  const CupertinoImageCropperAppBar({super.key, required this.controller});
+  const CupertinoImageCropperAppBar({
+    super.key,
+    required this.controller,
+    required this.onSubmit,
+  });
 
   final CroppableImageController controller;
+  final VoidCallback onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +31,9 @@ class CupertinoImageCropperAppBar extends StatelessWidget
             const Spacer(),
             CupertinoButton(
               onPressed: () async {
+                onSubmit();
                 final result = await controller.crop();
-    
+
                 if (context.mounted) {
                   Navigator.of(context).pop(result);
                 }
