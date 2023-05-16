@@ -1,31 +1,28 @@
-import 'dart:typed_data';
-
 import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
 
-Future<Uint8List?> showCupertinoImageCropper(
+/// Shows a [CupertinoImageCropperPage] and returns the cropped image.
+/// 
+/// The [imageProvider] is the image that will be cropped.
+/// 
+/// The [initialData] is the initial crop data. Use 
+/// [CroppableImageData.initial(imageSize: imageSize)] to create it.
+Future<CropImageResult?> showCupertinoImageCropper(
   BuildContext context, {
   required ImageProvider imageProvider,
-  required Size imageSize,
+  required CroppableImageData initialData,
 }) async {
-  final controller = CupertinoCroppableImageController(
-    imageProvider: imageProvider,
-    data: CroppableImageData.initial(
-      imageSize: imageSize,
-    ),
-  );
-
-  final result = await Navigator.of(context).push<Uint8List?>(
+  return Navigator.of(context).push<CropImageResult?>(
     CupertinoPageRoute(
       builder: (context) {
-        return CupertinoImageCropperPage(
-          controller: controller,
+        return DefaultCupertinoCroppableImageController(
+          imageProvider: imageProvider,
+          initialData: initialData,
+          builder: (context, controller) => CupertinoImageCropperPage(
+            controller: controller,
+          ),
         );
       },
     ),
   );
-
-  controller.dispose();
-
-  return result;
 }

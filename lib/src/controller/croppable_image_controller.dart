@@ -49,10 +49,17 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
       currentImageTransform: Matrix4.identity(),
     );
 
-    normalize();
     notifyListeners();
   }
 
+  /// Called when a base transformation is applied. Implementers can override
+  /// this to update the [data] and notify listeners.
+  void onBaseTransformation(CroppableImageData newData) {
+    data = newData;
+    notifyListeners();
+  }
+
+  /// Normalizes the crop rect to fit inside the transformed image quad.
   void normalize() {
     final normalizedAabb = FitAabbInQuadSolver.solve(
       data.cropAabb,
@@ -62,6 +69,9 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     data = data.copyWith(cropRect: normalizedAabb.rect);
   }
 
+  /// Returns the transformation matrix that is needed to transform the crop
+  /// rect from the current base transformations to the new base 
+  /// transformations.
   Matrix4 getMatrixForBaseTransformations(
     BaseTransformations newBaseTransformations,
   ) {
@@ -75,8 +85,9 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
 
   /// Crops the image and returns the cropped image as a [Uint8List].
   @mustCallSuper
-  Future<Uint8List> crop() async {
-    throw UnimplementedError();
+  Future<CropImageResult> crop() async {
+    final image = await obtainImage(imageProvider);
+    return cropImageBilinear(image, data);
   }
 }
 

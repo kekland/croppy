@@ -14,13 +14,11 @@ mixin RotateTransformation on BaseCroppableImageController {
       newBaseTransformations,
     );
 
-    var cropRect = data.cropRect.transform(transformation);
+    final cropRect = data.cropRect.transform(transformation);
 
-    data = data.copyWith(
+    onBaseTransformation(data.copyWith(
       cropRect: cropRect,
       baseTransformations: newBaseTransformations,
-    );
-
-    notifyListeners();
+    ));
   }
 }

@@ -108,9 +108,9 @@ class CroppableImageData {
     return CroppableImageData(
       imageSize: Size.lerp(a.imageSize, b.imageSize, t)!,
       cropRect: Rect.lerp(a.cropRect, b.cropRect, t)!,
-      imageTransform: lerpMatrix4(a.imageTransform, b.imageTransform, t),
+      imageTransform: t > 0.5 ? b.imageTransform : a.imageTransform,
       currentImageTransform:
-          lerpMatrix4(a.currentImageTransform, b.currentImageTransform, t),
+          t > 0.5 ? b.currentImageTransform : a.currentImageTransform,
       baseTransformations: BaseTransformations.lerp(
         a.baseTransformations,
         b.baseTransformations,

@@ -1,5 +1,4 @@
 import 'package:croppy/src/src.dart';
-import 'package:flutter/widgets.dart';
 
 /// Provides methods for mirroring the image.
 mixin MirrorTransformation on BaseCroppableImageController {
@@ -15,11 +14,9 @@ mixin MirrorTransformation on BaseCroppableImageController {
 
     final cropRect = data.cropRect.transform(transformation);
 
-    data = data.copyWith(
+    onBaseTransformation(data.copyWith(
       cropRect: cropRect,
       baseTransformations: newBaseTransformations,
-    );
-
-    notifyListeners();
+    ));
   }
 }

@@ -8,3 +8,4 @@ export 'cupertino/cupertino_image_cropper_page.dart';
 export 'cupertino/cupertino_image_transformation_toolbar.dart';
 export 'cupertino/cupertino_knob.dart';
 export 'cupertino/cupertino_rotation_slider.dart';
+export 'cupertino/default_cupertino_croppable_image_controller.dart';

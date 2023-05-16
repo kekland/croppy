@@ -1,3 +1,5 @@
+export 'mixins/resize_static_layout_mixin.dart';
+
 export 'transformations/mirror.dart';
 export 'transformations/pan_and_scale.dart';
 export 'transformations/resize.dart';

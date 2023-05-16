@@ -27,7 +27,10 @@ mixin StraightenTransformation on BaseCroppableImageController {
 
     final transform = Matrix4.identity();
 
-    final pivot = data.cropRect.center;
+    final pivot = MatrixUtils.transformPoint(
+      data.translatedBaseTransformations,
+      data.cropRect.center,
+    );
 
     transform.translate(pivot.dx, pivot.dy);
     transform.rotateZ(angleRad - angle);

@@ -14,7 +14,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
       child: Row(
         children: [
           CupertinoButton(
-            onPressed: () {},
+            onPressed: () => Navigator.maybePop(context),
             child: const Text(
               'Cancel',
               style: TextStyle(color: CupertinoColors.white),
@@ -22,7 +22,13 @@ class CupertinoImageCropperAppBar extends StatelessWidget
           ),
           const Spacer(),
           CupertinoButton(
-            onPressed: controller.crop,
+            onPressed: () async {
+              final result = await controller.crop();
+
+              if (context.mounted) {
+                Navigator.of(context).pop(result);
+              }
+            },
             child: const Text('Done'),
           ),
         ],

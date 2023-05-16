@@ -19,63 +19,65 @@ class CupertinoImageCropperPage extends StatelessWidget {
       navigationBar: CupertinoImageCropperAppBar(
         controller: controller,
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 16.0,
-            top: 16.0,
-            right: 16.0,
-            bottom: 64.0,
-            child: CroppableImageViewport(
-              controller: controller,
-              gesturePadding: gesturePadding,
-              child: ListenableBuilder(
-                listenable: controller,
-                builder: (context, _) => CroppableImageWidget(
-                  controller: controller,
-                  image: Image(image: controller.imageProvider),
-                  cropHandles: CupertinoImageCropHandles(
+      child: ClipRect(
+        child: Stack(
+          children: [
+            Positioned(
+              left: 16.0,
+              top: 16.0,
+              right: 16.0,
+              bottom: 64.0,
+              child: CroppableImageViewport(
+                controller: controller,
+                gesturePadding: gesturePadding,
+                child: ListenableBuilder(
+                  listenable: controller,
+                  builder: (context, _) => CroppableImageWidget(
                     controller: controller,
+                    image: Image(image: controller.imageProvider),
+                    cropHandles: CupertinoImageCropHandles(
+                      controller: controller,
+                      gesturePadding: gesturePadding,
+                    ),
                     gesturePadding: gesturePadding,
                   ),
-                  gesturePadding: gesturePadding,
                 ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 0.0,
-            height: 128.0,
-            left: 0.0,
-            right: 0.0,
-            child: IgnorePointer(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      CupertinoColors.black.withOpacity(0.0),
-                      CupertinoColors.black.withOpacity(0.5),
-                    ],
+            Positioned(
+              bottom: 0.0,
+              height: 128.0,
+              left: 0.0,
+              right: 0.0,
+              child: IgnorePointer(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        CupertinoColors.black.withOpacity(0.0),
+                        CupertinoColors.black.withOpacity(0.5),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            left: 16.0,
-            right: 16.0,
-            bottom: 16.0,
-            height: 40.0,
-            child: ListenableBuilder(
-              listenable: controller,
-              builder: (context, _) => CupertinoImageTransformationToolbar(
-                controller: controller,
+            Positioned(
+              left: 16.0,
+              right: 16.0,
+              bottom: 16.0,
+              height: 40.0,
+              child: ListenableBuilder(
+                listenable: controller,
+                builder: (context, _) => CupertinoImageTransformationToolbar(
+                  controller: controller,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

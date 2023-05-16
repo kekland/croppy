@@ -24,10 +24,15 @@ class CroppableImageWidget extends RenderObjectWidget
 
   @override
   CroppableImageRenderObject createRenderObject(BuildContext context) {
+    final staticCropRect = (controller is ResizeStaticLayoutMixin)
+        ? (controller as ResizeStaticLayoutMixin).staticCropRect
+        : null;
+
     return CroppableImageRenderObject(
       controller.data,
       controller.viewportScale,
       gesturePadding,
+      staticCropRect,
     );
   }
 
@@ -39,6 +44,9 @@ class CroppableImageWidget extends RenderObjectWidget
     renderObject.imageData = controller.data;
     renderObject.viewportScale = controller.viewportScale;
     renderObject.gesturePadding = gesturePadding;
+    renderObject.staticCropRect = (controller is ResizeStaticLayoutMixin)
+        ? (controller as ResizeStaticLayoutMixin).staticCropRect
+        : null;
   }
 
   @override
@@ -65,10 +73,12 @@ class CroppableImageRenderObject extends RenderBox
   CroppableImageRenderObject(
     CroppableImageData imageData,
     double viewportScale,
-    double gestureSafeArea,
-  )   : _imageData = imageData,
+    double gestureSafeArea, [
+    Rect? staticCropRect,
+  ])  : _imageData = imageData,
         _viewportScale = viewportScale,
-        _gesturePadding = gestureSafeArea;
+        _gesturePadding = gestureSafeArea,
+        _staticCropRect = staticCropRect;
 
   CroppableImageData _imageData;
   CroppableImageData get imageData => _imageData;
@@ -94,11 +104,11 @@ class CroppableImageRenderObject extends RenderBox
     markNeedsLayout();
   }
 
-  Rect? _layoutCropRect;
-  Rect? get layoutCropRect => _layoutCropRect;
-  set layoutCropRect(Rect? value) {
-    if (value == _layoutCropRect) return;
-    _layoutCropRect = value;
+  Rect? _staticCropRect;
+  Rect? get staticCropRect => _staticCropRect;
+  set staticCropRect(Rect? value) {
+    if (value == _staticCropRect) return;
+    _staticCropRect = value;
     markNeedsLayout();
   }
 
@@ -112,7 +122,7 @@ class CroppableImageRenderObject extends RenderBox
       imageData.cropRect.height,
     );
 
-    var layoutSize = layoutCropRect?.size ?? scaledSize;
+    var layoutSize = staticCropRect?.size ?? scaledSize;
 
     scaledSize *= viewportScale;
     layoutSize *= viewportScale;
@@ -205,13 +215,13 @@ class CroppableImageRenderObject extends RenderBox
 
     var additionalOffset = Offset.zero;
 
-    if (layoutCropRect != null) {
-      additionalOffset = (imageData.cropRect.topLeft - layoutCropRect!.topLeft);
+    if (staticCropRect != null) {
+      additionalOffset = (imageData.cropRect.topLeft - staticCropRect!.topLeft);
       additionalOffset *= viewportScale;
     }
 
     final _offset = offset + Offset(gesturePadding, gesturePadding);
-    final _layoutCropRect = layoutCropRect ?? imageData.cropRect;
+    final _layoutCropRect = staticCropRect ?? imageData.cropRect;
 
     final scaleTransform = Matrix4.identity()..scale(viewportScale);
     final translationTransform = Matrix4.identity()
