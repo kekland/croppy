@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   heroTag: _heroTag,
                   imageProvider: _imageProvider,
+                  initialData: _data,
                   postProcessFn: (result) async {
                     final uiImage = await result.asUiImage;
 
@@ -78,10 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                     return result;
                   },
-                  initialData: _data ??
-                      CroppableImageData.initial(
-                        imageSize: const Size(1080, 1080),
-                      ),
                 );
               },
               child: const Text('Crop (Hero)'),
@@ -91,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 await showCupertinoImageCropper(
                   context,
                   imageProvider: _imageProvider,
+                  initialData: _data,
                   postProcessFn: (result) async {
                     final uiImage = await result.asUiImage;
 
@@ -101,10 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                     return result;
                   },
-                  initialData: _data ??
-                      CroppableImageData.initial(
-                        imageSize: const Size(1080, 1080),
-                      ),
                 );
               },
               child: const Text('Crop (Without Hero)'),

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class CupertinoKnobButton extends StatelessWidget {
     return CupertinoButton(
       onPressed: onPressed,
       padding: EdgeInsets.zero,
-      minSize: 40.0,
+      minSize: 48.0,
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
@@ -36,8 +37,8 @@ class CupertinoKnobButton extends StatelessWidget {
         child: CustomPaint(
           foregroundPainter: progressPainter,
           child: Container(
-            width: 40.0,
-            height: 40.0,
+            width: 48.0,
+            height: 48.0,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -71,8 +72,8 @@ class CupertinoKnob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isActive = value != 0.0;
-    final isPositive = value > 0.0;
+    final isActive = value.abs() > epsilon;
+    final isPositive = value > epsilon;
 
     final color = isPositive
         ? CupertinoTheme.of(context).primaryColor
@@ -80,14 +81,14 @@ class CupertinoKnob extends StatelessWidget {
 
     late final Widget child;
 
-    if (value == 0.0) {
-      child = Icon(
-        Icons.straighten_rounded,
-        color: color,
-        size: 16.0,
+    if (!isActive) {
+      child = KeyedSubtree(
+        key: const Key('inactive'),
+        child: inactiveChild,
       );
     } else {
       child = Text(
+        key: const Key('value'),
         value.round().toString(),
         style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
               fontSize: 14.0,
@@ -104,7 +105,12 @@ class CupertinoKnob extends StatelessWidget {
         primaryColor: color,
         value: value / extent,
       ),
-      child: child,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        switchInCurve: Curves.easeInOut,
+        switchOutCurve: Curves.easeInOut,
+        child: child,
+      ),
     );
   }
 }
@@ -121,7 +127,7 @@ class _CupertinoKnobProgressPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = value > 0 ? primaryColor : Colors.white
+      ..color = value > epsilon ? primaryColor : Colors.white
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 

@@ -155,8 +155,8 @@ class CupertinoCroppableImageController extends CroppableImageController
         end: data,
       );
 
-      _imageDataAnimationController.forward(from: 0.0);
       setViewportScaleWithAnimation(overrideCropRect: data.cropRect);
+      _imageDataAnimationController.forward(from: 0.0);
     }
   }
 
@@ -210,10 +210,9 @@ class CupertinoCroppableImageController extends CroppableImageController
       end: newData,
     );
 
-    _imageDataAnimationController.forward(from: 0.0);
-
     staticCropRect = null;
     setViewportScaleWithAnimation(overrideCropRect: newData.cropRect);
+    _imageDataAnimationController.forward(from: 0.0);
   }
 
   Timer? _recomputeViewportScaleTimer;
@@ -244,6 +243,24 @@ class CupertinoCroppableImageController extends CroppableImageController
 
     _imageDataAnimationController.forward(from: 0.0);
     return normalizedAabb.rect;
+  }
+
+  @override
+  bool get canReset =>
+      data != CroppableImageData.initial(imageSize: data.imageSize);
+
+  @override
+  void reset() {
+    final oldData = data.copyWith();
+    super.reset();
+
+    _imageDataTween = CroppableImageDataTween(
+      begin: oldData,
+      end: data,
+    );
+
+    setViewportScaleWithAnimation(overrideCropRect: data.cropRect);
+    _imageDataAnimationController.forward(from: 0.0);
   }
 
   @override

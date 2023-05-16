@@ -46,18 +46,8 @@ Currently `croppy` supports an iOS-like image cropper:
 final result = await showCupertinoImageCropper(
   context,
   imageProvider: const NetworkImage('MY_IMAGE_URL'), // Or any other image provider
-  initialData: CroppableImageData.initial(imageSize: const Size(1080, 1080)),
 );
 ```
-
-The image size has to be known before launching the cropper. One way to obtain it is to use `obtainImage`:
-
-```dart
-final image = await obtainImage(myProvider);
-final size = (image.width, image.height);
-```
-
-In the future this will be a bit more streamlined. Still thinking of a clean way of doing this.
 
 The return value of `showCupertinoImageCropper` is `CropImageResult`, which contains the image data encoded with the `image` package. To convert it to `dart:ui`'s `Image`, you can use `await result.asUiImage`. Check out the `image` package to convert the image to any of the supported formats (png, jpg, etc).
 

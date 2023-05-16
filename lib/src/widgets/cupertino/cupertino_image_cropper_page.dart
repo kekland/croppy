@@ -1,4 +1,5 @@
 import 'package:croppy/src/src.dart';
+import 'package:croppy/src/widgets/cupertino/cupertino_image_cropper_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 
 class CupertinoImageCropperPage extends StatefulWidget {
@@ -77,6 +78,7 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
   @override
   Widget build(BuildContext context) {
     final safeArea = MediaQuery.of(context).padding;
+    const bottomAppBarHeight = 96.0 + 55.0;
 
     return HeroMode(
       enabled: _areHeroesEnabled,
@@ -85,7 +87,6 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
           backgroundColor: CupertinoColors.black,
           navigationBar: CupertinoImageCropperAppBar(
             controller: widget.controller,
-            onSubmit: () => setHeroesEnabled(true),
           ),
           child: Stack(
             children: [
@@ -93,7 +94,7 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
                 left: 16.0,
                 top: 16.0,
                 right: 16.0,
-                bottom: safeArea.bottom + 64.0,
+                bottom: safeArea.bottom + bottomAppBarHeight + 16.0,
                 child: CroppableImageViewport(
                   controller: widget.controller,
                   gesturePadding: widget.gesturePadding,
@@ -148,14 +149,21 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
                 left: 16.0,
                 right: 16.0,
                 bottom: safeArea.bottom + 16.0,
-                height: 40.0,
+                height: bottomAppBarHeight,
                 child: Opacity(
                   opacity: _overlayOpacityAnimation.value,
                   child: ListenableBuilder(
                     listenable: widget.controller,
-                    builder: (context, _) =>
+                    builder: (context, _) => Column(
+                      children: [
                         CupertinoImageTransformationToolbar(
-                      controller: widget.controller,
+                          controller: widget.controller,
+                        ),
+                        CupertinoImageCropperBottomAppBar(
+                          controller: widget.controller,
+                          onSubmit: () => setHeroesEnabled(true),
+                        ),
+                      ],
                     ),
                   ),
                 ),

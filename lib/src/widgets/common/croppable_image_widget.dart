@@ -219,7 +219,7 @@ class CroppableImageRenderObject extends RenderBox
 
     context.canvas.drawPath(
       path,
-      Paint()..color = Colors.black.withOpacity(0.8),
+      Paint()..color = Colors.black.withOpacity(0.9),
     );
   }
 

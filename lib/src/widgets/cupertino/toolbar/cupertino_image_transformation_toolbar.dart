@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class CupertinoImageTransformationToolbar extends StatelessWidget {
   const CupertinoImageTransformationToolbar({
@@ -14,55 +13,79 @@ class CupertinoImageTransformationToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CupertinoKnobButton(
-          onPressed: () => controller.onMirrorHorizontal(),
-          isActive: false,
-          isPositive: false,
-          child: const Icon(
-            Icons.flip_rounded,
-            size: 16.0,
-            color: CupertinoColors.white,
-          ),
-        ),
-        const SizedBox(width: 12.0),
-        CupertinoKnobButton(
-          onPressed: () => controller.onRotateCCW(),
-          isActive: false,
-          isPositive: false,
-          child: const Icon(
-            Icons.rotate_90_degrees_ccw_rounded,
-            size: 16.0,
-            color: CupertinoColors.white,
-          ),
-        ),
-        const SizedBox(width: 12.0),
         CupertinoKnob(
           value: controller.rotationZ * 180 / pi,
           extent: 45,
           onChanged: (v) {
             controller.onStraighten(angleRad: v);
           },
-          inactiveChild: const Icon(
-            Icons.straighten_rounded,
+          inactiveChild: const _CupertinoStraightenIconWidget(
             color: CupertinoColors.white,
-            size: 16.0,
           ),
         ),
-        const SizedBox(width: 12.0),
-        Expanded(
-          child: CupertinoRotationSlider(
-            value: controller.rotationZ,
-            extent: pi / 4,
-            onStart: controller.onStraightenStart,
-            onEnd: controller.onStraightenEnd,
-            onChanged: (v) {
-              controller.onStraighten(angleRad: v);
-            },
-          ),
+        const SizedBox(height: 8.0),
+        CupertinoRotationSlider(
+          value: controller.rotationZ,
+          extent: pi / 4,
+          onStart: controller.onStraightenStart,
+          onEnd: controller.onStraightenEnd,
+          onChanged: (v) {
+            controller.onStraighten(angleRad: v);
+          },
         ),
       ],
     );
   }
+}
+
+class _CupertinoStraightenIconWidget extends StatelessWidget {
+  const _CupertinoStraightenIconWidget({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 24.0,
+      height: 24.0,
+      child: CustomPaint(
+        painter: _CupertinoStraightenIconPainter(color),
+      ),
+    );
+  }
+}
+
+class _CupertinoStraightenIconPainter extends CustomPainter {
+  _CupertinoStraightenIconPainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final circlePath = Path()
+      ..addOval(
+        Rect.fromCircle(
+          center: size.center(Offset.zero),
+          radius: size.width / 2 - 3.0,
+        ),
+      );
+
+    final linePath = Path()
+      ..addRect(
+        Rect.fromCenter(
+          center: size.center(Offset.zero),
+          width: size.width,
+          height: 1.0,
+        ),
+      );
+
+    final path = Path.combine(PathOperation.xor, circlePath, linePath);
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(_CupertinoStraightenIconPainter oldDelegate) => true;
 }

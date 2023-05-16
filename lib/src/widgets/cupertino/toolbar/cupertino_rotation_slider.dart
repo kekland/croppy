@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 
 class CupertinoRotationSlider extends StatefulWidget {
@@ -74,7 +76,7 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
                     width: _width,
                     height: 12.0,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: CustomPaint(
                         painter: _CupertinoSliderPainter(
                           primaryColor: CupertinoTheme.of(context).primaryColor,
@@ -124,7 +126,7 @@ class _CupertinoSliderPainter extends CustomPainter {
 
     final center = size.center(Offset(-size.width / 2, 0.0) * value);
 
-    for (var i = 1; i <= 100; i++) {
+    for (var i = -20; i <= 20; i++) {
       final isHighlighted = i % 10 == 0;
       final x = i * (size.width / 20) / 2;
       var paint = isHighlighted ? highlightedDividerPaint : dividerPaint;
@@ -133,24 +135,23 @@ class _CupertinoSliderPainter extends CustomPainter {
         paint = outOfBoundsDividerPaint;
       }
 
+      final absoluteX = center.dx + x;
+      final centerDiff = ((size.width / 2) - absoluteX).abs();
+
+      var opacity = 1.0 - (centerDiff.abs() / (size.width / 2)).clamp(0, 1);
+      opacity = sqrt(opacity);
+
+      paint = Paint()
+        ..color = paint.color.withOpacity(opacity)
+        ..style = paint.style
+        ..strokeWidth = paint.strokeWidth;
+
       canvas.drawLine(
         Offset(center.dx + x, 2),
         Offset(center.dx + x, size.height),
         paint,
       );
-
-      canvas.drawLine(
-        Offset(center.dx - x, 2),
-        Offset(center.dx - x, size.height),
-        paint,
-      );
     }
-
-    canvas.drawLine(
-      Offset(center.dx, 0),
-      Offset(center.dx, size.height),
-      highlightedDividerPaint,
-    );
 
     canvas.drawCircle(
       Offset(center.dx, -8.0),

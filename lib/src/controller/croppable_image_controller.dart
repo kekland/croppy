@@ -94,6 +94,17 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     return newTransform * Matrix4.inverted(oldTransform);
   }
 
+  /// Whether the controller can be reset to its initial state, i.e. whether
+  /// the image has been transformed.
+  bool get canReset =>
+      data != CroppableImageData.initial(imageSize: data.imageSize);
+
+  /// Resets the controller to its initial state.
+  void reset() {
+    data = CroppableImageData.initial(imageSize: data.imageSize);
+    notifyListeners();
+  }
+
   /// Crops the image and returns the cropped image as a [Uint8List].
   @mustCallSuper
   Future<CropImageResult> crop() async {
