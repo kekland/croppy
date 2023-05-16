@@ -1,4 +1,5 @@
 import 'package:croppy/src/src.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ResizableGestureDetector extends StatelessWidget {
@@ -152,6 +153,7 @@ class _ResizeGestureDetectorState extends State<_ResizeGestureDetector> {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
+      dragStartBehavior: DragStartBehavior.down,
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,

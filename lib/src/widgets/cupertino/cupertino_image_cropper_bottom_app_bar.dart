@@ -18,6 +18,12 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
       children: [
         CupertinoButton(
           onPressed: () => Navigator.maybePop(context),
+          padding: const EdgeInsets.only(
+            left: 4.0,
+            right: 16.0,
+            top: 16.0,
+            bottom: 16.0,
+          ),
           child: const Text(
             'Cancel',
             style: TextStyle(color: CupertinoColors.white),
@@ -33,6 +39,12 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
               Navigator.of(context).pop(result);
             }
           },
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 4.0,
+            top: 16.0,
+            bottom: 16.0,
+          ),
           child: const Text('Done'),
         ),
       ],
