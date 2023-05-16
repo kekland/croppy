@@ -17,7 +17,8 @@ class CupertinoRotationSlider extends StatefulWidget {
   final VoidCallback onEnd;
 
   @override
-  State<CupertinoRotationSlider> createState() => _CupertinoRotationSliderState();
+  State<CupertinoRotationSlider> createState() =>
+      _CupertinoRotationSliderState();
 }
 
 class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
@@ -76,6 +77,7 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
                       padding: const EdgeInsets.only(left: 20.0),
                       child: CustomPaint(
                         painter: _CupertinoSliderPainter(
+                          primaryColor: CupertinoTheme.of(context).primaryColor,
                           value: widget.value / widget.extent,
                           isDragging: _dragStartDetails != null,
                         ),
@@ -94,10 +96,12 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
 
 class _CupertinoSliderPainter extends CustomPainter {
   _CupertinoSliderPainter({
+    required this.primaryColor,
     required this.value,
     this.isDragging = false,
   });
 
+  final Color primaryColor;
   final double value;
   final bool isDragging;
 
@@ -155,10 +159,9 @@ class _CupertinoSliderPainter extends CustomPainter {
     );
 
     final tickerPaint = Paint()
-      ..color =
-          isDragging ? CupertinoColors.systemYellow : CupertinoColors.white
+      ..color = isDragging ? primaryColor : CupertinoColors.white
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
+      ..strokeWidth = 2.0;
 
     canvas.drawLine(
       Offset(size.center(Offset.zero).dx, -8),

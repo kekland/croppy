@@ -1,5 +1,6 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class CupertinoImageCropperAppBar extends StatelessWidget
     implements ObstructingPreferredSizeWidget {
@@ -9,29 +10,32 @@ class CupertinoImageCropperAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: Row(
-        children: [
-          CupertinoButton(
-            onPressed: () => Navigator.maybePop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: CupertinoColors.white),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: SafeArea(
+        top: true,
+        child: Row(
+          children: [
+            CupertinoButton(
+              onPressed: () => Navigator.maybePop(context),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: CupertinoColors.white),
+              ),
             ),
-          ),
-          const Spacer(),
-          CupertinoButton(
-            onPressed: () async {
-              final result = await controller.crop();
-
-              if (context.mounted) {
-                Navigator.of(context).pop(result);
-              }
-            },
-            child: const Text('Done'),
-          ),
-        ],
+            const Spacer(),
+            CupertinoButton(
+              onPressed: () async {
+                final result = await controller.crop();
+    
+                if (context.mounted) {
+                  Navigator.of(context).pop(result);
+                }
+              },
+              child: const Text('Done'),
+            ),
+          ],
+        ),
       ),
     );
   }

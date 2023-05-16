@@ -89,4 +89,17 @@ class Quad2 {
 
     return area / 2;
   }
+
+  /// Returns a [Path] representing this [Quad2].
+  Path get path {
+    final path = Path();
+
+    path.moveTo(point0.x, point0.y);
+    path.lineTo(point1.x, point1.y);
+    path.lineTo(point2.x, point2.y);
+    path.lineTo(point3.x, point3.y);
+
+    path.close();
+    return path;
+  }
 }

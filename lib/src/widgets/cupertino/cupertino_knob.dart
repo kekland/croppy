@@ -21,8 +21,9 @@ class CupertinoKnobButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        isPositive ? CupertinoColors.systemYellow : CupertinoColors.white;
+    final color = isPositive
+        ? CupertinoTheme.of(context).primaryColor
+        : CupertinoColors.white;
 
     return CupertinoButton(
       onPressed: onPressed,
@@ -73,8 +74,9 @@ class CupertinoKnob extends StatelessWidget {
     final isActive = value != 0.0;
     final isPositive = value > 0.0;
 
-    final color =
-        isPositive ? CupertinoColors.systemYellow : CupertinoColors.white;
+    final color = isPositive
+        ? CupertinoTheme.of(context).primaryColor
+        : CupertinoColors.white;
 
     late final Widget child;
 
@@ -98,21 +100,28 @@ class CupertinoKnob extends StatelessWidget {
       isActive: isActive,
       isPositive: isPositive,
       onPressed: () => onChanged(0.0),
-      progressPainter: _CupertinoKnobProgressPainter(value / extent),
+      progressPainter: _CupertinoKnobProgressPainter(
+        primaryColor: color,
+        value: value / extent,
+      ),
       child: child,
     );
   }
 }
 
 class _CupertinoKnobProgressPainter extends CustomPainter {
-  _CupertinoKnobProgressPainter(this.value);
+  _CupertinoKnobProgressPainter({
+    required this.value,
+    required this.primaryColor,
+  });
 
+  final Color primaryColor;
   final double value;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = value > 0 ? CupertinoColors.systemYellow : Colors.white
+      ..color = value > 0 ? primaryColor : Colors.white
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 

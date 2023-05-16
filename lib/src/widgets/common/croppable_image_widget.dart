@@ -150,27 +150,53 @@ class CroppableImageRenderObject extends RenderBox
     size = layoutSizeWithPadding;
   }
 
-  final _imageFilterLayer = LayerHandle<ImageFilterLayer>();
+  final _backgroundTransformLayer = LayerHandle<TransformLayer>();
   void paintBackgroundImage(
     PaintingContext context,
     Offset offset,
     Matrix4 transform,
   ) {
-    _imageFilterLayer.layer = ImageFilterLayer(
-      imageFilter: null,
-      offset: offset,
-    );
+    // Not working with Impeller :(
+    // TODO(kekland): find a way to make it work
+    // _imageFilterLayer.layer = ImageFilterLayer(
+    //   imageFilter: null,
+    //   offset: offset,
+    // );
 
-    _imageFilterLayer.layer!.imageFilter = ImageFilter.matrix(
-      transform.storage,
-    );
+    // _imageFilterLayer.layer!.imageFilter = ImageFilter.compose(
+    //   outer: ImageFilter.matrix(
+    //     transform.storage,
+    //   ),
+    //   inner: ImageFilter.blur(
+    //     sigmaX: 8.0,
+    //     sigmaY: 8.0,
+    //     tileMode: TileMode.decal,
+    //   ),
+    // );
 
-    context.pushLayer(
-      _imageFilterLayer.layer!,
+    // context.pushLayer(
+    //   _imageFilterLayer.layer!,
+    //   (context, offset) {
+    //     context.paintChild(image!, offset);
+    //   },
+    //   Offset.zero,
+    // );
+
+    _backgroundTransformLayer.layer = context.pushTransform(
+      false,
+      offset,
+      transform,
       (context, offset) {
         context.paintChild(image!, offset);
       },
-      Offset.zero,
+      oldLayer: _backgroundTransformLayer.layer,
+    );
+  }
+
+  void paintBackgroundImageForeground(PaintingContext context, Path path) {
+    context.canvas.drawPath(
+      path,
+      Paint()..color = Colors.black.withOpacity(0.8),
     );
   }
 
@@ -230,7 +256,16 @@ class CroppableImageRenderObject extends RenderBox
     final Matrix4 matrix =
         scaleTransform * translationTransform * imageData.totalImageTransform;
 
+    var backgroundImageQuad = Quad2.fromSize(imageData.imageSize);
+    backgroundImageQuad = backgroundImageQuad.transform(
+      Matrix4.copy(matrix)..leftTranslate(_offset.dx, _offset.dy),
+    );
+
+    final backgroundImagePath = backgroundImageQuad.path;
+
     paintBackgroundImage(context, _offset, matrix);
+    paintBackgroundImageForeground(context, backgroundImagePath);
+
     paintCroppedImage(
       context,
       _offset,

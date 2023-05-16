@@ -13,19 +13,21 @@ class CupertinoImageCropperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.black,
-      navigationBar: CupertinoImageCropperAppBar(
-        controller: controller,
-      ),
-      child: ClipRect(
+    final safeArea = MediaQuery.of(context).padding;
+
+    return ClipRect(
+      child: CupertinoPageScaffold(
+        backgroundColor: CupertinoColors.black,
+        navigationBar: CupertinoImageCropperAppBar(
+          controller: controller,
+        ),
         child: Stack(
           children: [
             Positioned(
               left: 16.0,
               top: 16.0,
               right: 16.0,
-              bottom: 64.0,
+              bottom: safeArea.bottom + 64.0,
               child: CroppableImageViewport(
                 controller: controller,
                 gesturePadding: gesturePadding,
@@ -57,6 +59,7 @@ class CupertinoImageCropperPage extends StatelessWidget {
                       colors: [
                         CupertinoColors.black.withOpacity(0.0),
                         CupertinoColors.black.withOpacity(0.5),
+                        CupertinoColors.black.withOpacity(0.85),
                       ],
                     ),
                   ),
@@ -66,7 +69,7 @@ class CupertinoImageCropperPage extends StatelessWidget {
             Positioned(
               left: 16.0,
               right: 16.0,
-              bottom: 16.0,
+              bottom: safeArea.bottom + 16.0,
               height: 40.0,
               child: ListenableBuilder(
                 listenable: controller,
