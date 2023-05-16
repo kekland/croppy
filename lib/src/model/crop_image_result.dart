@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:croppy/src/src.dart';
 import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;

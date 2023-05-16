@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:croppy/croppy.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;

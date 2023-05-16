@@ -1,5 +1,4 @@
 import 'package:croppy/src/src.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 /// A mixin that provides resizing functionality to a
