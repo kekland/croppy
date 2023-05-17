@@ -3,9 +3,15 @@ import 'dart:typed_data';
 import 'package:croppy/src/src.dart';
 import 'package:flutter/widgets.dart';
 
+/// A function that is called in [crop] as a post-processing function. Use it
+/// to, for example, compress the image, or update the state in the preview
+/// page.
 typedef CroppableImagePostProcessFn = Future<CropImageResult> Function(
   CropImageResult result,
 );
+
+/// A function that provides the crop path for a given size.
+typedef CropShapeFn = CropShape Function(Size size);
 
 /// A base class for controllers that can be used with this package.
 abstract class BaseCroppableImageController extends ChangeNotifier {
@@ -13,8 +19,12 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     required this.imageProvider,
     required CroppableImageData data,
     this.postProcessFn,
+    this.cropShapeFn = aabbCropShapeFn,
   })  : _data = data.copyWith(),
-        _resetData = CroppableImageData.initial(imageSize: data.imageSize) {
+        _resetData = CroppableImageData.initialWithCropPathFn(
+          imageSize: data.imageSize,
+          cropPathFn: cropShapeFn,
+        ) {
     recomputeValueNotifiers();
   }
 
@@ -26,6 +36,9 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   /// page.
   final CroppableImagePostProcessFn? postProcessFn;
 
+  /// A function that provides the crop path for a given size.
+  final CropShapeFn cropShapeFn;
+
   /// The current crop data.
   CroppableImageData _data;
 
@@ -35,7 +48,11 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   /// Sets the current crop data.
   set data(CroppableImageData newData) {
     if (_data == newData) return;
-    _data = newData;
+
+    _data = newData.copyWith(
+      cropShape: cropShapeFn(newData.cropRect.size),
+    );
+
     recomputeValueNotifiers();
     notifyListeners();
   }
@@ -59,6 +76,13 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   set viewportSize(Size? size) {
     if (_viewportSize == size) return;
     _viewportSize = size;
+  }
+
+  /// Sets the size of the available viewport in the [build] method.
+  @mustCallSuper
+  void setViewportSizeInBuild(Size? size) {
+    if (viewportSize == size) return;
+    viewportSize = size;
   }
 
   /// Called when a transformation starts.
@@ -147,12 +171,13 @@ abstract class CroppableImageController extends BaseCroppableImageController
     with
         PanAndScaleTransformation,
         ResizeTransformation,
-        StraightenTransformation,
+        StraightenAndPerspectiveTransformation,
         RotateTransformation,
         MirrorTransformation {
   CroppableImageController({
     required super.imageProvider,
     required super.data,
     super.postProcessFn,
+    super.cropShapeFn,
   });
 }

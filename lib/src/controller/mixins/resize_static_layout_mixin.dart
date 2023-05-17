@@ -9,12 +9,6 @@ mixin ResizeStaticLayoutMixin on ResizeTransformation {
   Rect? staticCropRect;
 
   @override
-  void onTransformationStart() {
-    super.onTransformationStart();
-    staticCropRect = null;
-  }
-
-  @override
   void onResize({
     required Offset offset,
     required ResizeDirection direction,

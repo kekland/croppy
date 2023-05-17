@@ -139,8 +139,11 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
                       opacity: _overlayOpacityAnimation.value,
                       child: Column(
                         children: [
-                          CupertinoImageTransformationToolbar(
-                            controller: widget.controller,
+                          SizedBox(
+                            height: 96.0,
+                            child: CupertinoToolbar(
+                              controller: widget.controller,
+                            ),
                           ),
                           CupertinoImageCropperBottomAppBar(
                             controller: widget.controller,

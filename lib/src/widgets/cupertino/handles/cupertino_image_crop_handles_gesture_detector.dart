@@ -47,11 +47,17 @@ class _CupertinoImageCropHandlesGestureDetectorState
       onScaleStart: _onScaleStart,
       onScaleUpdate: _onScaleUpdate,
       onScaleEnd: _onScaleEnd,
-      child: ResizableGestureDetector(
-        controller: widget.controller,
-        gesturePadding: widget.gesturePadding,
-        child: widget.child,
-      ),
+      // Don't use ResizableGestureDetector if we have a non-aabb crop shape
+      child: widget.controller.data.cropShape.type == CropShapeType.aabb
+          ? ResizableGestureDetector(
+              controller: widget.controller,
+              gesturePadding: widget.gesturePadding,
+              child: widget.child,
+            )
+          : Padding(
+              padding: EdgeInsets.all(widget.gesturePadding),
+              child: widget.child,
+            ),
     );
   }
 }

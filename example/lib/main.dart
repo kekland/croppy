@@ -88,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
             imageProvider: _imageProviders[page],
             heroTag: 'image-$page',
             initialData: _data[page],
+            cropPathFn: aabbCropShapeFn,
             postProcessFn: (result) async {
               final uiImage = await result.asUiImage;
 

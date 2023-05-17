@@ -37,3 +37,7 @@ extension RectTransform on Rect {
     return Rect.fromPoints(topLeft, bottomRight);
   }
 }
+
+extension SizeArea on Size {
+  double get area => width * height;
+}

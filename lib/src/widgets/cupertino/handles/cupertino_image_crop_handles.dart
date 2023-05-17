@@ -13,30 +13,41 @@ class CupertinoImageCropHandles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fineGuidesChild = AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      opacity: controller.isRotatingZ ? 1.0 : 0.0,
+      child: CustomPaint(
+        painter: _CupertinoImageCropperFineGuidesPainter(),
+      ),
+    );
+
+    final cropShape = controller.data.cropShape;
+
+    Widget child = Stack(
+      fit: StackFit.passthrough,
+      children: [
+        CustomPaint(
+          painter: cropShape.type == CropShapeType.aabb
+              ? _CupertinoImageRectCropHandlesPainter()
+              : _CupertinoImageCustomCropHandlesPainter(cropShape),
+        ),
+        ClipPath(
+          clipper: _CupertinoImageCropHandlesClipper(cropShape),
+          child: fineGuidesChild,
+        )
+      ],
+    );
+
     return CupertinoImageCropHandlesGestureDetector(
       controller: controller,
       gesturePadding: gesturePadding,
-      child: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          CustomPaint(
-            painter: _CupertinoImageCropHandlesPainter(),
-          ),
-          AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            opacity: controller.isRotating ? 1.0 : 0.0,
-            child: CustomPaint(
-              painter: _CupertinoImageCropperFineGuidesPainter(),
-            ),
-          ),
-        ],
-      ),
+      child: child,
     );
   }
 }
 
-class _CupertinoImageCropHandlesPainter extends CustomPainter {
+class _CupertinoImageRectCropHandlesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const color = CupertinoColors.white;
@@ -132,7 +143,63 @@ class _CupertinoImageCropHandlesPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CupertinoImageCropHandlesPainter oldDelegate) => false;
+  bool shouldRepaint(_CupertinoImageRectCropHandlesPainter oldDelegate) =>
+      false;
+}
+
+class _CupertinoImageCustomCropHandlesPainter extends CustomPainter {
+  _CupertinoImageCustomCropHandlesPainter(this.cropShape);
+
+  final CropShape cropShape;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cropPath = cropShape.getTransformedPathForSize(size);
+
+    const color = CupertinoColors.white;
+    final pathPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
+    final guidePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0;
+
+    // Draw the path
+    canvas.drawPath(cropPath, pathPaint);
+    canvas.clipPath(cropPath);
+
+    // Draw the guides
+    canvas.drawLine(
+      Offset(size.width / 3, 0.0),
+      Offset(size.width / 3, size.height),
+      guidePaint,
+    );
+
+    canvas.drawLine(
+      Offset(size.width * 2 / 3, 0.0),
+      Offset(size.width * 2 / 3, size.height),
+      guidePaint,
+    );
+
+    canvas.drawLine(
+      Offset(0.0, size.height / 3),
+      Offset(size.width, size.height / 3),
+      guidePaint,
+    );
+
+    canvas.drawLine(
+      Offset(0.0, size.height * 2 / 3),
+      Offset(size.width, size.height * 2 / 3),
+      guidePaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_CupertinoImageCustomCropHandlesPainter oldDelegate) =>
+      oldDelegate.cropShape != cropShape;
 }
 
 class _CupertinoImageCropperFineGuidesPainter extends CustomPainter {
@@ -221,4 +288,17 @@ class _CupertinoImageCropperFineGuidesPainter extends CustomPainter {
   @override
   bool shouldRepaint(_CupertinoImageCropperFineGuidesPainter oldDelegate) =>
       false;
+}
+
+class _CupertinoImageCropHandlesClipper extends CustomClipper<Path> {
+  _CupertinoImageCropHandlesClipper(this.cropShape);
+
+  final CropShape cropShape;
+
+  @override
+  Path getClip(Size size) => cropShape.getTransformedPathForSize(size);
+
+  @override
+  bool shouldReclip(_CupertinoImageCropHandlesClipper oldClipper) =>
+      oldClipper.cropShape != cropShape;
 }

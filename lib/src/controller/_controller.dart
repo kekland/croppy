@@ -1,3 +1,4 @@
+export 'mixins/aspect_ratio_mixin.dart';
 export 'mixins/resize_static_layout_mixin.dart';
 
 export 'transformations/mirror.dart';

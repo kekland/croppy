@@ -227,20 +227,22 @@ class CroppableImageRenderObject extends RenderBox
     );
   }
 
+  final _clipPathLayer = LayerHandle<ClipPathLayer>();
   final _transformLayer = LayerHandle<TransformLayer>();
-  final _clipRectLayer = LayerHandle<ClipRectLayer>();
   void paintCroppedImage(
     PaintingContext context,
     Offset offset,
-    Rect clipRect,
+    Rect bounds,
+    Path clipPath,
     Matrix4 transform,
   ) {
     if (_overlayOpacity == 0.0) return;
 
-    _clipRectLayer.layer = context.pushClipRect(
+    _clipPathLayer.layer = context.pushClipPath(
       false,
       offset,
-      clipRect,
+      bounds,
+      clipPath,
       (context, offset) {
         _transformLayer.layer = context.pushTransform(
           false,
@@ -253,7 +255,7 @@ class CroppableImageRenderObject extends RenderBox
         );
       },
       clipBehavior: Clip.antiAlias,
-      oldLayer: _clipRectLayer.layer,
+      oldLayer: _clipPathLayer.layer,
     );
   }
 
@@ -291,10 +293,18 @@ class CroppableImageRenderObject extends RenderBox
         scaleTransform * translationTransform * imageData.totalImageTransform;
 
     paintBackgroundImage(context, _offset, matrix);
+
+    final cropRect =
+        additionalOffset & (imageData.cropRect.size * viewportScale);
+
     paintCroppedImage(
       context,
       _offset,
-      additionalOffset & (imageData.cropRect.size * viewportScale),
+      cropRect,
+      _imageData.cropShape.getTransformedPath(
+        additionalOffset,
+        viewportScale,
+      ),
       matrix,
     );
 

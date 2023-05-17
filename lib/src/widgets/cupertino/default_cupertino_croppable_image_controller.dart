@@ -7,12 +7,16 @@ class DefaultCupertinoCroppableImageController extends StatefulWidget {
     required this.builder,
     required this.imageProvider,
     required this.initialData,
+    this.allowedAspectRatios,
     this.postProcessFn,
+    this.cropShapeFn,
   });
 
   final ImageProvider imageProvider;
   final CroppableImageData initialData;
   final CroppableImagePostProcessFn? postProcessFn;
+  final CropShapeFn? cropShapeFn;
+  final List<CropAspectRatio?>? allowedAspectRatios;
 
   final Widget Function(
     BuildContext context,
@@ -38,6 +42,8 @@ class _DefaultCupertinoCroppableImageControllerState
       imageProvider: widget.imageProvider,
       data: widget.initialData,
       postProcessFn: widget.postProcessFn,
+      cropShapeFn: widget.cropShapeFn ?? aabbCropShapeFn,
+      allowedAspectRatios: widget.allowedAspectRatios,
     );
   }
 

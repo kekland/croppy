@@ -48,14 +48,35 @@ class CupertinoImageCropperAppBar extends StatelessWidget
                     ),
                   ),
                   const Spacer(),
-                  // CupertinoButton(
-                  //   onPressed: () {},
-                  //   minSize: 44.0,
-                  //   child: const Icon(
-                  //     Icons.aspect_ratio_rounded,
-                  //     color: CupertinoColors.systemGrey2,
-                  //   ),
-                  // ),
+                  if (controller is CupertinoCroppableImageController)
+                    ValueListenableBuilder(
+                      valueListenable:
+                          (controller as CupertinoCroppableImageController)
+                              .toolbarNotifier,
+                      builder: (context, toolbar, _) => CupertinoButton(
+                        onPressed: () {
+                          // ignore: no_leading_underscores_for_local_identifiers
+                          final _controller =
+                              controller as CupertinoCroppableImageController;
+
+                          _controller.toggleToolbar(
+                            CupertinoCroppableImageToolbar.aspectRatio,
+                          );
+                        },
+                        minSize: 44.0,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 10.0,
+                        ),
+                        child: CupertinoAspectRatioIcon(
+                          color: toolbar ==
+                                  CupertinoCroppableImageToolbar.aspectRatio
+                              ? CupertinoTheme.of(context).primaryColor
+                              : CupertinoColors.systemGrey2,
+                          size: 24.0,
+                        ),
+                      ),
+                    ),
                 ],
               ),
               Center(

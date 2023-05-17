@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
 
 class CupertinoRotationSlider extends StatefulWidget {
@@ -77,11 +78,17 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
                     height: 12.0,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: CustomPaint(
-                        painter: _CupertinoSliderPainter(
-                          primaryColor: CupertinoTheme.of(context).primaryColor,
-                          value: widget.value / widget.extent,
-                          isDragging: _dragStartDetails != null,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 100),
+                        curve: Curves.easeInOut,
+                        opacity: widget.value.abs() > epsilon ? 1.0 : 0.5,
+                        child: CustomPaint(
+                          painter: _CupertinoSliderPainter(
+                            primaryColor:
+                                CupertinoTheme.of(context).primaryColor,
+                            value: widget.value / widget.extent,
+                            isDragging: _dragStartDetails != null,
+                          ),
                         ),
                       ),
                     ),

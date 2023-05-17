@@ -62,7 +62,7 @@ class CroppedHeroImageRenderObject extends RenderBox
   CroppableImageData get imageData => _imageData;
   set imageData(CroppableImageData value) {
     if (_imageData == value) return;
-    
+
     if (_imageData.cropRect != value.cropRect) {
       markNeedsLayout();
     } else {
@@ -120,27 +120,33 @@ class CroppedHeroImageRenderObject extends RenderBox
     size = layoutSizeWithPadding;
   }
 
+  final _clipPathLayer = LayerHandle<ClipPathLayer>();
+  final _transformLayer = LayerHandle<TransformLayer>();
   void paintCroppedImage(
     PaintingContext context,
     Offset offset,
-    Rect clipRect,
+    Rect bounds,
+    Path clipPath,
     Matrix4 transform,
   ) {
-    context.pushClipRect(
+    _clipPathLayer.layer = context.pushClipPath(
       false,
       offset,
-      clipRect,
+      bounds,
+      clipPath,
       (context, offset) {
-        context.pushTransform(
+        _transformLayer.layer = context.pushTransform(
           false,
           offset,
           transform,
           (context, offset) {
             context.paintChild(child!, offset);
           },
+          oldLayer: _transformLayer.layer,
         );
       },
       clipBehavior: Clip.antiAlias,
+      oldLayer: _clipPathLayer.layer,
     );
   }
 
@@ -163,10 +169,17 @@ class CroppedHeroImageRenderObject extends RenderBox
     final Matrix4 matrix =
         scaleTransform * translationTransform * imageData.totalImageTransform;
 
+    final cropRect =
+        additionalOffset & (imageData.cropRect.size * viewportScale);
+
     paintCroppedImage(
       context,
       _offset,
       additionalOffset & (imageData.cropRect.size * viewportScale),
+      _imageData.cropShape.getTransformedPath(
+        -cropRect.topLeft,
+        viewportScale,
+      ),
       matrix,
     );
   }

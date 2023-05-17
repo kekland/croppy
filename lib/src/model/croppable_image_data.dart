@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:croppy/src/geometry/_geometry.dart';
+import 'package:croppy/src/src.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -9,6 +9,7 @@ class CroppableImageData extends Equatable {
   const CroppableImageData({
     required this.imageSize,
     required this.cropRect,
+    required this.cropShape,
     required this.imageTransform,
     required this.currentImageTransform,
     required this.baseTransformations,
@@ -16,7 +17,17 @@ class CroppableImageData extends Equatable {
 
   CroppableImageData.initial({
     required this.imageSize,
+    required this.cropShape,
   })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
+        imageTransform = Matrix4.identity(),
+        currentImageTransform = Matrix4.identity(),
+        baseTransformations = const BaseTransformations.initial();
+
+  CroppableImageData.initialWithCropPathFn({
+    required this.imageSize,
+    required CropShapeFn cropPathFn,
+  })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
+        cropShape = cropPathFn(imageSize),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
         baseTransformations = const BaseTransformations.initial();
@@ -26,6 +37,9 @@ class CroppableImageData extends Equatable {
 
   /// The rectangle containing the crop area.
   final Rect cropRect;
+
+  /// The shape of the crop area.
+  final CropShape cropShape;
 
   /// The transformation applied to the image.
   final Matrix4 imageTransform;
@@ -68,7 +82,7 @@ class CroppableImageData extends Equatable {
 
   /// The total transformation applied to the image.
   Matrix4 get totalImageTransform =>
-      translatedBaseTransformations * currentImageTransform * imageTransform;
+      currentImageTransform * imageTransform * translatedBaseTransformations;
 
   /// The original quad of the image, before any transformations are applied.
   Quad2 get originalImageQuad => Quad2.fromSize(imageSize);
@@ -84,6 +98,7 @@ class CroppableImageData extends Equatable {
   CroppableImageData copyWith({
     Size? imageSize,
     Rect? cropRect,
+    CropShape? cropShape,
     Matrix4? imageTransform,
     Matrix4? currentImageTransform,
     BaseTransformations? baseTransformations,
@@ -91,6 +106,7 @@ class CroppableImageData extends Equatable {
     return CroppableImageData(
       imageSize: imageSize ?? this.imageSize,
       cropRect: cropRect ?? this.cropRect,
+      cropShape: cropShape ?? this.cropShape,
       imageTransform: imageTransform ?? this.imageTransform,
       currentImageTransform:
           currentImageTransform ?? this.currentImageTransform,
@@ -109,6 +125,7 @@ class CroppableImageData extends Equatable {
     return CroppableImageData(
       imageSize: Size.lerp(a.imageSize, b.imageSize, t)!,
       cropRect: Rect.lerp(a.cropRect, b.cropRect, t)!,
+      cropShape: CropShape.lerp(a.cropShape, b.cropShape, t)!,
       imageTransform: lerpMatrix4(a.imageTransform, b.imageTransform, t),
       currentImageTransform:
           lerpMatrix4(a.currentImageTransform, b.currentImageTransform, t),
@@ -124,6 +141,7 @@ class CroppableImageData extends Equatable {
   List<Object?> get props => [
         imageSize,
         cropRect,
+        cropShape,
         imageTransform,
         currentImageTransform,
         baseTransformations,
@@ -150,13 +168,12 @@ class BaseTransformations extends Equatable {
   final double scaleY;
 
   /// Returns a [Matrix4] representing all of the transformations.
-  Matrix4 get matrix {
-    return rotationMatrix * scaleMatrix;
-  }
+  Matrix4 get matrix => scaleMatrix * rotationMatrix;
 
   /// Returns a [Matrix4] representing the rotation transformations.
   Matrix4 get rotationMatrix {
     final matrix = Matrix4.identity();
+    matrix.setEntry(3, 2, 0.001);
     matrix.rotateZ(rotationZ);
     matrix.rotateY(rotationY);
     matrix.rotateX(rotationX);

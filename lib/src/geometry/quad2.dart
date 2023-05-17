@@ -59,20 +59,11 @@ class Quad2 {
 
   /// Transforms this [Quad2] by the given transformation matrix.
   Quad2 transform(Matrix4 t) {
-    final quad = Quad.points(
-      point0.vector3,
-      point1.vector3,
-      point2.vector3,
-      point3.vector3,
-    );
-
-    quad.transform(t);
-
     return Quad2(
-      quad.point0.vector2,
-      quad.point1.vector2,
-      quad.point2.vector2,
-      quad.point3.vector2,
+      t.perspectiveTransform(point0.vector3).vector2,
+      t.perspectiveTransform(point1.vector3).vector2,
+      t.perspectiveTransform(point2.vector3).vector2,
+      t.perspectiveTransform(point3.vector3).vector2,
     );
   }
 

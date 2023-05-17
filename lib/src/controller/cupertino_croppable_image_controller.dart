@@ -6,14 +6,31 @@ import 'package:flutter/material.dart';
 
 /// A croppable image controller that is similar to the iOS Photos app.
 class CupertinoCroppableImageController extends CroppableImageController
-    with ResizeStaticLayoutMixin {
+    with AspectRatioMixin, ResizeStaticLayoutMixin {
   CupertinoCroppableImageController({
     required TickerProvider vsync,
     required super.data,
     required super.imageProvider,
     super.postProcessFn,
-  }) {
+    super.cropShapeFn,
+    List<CropAspectRatio?>? allowedAspectRatios,
+  }) : allowedAspectRatios =
+            allowedAspectRatios ?? createDefaultAspectRatios(data.imageSize) {
     _initAnimationControllers(vsync);
+
+    // If the current aspect ratio is not allowed, set it to the first allowed
+    // aspect ratio.
+    if (!this.allowedAspectRatios.contains(currentAspectRatio)) {
+      aspectRatioNotifier.value = this.allowedAspectRatios.first;
+
+      final newCropRect = resizeCropRectWithAspectRatio(
+        data.cropRect,
+        this.allowedAspectRatios.first,
+      );
+
+      data = data.copyWith(cropRect: newCropRect);
+      normalize();
+    }
   }
 
   late final AnimationController _imageDataAnimationController;
@@ -26,6 +43,14 @@ class CupertinoCroppableImageController extends CroppableImageController
 
   RectTween? _staticCropRectTween;
   Tween<double>? _viewportScaleTween;
+
+  /// Allowed aspect ratios for the aspect ratio toolbar.
+  @override
+  final List<CropAspectRatio?> allowedAspectRatios;
+
+  final toolbarNotifier = ValueNotifier<CupertinoCroppableImageToolbar>(
+    CupertinoCroppableImageToolbar.transform,
+  );
 
   void _initAnimationControllers(TickerProvider vsync) {
     _imageDataAnimationController = AnimationController(
@@ -71,6 +96,15 @@ class CupertinoCroppableImageController extends CroppableImageController
 
       notifyListeners();
     });
+
+    _viewportScaleAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        if (_staticCropRectTween != null) {
+          staticCropRect = null;
+          notifyListeners();
+        }
+      }
+    });
   }
 
   @override
@@ -82,6 +116,20 @@ class CupertinoCroppableImageController extends CroppableImageController
 
     super.viewportSize = size;
     setViewportScale(shouldNotify: false);
+  }
+
+  @override
+  void setViewportSizeInBuild(Size? size) {
+    if (viewportSize == size) return;
+    final shouldNotifyAfterFrame = viewportSize != null;
+
+    super.setViewportSizeInBuild(size);
+
+    if (shouldNotifyAfterFrame) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
+    }
   }
 
   double _computeViewportScale({Rect? overrideCropRect}) {
@@ -141,22 +189,53 @@ class CupertinoCroppableImageController extends CroppableImageController
   void onStraighten({
     required double angleRad,
   }) {
-    if (isRotating) {
+    if (isRotatingZ) {
       super.onStraighten(angleRad: angleRad);
       normalize();
       setViewportScale();
     } else {
-      final oldData = data.copyWith();
-      super.onStraighten(angleRad: angleRad);
-      normalize();
-
-      _imageDataTween = CroppableImageDataTween(
-        begin: oldData,
-        end: data,
+      animatedNormalizeAfterTransform(
+        () {
+          super.onStraighten(angleRad: angleRad);
+          normalize();
+        },
       );
+    }
+  }
 
-      setViewportScaleWithAnimation(overrideCropRect: data.cropRect);
-      _imageDataAnimationController.forward(from: 0.0);
+  @override
+  void onRotateX({
+    required double angleRad,
+  }) {
+    if (isRotatingX) {
+      super.onRotateX(angleRad: angleRad);
+      normalize();
+      setViewportScale();
+    } else {
+      animatedNormalizeAfterTransform(
+        () {
+          super.onRotateX(angleRad: angleRad);
+          normalize();
+        },
+      );
+    }
+  }
+
+  @override
+  void onRotateY({
+    required double angleRad,
+  }) {
+    if (isRotatingY) {
+      super.onRotateY(angleRad: angleRad);
+      normalize();
+      setViewportScale();
+    } else {
+      animatedNormalizeAfterTransform(
+        () {
+          super.onRotateY(angleRad: angleRad);
+          normalize();
+        },
+      );
     }
   }
 
@@ -166,6 +245,7 @@ class CupertinoCroppableImageController extends CroppableImageController
     required Offset offset,
   }) {
     super.onPanAndScale(scale: scale, offset: offset);
+    _staticCropRectTween?.end = data.cropRect;
     setViewportScale();
   }
 
@@ -199,7 +279,7 @@ class CupertinoCroppableImageController extends CroppableImageController
 
     if (_recomputeViewportScaleTimer?.isActive == true) {
       _recomputeViewportScaleTimer?.cancel();
-      setViewportScale();
+      setViewportScaleWithAnimation();
     }
   }
 
@@ -213,6 +293,17 @@ class CupertinoCroppableImageController extends CroppableImageController
     staticCropRect = null;
     setViewportScaleWithAnimation(overrideCropRect: newData.cropRect);
     _imageDataAnimationController.forward(from: 0.0);
+  }
+
+  @override
+  set currentAspectRatio(CropAspectRatio? newAspectRatio) {
+    if (aspectRatioNotifier.value == newAspectRatio) return;
+
+    animatedNormalizeAfterTransform(
+      () => super.currentAspectRatio = newAspectRatio,
+    );
+
+    notifyListeners();
   }
 
   Timer? _recomputeViewportScaleTimer;
@@ -245,10 +336,9 @@ class CupertinoCroppableImageController extends CroppableImageController
     return normalizedAabb.rect;
   }
 
-  @override
-  void reset() {
+  void animatedNormalizeAfterTransform(VoidCallback action) {
     final oldData = data.copyWith();
-    super.reset();
+    action();
 
     _imageDataTween = CroppableImageDataTween(
       begin: oldData,
@@ -260,8 +350,28 @@ class CupertinoCroppableImageController extends CroppableImageController
   }
 
   @override
+  void reset() {
+    animatedNormalizeAfterTransform(
+      () => super.reset(),
+    );
+  }
+
+  void toggleToolbar(CupertinoCroppableImageToolbar toolbar) {
+    if (toolbarNotifier.value == toolbar) {
+      toolbarNotifier.value = CupertinoCroppableImageToolbar.transform;
+    } else {
+      toolbarNotifier.value = toolbar;
+    }
+  }
+
+  @override
   void dispose() {
     _imageDataAnimationController.dispose();
     super.dispose();
   }
+}
+
+enum CupertinoCroppableImageToolbar {
+  transform,
+  aspectRatio,
 }

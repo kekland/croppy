@@ -29,7 +29,7 @@ class CroppableImageViewport extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = constraints.biggest + _sizeDelta;
-        controller.viewportSize = size;
+        controller.setViewportSizeInBuild(size);
 
         return Stack(
           children: [

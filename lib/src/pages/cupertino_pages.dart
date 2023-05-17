@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 ///
 /// The [initialData] is the initial crop data. If not provided, the image will
 /// be shown in full size. There might be a small delay before the cropper is
-/// shown, because the image needs to be loaded first (if it's in the cache, 
+/// shown, because the image needs to be loaded first (if it's in the cache,
 /// then the delay is practically zero).
 ///
 /// The [heroTag] is used to create a hero animation between the image
@@ -18,11 +18,20 @@ import 'package:flutter/cupertino.dart';
 /// The [postProcessFn] is a function that is called after the image has been
 /// cropped. Use it to, for example, compress the image, or update the state in
 /// the preview page.
+/// 
+/// Use the [cropPathFn] to define a custom crop shape. If not provided, the
+/// default crop shape is a rectangle.
+/// 
+/// Use the [allowedAspectRatios] to define a list of aspect ratios that the
+/// user can choose from. If not provided, the user can choose any aspect ratio.
+/// See [CropAspectRatio] for more information.
 Future<CropImageResult?> showCupertinoImageCropper(
   BuildContext context, {
   required ImageProvider imageProvider,
   CroppableImageData? initialData,
   CroppableImagePostProcessFn? postProcessFn,
+  CropShapeFn? cropPathFn,
+  List<CropAspectRatio?>? allowedAspectRatios,
   Object? heroTag,
 }) async {
   late final CroppableImageData _initialData;
@@ -31,11 +40,12 @@ Future<CropImageResult?> showCupertinoImageCropper(
     _initialData = initialData;
   } else {
     final image = await obtainImage(imageProvider);
-    _initialData = CroppableImageData.initial(
+    _initialData = CroppableImageData.initialWithCropPathFn(
       imageSize: Size(
         image.width.toDouble(),
         image.height.toDouble(),
       ),
+      cropPathFn: cropPathFn ?? aabbCropShapeFn,
     );
   }
 
@@ -44,6 +54,8 @@ Future<CropImageResult?> showCupertinoImageCropper(
       imageProvider: imageProvider,
       initialData: _initialData,
       postProcessFn: postProcessFn,
+      cropShapeFn: cropPathFn,
+      allowedAspectRatios: allowedAspectRatios,
       builder: (context, controller) => CupertinoImageCropperPage(
         heroTag: heroTag,
         controller: controller,
