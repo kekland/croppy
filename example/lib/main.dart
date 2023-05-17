@@ -5,8 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-import 'package:flutter/services.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -109,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           const Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: Text('Croppy Demo'),
             ),
           ),

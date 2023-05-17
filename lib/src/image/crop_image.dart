@@ -27,6 +27,7 @@ Future<ui.Image> obtainImage(ImageProvider provider) {
 /// Internally, this uses [ui.Image.toByteData] to obtain the original image's
 /// pixel data, and then computes the cropped image's pixel data from that,
 /// smoothing with bilinear interpolation.
+@Deprecated('Use [cropImageCanvas] instead')
 Future<CropImageResult> cropImageBilinear(
   ui.Image image,
   CroppableImageData data,
@@ -145,4 +146,59 @@ Future<CropImageResult> cropImageBilinear(
     image: resultImage,
     transformationsData: data.copyWith(),
   );
+}
+
+/// Crops an [ui.Image] using the [CroppableImageData] and returns the cropped
+/// image as a [CropImageResult].
+///
+/// Internally, this uses [ui.PictureRecorder] and [Canvas] to draw the image
+/// onto a canvas, and then crops the canvas to the crop rect.
+Future<CropImageResult> cropImageCanvas(
+  ui.Image image,
+  CroppableImageData data,
+) async {
+  final pictureRecorder = ui.PictureRecorder();
+
+  final canvas = Canvas(pictureRecorder);
+  final cropRect = data.cropRect;
+
+  canvas.translate(-cropRect.left, -cropRect.top);
+  canvas.clipRect(cropRect);
+
+  canvas.transform(data.totalImageTransform.storage);
+
+  canvas.drawImage(
+    image,
+    Offset.zero,
+    Paint()..filterQuality = FilterQuality.high,
+  );
+
+  final croppedImage = await pictureRecorder.endRecording().toImage(
+        cropRect.width.round(),
+        cropRect.height.round(),
+      );
+
+  final imgImage = img.Image.fromBytes(
+    width: croppedImage.width,
+    height: croppedImage.height,
+    bytes: (await croppedImage.toByteData())!.buffer,
+    numChannels: 4,
+  );
+
+  croppedImage.dispose();
+
+  return CropImageResult(
+    image: imgImage,
+    transformationsData: data,
+  );
+
+  // Canvas(pictureRecorder).drawImageRect(
+  //   image,
+  //   cropSize,
+  //   Offset.zero & cropSize.size,
+  //   Paint()..filterQuality = quality,
+  // );
+  // return await pictureRecorder
+  //     .endRecording()
+  //     .toImage(cropSize.width.round(), cropSize.height.round());
 }
