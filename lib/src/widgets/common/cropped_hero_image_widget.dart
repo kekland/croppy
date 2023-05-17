@@ -62,8 +62,14 @@ class CroppedHeroImageRenderObject extends RenderBox
   CroppableImageData get imageData => _imageData;
   set imageData(CroppableImageData value) {
     if (_imageData == value) return;
+    
+    if (_imageData.cropRect != value.cropRect) {
+      markNeedsLayout();
+    } else {
+      markNeedsPaint();
+    }
+
     _imageData = value;
-    markNeedsLayout();
   }
 
   double _viewportScale;

@@ -87,8 +87,14 @@ class CroppableImageRenderObject extends RenderBox
   CroppableImageData get imageData => _imageData;
   set imageData(CroppableImageData value) {
     if (_imageData == value) return;
+
+    if (_imageData.cropRect != value.cropRect) {
+      markNeedsLayout();
+    } else {
+      markNeedsPaint();
+    }
+
     _imageData = value;
-    markNeedsLayout();
   }
 
   double _viewportScale;
@@ -163,7 +169,6 @@ class CroppableImageRenderObject extends RenderBox
     size = layoutSizeWithPadding;
   }
 
-  final _backgroundOpacityLayer = LayerHandle<OpacityLayer>();
   final _backgroundTransformLayer = LayerHandle<TransformLayer>();
   final _colorFilterLayer = LayerHandle<ColorFilterLayer>();
   void paintBackgroundImage(
@@ -196,55 +201,27 @@ class CroppableImageRenderObject extends RenderBox
     //   },
     //   Offset.zero,
     // );
+    if (_overlayOpacity < epsilon) return;
 
     _colorFilterLayer.layer = context.pushColorFilter(
       offset,
       ColorFilter.mode(
-        Colors.black.withOpacity(0.9),
-        BlendMode.darken,
+        Colors.black.withOpacity(1.0 - 0.2 * _overlayOpacity),
+        BlendMode.multiply,
       ),
       (context, offset) {
-        _backgroundOpacityLayer.layer = context.pushOpacity(
+        _backgroundTransformLayer.layer = context.pushTransform(
+          false,
           offset,
-          _overlayAlpha,
+          transform,
           (context, offset) {
-            _backgroundTransformLayer.layer = context.pushTransform(
-              false,
-              offset,
-              transform,
-              (context, offset) {
-                context.paintChild(image!, offset);
-              },
-              oldLayer: _backgroundTransformLayer.layer,
-            );
+            context.paintChild(image!, offset);
           },
-          oldLayer: _backgroundOpacityLayer.layer,
+          oldLayer: _backgroundTransformLayer.layer,
         );
       },
       oldLayer: _colorFilterLayer.layer,
     );
-  }
-
-  void paintBackgroundImageForeground(
-    PaintingContext context,
-    Offset offset,
-    Path path,
-    Rect rect,
-  ) {
-    if (_overlayOpacity == 0.0) return;
-
-    // context.pushClipPath(
-    //   false,
-    //   offset,
-    //   rect,
-    //   path,
-    //   (context, offset) {
-    //     context.canvas.drawRect(
-    //       rect,
-    //       Paint()..color = Colors.black.withOpacity(0.9),
-    //     );
-    //   },
-    // );
   }
 
   final _transformLayer = LayerHandle<TransformLayer>();
@@ -310,25 +287,7 @@ class CroppableImageRenderObject extends RenderBox
     final Matrix4 matrix =
         scaleTransform * translationTransform * imageData.totalImageTransform;
 
-    var backgroundImageQuad = Quad2.fromSize(imageData.imageSize);
-    backgroundImageQuad = backgroundImageQuad.transform(
-      Matrix4.copy(matrix)..leftTranslate(_offset.dx, _offset.dy),
-    );
-
-    final backgroundImageBoundingBox = backgroundImageQuad.boundingBox;
-    var backgroundImageRect = backgroundImageBoundingBox.rect;
-
-    // Inflate this rect by 1px to avoid aliasing issues
-    backgroundImageRect = backgroundImageRect.inflate(1.0);
-
     paintBackgroundImage(context, _offset, matrix);
-    paintBackgroundImageForeground(
-      context,
-      Offset.zero,
-      backgroundImageQuad.path,
-      backgroundImageRect,
-    );
-
     paintCroppedImage(
       context,
       _offset,
