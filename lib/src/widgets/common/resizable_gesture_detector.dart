@@ -156,7 +156,7 @@ class _ResizeGestureDetectorState extends State<_ResizeGestureDetector> {
       dragStartBehavior: DragStartBehavior.down,
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
-      onPanEnd: (_) => _onPanEnd,
+      onPanEnd: (_) => _onPanEnd(),
       onPanCancel: _onPanEnd,
       child: const SizedBox.expand(),
     );
