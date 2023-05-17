@@ -1,3 +1,10 @@
+# 0.0.4
+
+* Updated the example app
+* Performance improvements to the Cupertino cropper
+* Minor design tweaks
+* Added an example webapp
+
 # 0.0.3
 
 * Implemented a new UI for the Cupertino cropper
