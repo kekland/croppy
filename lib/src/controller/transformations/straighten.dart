@@ -118,6 +118,10 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
     onTransformationEnd();
   }
 
+  /// Returns `true` if the user is currently rotating the crop rect in any
+  /// direction.
+  bool get isRotating => isRotatingX || isRotatingY || isRotatingZ;
+
   /// The rotation around X axis of the image in radians.
   final rotationXNotifier = ValueNotifier(0.0);
 

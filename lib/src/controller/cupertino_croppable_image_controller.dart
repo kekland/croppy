@@ -49,6 +49,9 @@ class CupertinoCroppableImageController extends CroppableImageController
   @override
   final List<CropAspectRatio?> allowedAspectRatios;
 
+  /// Whether the guide lines are visible.
+  final guideLinesVisibility = ValueNotifier<bool>(false);
+
   final toolbarNotifier = ValueNotifier<CupertinoCroppableImageToolbar>(
     CupertinoCroppableImageToolbar.transform,
   );
@@ -293,6 +296,14 @@ class CupertinoCroppableImageController extends CroppableImageController
       _recomputeViewportScaleTimer?.cancel();
       setViewportScaleWithAnimation();
     }
+
+    showGuideLines();
+  }
+
+  @override
+  void onTransformationEnd() {
+    super.onTransformationEnd();
+    maybeHideGuideLines();
   }
 
   @override
@@ -305,6 +316,9 @@ class CupertinoCroppableImageController extends CroppableImageController
     staticCropRect = null;
     setViewportScaleWithAnimation(overrideCropRect: newData.cropRect);
     _imageDataAnimationController.forward(from: 0.0);
+
+    showGuideLines();
+    maybeHideGuideLines();
   }
 
   @override
@@ -324,6 +338,21 @@ class CupertinoCroppableImageController extends CroppableImageController
     _recomputeViewportScaleTimer = Timer(
       const Duration(seconds: 1),
       setViewportScaleWithAnimation,
+    );
+  }
+
+  Timer? _hideGuideLinesTimer;
+
+  void showGuideLines() {
+    _hideGuideLinesTimer?.cancel();
+    guideLinesVisibility.value = true;
+  }
+
+  void maybeHideGuideLines() {
+    _hideGuideLinesTimer?.cancel();
+    _hideGuideLinesTimer = Timer(
+      const Duration(seconds: 1),
+      () => guideLinesVisibility.value = false,
     );
   }
 

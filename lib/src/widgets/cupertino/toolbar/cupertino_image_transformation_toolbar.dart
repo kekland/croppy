@@ -35,10 +35,10 @@ class _CupertinoImageTransformationToolbarState
     _knobs = [
       if (widget.controller.isTransformationEnabled(Transformation.rotateZ))
         _Knob.rotateZ,
-      if (widget.controller.isTransformationEnabled(Transformation.rotateY))
-        _Knob.rotateY,
       if (widget.controller.isTransformationEnabled(Transformation.rotateX))
         _Knob.rotateX,
+      if (widget.controller.isTransformationEnabled(Transformation.rotateY))
+        _Knob.rotateY,
     ];
 
     _activeKnob = _knobs.isNotEmpty ? _knobs.first : null;
@@ -61,6 +61,23 @@ class _CupertinoImageTransformationToolbarState
       );
     }
 
+    if (_activeKnob == _Knob.rotateX) {
+      return ValueListenableBuilder(
+        key: const Key('rotateX'),
+        valueListenable: widget.controller.rotationXNotifier,
+        builder: (context, rotationX, _) => CupertinoRotationSlider(
+          value: rotationX,
+          extent: pi / 6,
+          isReversed: true,
+          onStart: widget.controller.onRotateXStart,
+          onEnd: widget.controller.onRotateXEnd,
+          onChanged: (v) {
+            widget.controller.onRotateX(angleRad: v);
+          },
+        ),
+      );
+    }
+
     if (_activeKnob == _Knob.rotateY) {
       return ValueListenableBuilder(
         key: const Key('rotateY'),
@@ -72,22 +89,6 @@ class _CupertinoImageTransformationToolbarState
           onEnd: widget.controller.onRotateYEnd,
           onChanged: (v) {
             widget.controller.onRotateY(angleRad: v);
-          },
-        ),
-      );
-    }
-
-    if (_activeKnob == _Knob.rotateX) {
-      return ValueListenableBuilder(
-        key: const Key('rotateX'),
-        valueListenable: widget.controller.rotationXNotifier,
-        builder: (context, rotationX, _) => CupertinoRotationSlider(
-          value: rotationX,
-          extent: pi / 6,
-          onStart: widget.controller.onRotateXStart,
-          onEnd: widget.controller.onRotateXEnd,
-          onChanged: (v) {
-            widget.controller.onRotateX(angleRad: v);
           },
         ),
       );
@@ -110,6 +111,19 @@ class _CupertinoImageTransformationToolbarState
             color: CupertinoColors.white,
           ),
         ),
+      if (widget.controller.isTransformationEnabled(Transformation.rotateX))
+        _CupertinoRotationKnobWidget(
+          key: const Key('rotateX'),
+          notifier: widget.controller.rotationXNotifier,
+          extent: 30.0,
+          isReversed: true,
+          isActive: _activeKnob == _Knob.rotateX,
+          onSelected: () => setState(() => _activeKnob = _Knob.rotateX),
+          onChanged: (v) => widget.controller.onRotateX(angleRad: v),
+          inactiveChild: const CupertinoPerspectiveXIcon(
+            color: CupertinoColors.white,
+          ),
+        ),
       if (widget.controller.isTransformationEnabled(Transformation.rotateY))
         _CupertinoRotationKnobWidget(
           key: const Key('rotateY'),
@@ -119,18 +133,6 @@ class _CupertinoImageTransformationToolbarState
           onSelected: () => setState(() => _activeKnob = _Knob.rotateY),
           onChanged: (v) => widget.controller.onRotateY(angleRad: v),
           inactiveChild: const CupertinoPerspectiveYIcon(
-            color: CupertinoColors.white,
-          ),
-        ),
-      if (widget.controller.isTransformationEnabled(Transformation.rotateX))
-        _CupertinoRotationKnobWidget(
-          key: const Key('rotateX'),
-          notifier: widget.controller.rotationXNotifier,
-          extent: 30.0,
-          isActive: _activeKnob == _Knob.rotateX,
-          onSelected: () => setState(() => _activeKnob = _Knob.rotateX),
-          onChanged: (v) => widget.controller.onRotateX(angleRad: v),
-          inactiveChild: const CupertinoPerspectiveXIcon(
             color: CupertinoColors.white,
           ),
         ),
@@ -265,11 +267,13 @@ class _CupertinoRotationKnobWidget extends StatelessWidget {
     required this.onSelected,
     required this.onChanged,
     required this.inactiveChild,
+    this.isReversed = false,
   });
 
   final double extent;
   final ValueListenable notifier;
   final bool isActive;
+  final bool isReversed;
   final VoidCallback onSelected;
   final ValueChanged<double> onChanged;
   final Widget inactiveChild;
@@ -279,7 +283,7 @@ class _CupertinoRotationKnobWidget extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: notifier,
       builder: (context, v, _) => CupertinoKnob(
-        value: v * 180 / pi,
+        value: (isReversed ? -1 : 1) * v * 180 / pi,
         extent: extent,
         onChanged: (v) {
           if (!isActive) {

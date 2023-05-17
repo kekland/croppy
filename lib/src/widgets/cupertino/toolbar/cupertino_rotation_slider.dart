@@ -11,6 +11,7 @@ class CupertinoRotationSlider extends StatefulWidget {
     required this.onChanged,
     required this.onStart,
     required this.onEnd,
+    this.isReversed = false,
   });
 
   final double value;
@@ -18,6 +19,7 @@ class CupertinoRotationSlider extends StatefulWidget {
   final VoidCallback onStart;
   final ValueChanged<double> onChanged;
   final VoidCallback onEnd;
+  final bool isReversed;
 
   @override
   State<CupertinoRotationSlider> createState() =>
@@ -40,7 +42,13 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
   void _onPanUpdate(DragUpdateDetails details) {
     final delta = details.globalPosition - _dragStartDetails!.globalPosition;
 
-    var value = _dragStartValue! + (-delta.dx / _width) * (widget.extent * 2);
+    var dx = delta.dx;
+
+    if (!widget.isReversed) {
+      dx = -dx;
+    }
+
+    var value = _dragStartValue! + (dx / _width) * (widget.extent * 2);
     value = value.clamp(-widget.extent, widget.extent);
 
     widget.onChanged(value);
@@ -56,6 +64,12 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
 
   @override
   Widget build(BuildContext context) {
+    var value = widget.value / widget.extent;
+
+    if (widget.isReversed) {
+      value = -value;
+    }
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onPanStart: _onPanStart,
@@ -66,35 +80,29 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
           height: 40.0,
           child: Align(
             alignment: Alignment.center,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              opacity: widget.value == 0 ? 0.5 : 1.0,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  _width = constraints.maxWidth;
-                  return SizedBox(
-                    width: _width,
-                    height: 12.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 100),
-                        curve: Curves.easeInOut,
-                        opacity: widget.value.abs() > epsilon ? 1.0 : 0.5,
-                        child: CustomPaint(
-                          painter: _CupertinoSliderPainter(
-                            primaryColor:
-                                CupertinoTheme.of(context).primaryColor,
-                            value: widget.value / widget.extent,
-                            isDragging: _dragStartDetails != null,
-                          ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                _width = constraints.maxWidth;
+                return SizedBox(
+                  width: _width,
+                  height: 12.0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 100),
+                      curve: Curves.easeInOut,
+                      opacity: value.abs() > epsilon ? 1.0 : 0.5,
+                      child: CustomPaint(
+                        painter: _CupertinoSliderPainter(
+                          primaryColor: CupertinoTheme.of(context).primaryColor,
+                          value: value,
+                          isDragging: _dragStartDetails != null,
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ),
         ),

@@ -217,7 +217,7 @@ class CroppableImageRenderObject extends RenderBox
               // Avoids some anti-aliasing artifacts
               (offset & imageData.imageSize).inflate(0.5),
               Paint()
-                ..color = Colors.black.withOpacity(0.8)
+                ..color = Colors.black.withOpacity(0.85)
                 ..blendMode = BlendMode.multiply,
             );
           },

@@ -11,14 +11,22 @@ class CupertinoImageCropHandles extends StatelessWidget {
   final CroppableImageController controller;
   final double gesturePadding;
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildHandles(BuildContext context, bool areGuideLinesVisible) {
     final fineGuidesChild = AnimatedOpacity(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
-      opacity: controller.isRotatingZ ? 1.0 : 0.0,
+      opacity: controller.isRotating && areGuideLinesVisible ? 1.0 : 0.0,
       child: CustomPaint(
         painter: _CupertinoImageCropperFineGuidesPainter(),
+      ),
+    );
+
+    final guidesChild = AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      opacity: areGuideLinesVisible ? 1.0 : 0.0,
+      child: CustomPaint(
+        painter: _CupertinoImageCropperGuidesPainter(),
       ),
     );
 
@@ -29,8 +37,12 @@ class CupertinoImageCropHandles extends StatelessWidget {
       children: [
         CustomPaint(
           painter: cropShape.type == CropShapeType.aabb
-              ? _CupertinoImageRectCropHandlesPainter()
-              : _CupertinoImageCustomCropHandlesPainter(cropShape),
+              ? const _CupertinoImageRectCropHandlesPainter()
+              : _CupertinoImageCustomCropHandlesPainter(cropShape: cropShape),
+        ),
+        ClipPath(
+          clipper: _CupertinoImageCropHandlesClipper(cropShape),
+          child: guidesChild,
         ),
         ClipPath(
           clipper: _CupertinoImageCropHandlesClipper(cropShape),
@@ -45,9 +57,25 @@ class CupertinoImageCropHandles extends StatelessWidget {
       child: child,
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    if (controller is CupertinoCroppableImageController) {
+      return ValueListenableBuilder(
+        valueListenable: (controller as CupertinoCroppableImageController)
+            .guideLinesVisibility,
+        builder: (conetxt, isVisible, child) =>
+            _buildHandles(context, isVisible),
+      );
+    }
+
+    return _buildHandles(context, true);
+  }
 }
 
 class _CupertinoImageRectCropHandlesPainter extends CustomPainter {
+  const _CupertinoImageRectCropHandlesPainter();
+
   @override
   void paint(Canvas canvas, Size size) {
     const color = CupertinoColors.white;
@@ -56,38 +84,8 @@ class _CupertinoImageRectCropHandlesPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
-    final guidePaint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0;
-
     // Draw the rectangle
     canvas.drawRect(Offset.zero & size, rectPaint);
-
-    // Draw the guides
-    canvas.drawLine(
-      Offset(size.width / 3, 0.0),
-      Offset(size.width / 3, size.height),
-      guidePaint,
-    );
-
-    canvas.drawLine(
-      Offset(size.width * 2 / 3, 0.0),
-      Offset(size.width * 2 / 3, size.height),
-      guidePaint,
-    );
-
-    canvas.drawLine(
-      Offset(0.0, size.height / 3),
-      Offset(size.width, size.height / 3),
-      guidePaint,
-    );
-
-    canvas.drawLine(
-      Offset(0.0, size.height * 2 / 3),
-      Offset(size.width, size.height * 2 / 3),
-      guidePaint,
-    );
 
     const handleThickness = 2.0;
     final handlePaint = Paint()
@@ -148,7 +146,9 @@ class _CupertinoImageRectCropHandlesPainter extends CustomPainter {
 }
 
 class _CupertinoImageCustomCropHandlesPainter extends CustomPainter {
-  _CupertinoImageCustomCropHandlesPainter(this.cropShape);
+  _CupertinoImageCustomCropHandlesPainter({
+    required this.cropShape,
+  });
 
   final CropShape cropShape;
 
@@ -162,14 +162,24 @@ class _CupertinoImageCustomCropHandlesPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
+    // Draw the path
+    canvas.drawPath(cropPath, pathPaint);
+    canvas.clipPath(cropPath);
+  }
+
+  @override
+  bool shouldRepaint(_CupertinoImageCustomCropHandlesPainter oldDelegate) =>
+      oldDelegate.cropShape != cropShape;
+}
+
+class _CupertinoImageCropperGuidesPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    const color = CupertinoColors.white;
     final guidePaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0;
-
-    // Draw the path
-    canvas.drawPath(cropPath, pathPaint);
-    canvas.clipPath(cropPath);
 
     // Draw the guides
     canvas.drawLine(
@@ -198,8 +208,7 @@ class _CupertinoImageCustomCropHandlesPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CupertinoImageCustomCropHandlesPainter oldDelegate) =>
-      oldDelegate.cropShape != cropShape;
+  bool shouldRepaint(_CupertinoImageCropperGuidesPainter oldDelegate) => false;
 }
 
 class _CupertinoImageCropperFineGuidesPainter extends CustomPainter {

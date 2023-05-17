@@ -28,7 +28,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.orange,
-          brightness: Brightness.dark,
+          primary: Colors.orange,
+          brightness: Brightness.light,
         ),
         useMaterial3: true,
       ),
@@ -78,7 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final page = _pageController.page?.round() ?? 0;
@@ -89,13 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
             heroTag: 'image-$page',
             initialData: _data[page],
             cropPathFn: aabbCropShapeFn,
-            enabledTransformations: [
-              Transformation.rotateY,
-              Transformation.rotateX,
-              Transformation.rotateZ,
-            ],
             postProcessFn: (result) async {
               final uiImage = await result.asUiImage;
+
+              _croppedImage[page]?.dispose();
 
               setState(() {
                 _croppedImage[page] = uiImage;
