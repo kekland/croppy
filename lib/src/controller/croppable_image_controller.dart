@@ -179,5 +179,17 @@ abstract class CroppableImageController extends BaseCroppableImageController
     required super.data,
     super.postProcessFn,
     super.cropShapeFn,
+    this.enabledTransformations = Transformation.values,
   });
+
+  /// A list of transformations that are enabled.
+  final List<Transformation> enabledTransformations;
+
+  /// Whether the given transformation is enabled.
+  /// 
+  /// This is used in the UI to determine whether to show the transformation
+  /// button, or whether to accept the gestures.
+  bool isTransformationEnabled(Transformation t) {
+    return enabledTransformations.contains(t);
+  }
 }

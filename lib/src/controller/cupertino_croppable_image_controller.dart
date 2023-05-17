@@ -13,6 +13,7 @@ class CupertinoCroppableImageController extends CroppableImageController
     required super.imageProvider,
     super.postProcessFn,
     super.cropShapeFn,
+    super.enabledTransformations,
     List<CropAspectRatio?>? allowedAspectRatios,
   }) : allowedAspectRatios =
             allowedAspectRatios ?? createDefaultAspectRatios(data.imageSize) {

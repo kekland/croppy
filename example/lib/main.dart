@@ -89,6 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
             heroTag: 'image-$page',
             initialData: _data[page],
             cropPathFn: aabbCropShapeFn,
+            enabledTransformations: [
+              Transformation.rotateY,
+              Transformation.rotateX,
+              Transformation.rotateZ,
+            ],
             postProcessFn: (result) async {
               final uiImage = await result.asUiImage;
 

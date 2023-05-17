@@ -25,6 +25,10 @@ import 'package:flutter/cupertino.dart';
 /// Use the [allowedAspectRatios] to define a list of aspect ratios that the
 /// user can choose from. If not provided, the user can choose any aspect ratio.
 /// See [CropAspectRatio] for more information.
+/// 
+/// Use the [enabledTransformations] to define a list of transformations that
+/// the user can perform. If not provided, the user can apply any 
+/// transformations. See [Transformation] for a list of every transformation.
 Future<CropImageResult?> showCupertinoImageCropper(
   BuildContext context, {
   required ImageProvider imageProvider,
@@ -32,6 +36,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
   CroppableImagePostProcessFn? postProcessFn,
   CropShapeFn? cropPathFn,
   List<CropAspectRatio?>? allowedAspectRatios,
+  List<Transformation>? enabledTransformations,
   Object? heroTag,
 }) async {
   late final CroppableImageData _initialData;
@@ -56,6 +61,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
       postProcessFn: postProcessFn,
       cropShapeFn: cropPathFn,
       allowedAspectRatios: allowedAspectRatios,
+      enabledTransformations: enabledTransformations,
       builder: (context, controller) => CupertinoImageCropperPage(
         heroTag: heroTag,
         controller: controller,

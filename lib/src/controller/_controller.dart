@@ -6,6 +6,7 @@ export 'transformations/pan_and_scale.dart';
 export 'transformations/resize.dart';
 export 'transformations/rotate.dart';
 export 'transformations/straighten.dart';
+export 'transformations/transformations.dart';
 
 export 'croppable_image_controller.dart';
 export 'cupertino_croppable_image_controller.dart';
