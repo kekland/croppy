@@ -169,8 +169,8 @@ class CroppableImageRenderObject extends RenderBox
     size = layoutSizeWithPadding;
   }
 
+  final _backgroundOpacityLayer = LayerHandle<OpacityLayer>();
   final _backgroundTransformLayer = LayerHandle<TransformLayer>();
-  final _colorFilterLayer = LayerHandle<ColorFilterLayer>();
   void paintBackgroundImage(
     PaintingContext context,
     Offset offset,
@@ -203,12 +203,9 @@ class CroppableImageRenderObject extends RenderBox
     // );
     if (_overlayOpacity < epsilon) return;
 
-    _colorFilterLayer.layer = context.pushColorFilter(
+    _backgroundOpacityLayer.layer = context.pushOpacity(
       offset,
-      ColorFilter.mode(
-        Colors.black.withOpacity(1.0 - 0.2 * _overlayOpacity),
-        BlendMode.multiply,
-      ),
+      _overlayAlpha,
       (context, offset) {
         _backgroundTransformLayer.layer = context.pushTransform(
           false,
@@ -216,11 +213,17 @@ class CroppableImageRenderObject extends RenderBox
           transform,
           (context, offset) {
             context.paintChild(image!, offset);
+            context.canvas.drawRect(
+              // Avoids some anti-aliasing artifacts
+              (offset & imageData.imageSize).inflate(0.5),
+              Paint()
+                ..color = Colors.black.withOpacity(0.8)
+                ..blendMode = BlendMode.multiply,
+            );
           },
           oldLayer: _backgroundTransformLayer.layer,
         );
       },
-      oldLayer: _colorFilterLayer.layer,
     );
   }
 

@@ -1,9 +1,22 @@
+import 'dart:math';
+
 import 'package:croppy/croppy.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
+import 'package:flutter/services.dart';
+
 void main() {
   runApp(const MyApp());
+}
+
+class ExampleScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }
 
 class MyApp extends StatelessWidget {
@@ -13,6 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Croppy Demo',
+      scrollBehavior: ExampleScrollBehavior(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.orange,
@@ -34,81 +48,98 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _imageProvider = const NetworkImage(
-    'https://test-photos-qklwjen.s3.eu-west-3.amazonaws.com/image11.jpg',
-  );
+  late final PageController _pageController;
 
-  CroppableImageData? _data;
-  ui.Image? _croppedImage;
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(
+      viewportFraction: 0.9,
+    );
 
-  final _heroTag = 'hello';
+    final random = Random();
+    for (var i = 0; i < 80; i++) {
+      final image = NetworkImage(
+        'https://test-photos-qklwjen.s3.eu-west-3.amazonaws.com/image${random.nextInt(80) + 1}.jpg',
+      );
+
+      _imageProviders.add(image);
+    }
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  final _imageProviders = <ImageProvider>[];
+  final _data = <int, CroppableImageData>{};
+  final _croppedImage = <int, ui.Image>{};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Hero(
-              tag: _heroTag,
-              placeholderBuilder: (context, size, child) => Visibility.maintain(
-                visible: false,
-                child: child,
-              ),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height - 70,
-                ),
-                child: _croppedImage != null
-                    ? RawImage(image: _croppedImage)
-                    : Image(image: _imageProvider),
-              ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final page = _pageController.page?.round() ?? 0;
+
+          showCupertinoImageCropper(
+            context,
+            imageProvider: _imageProviders[page],
+            heroTag: 'image-$page',
+            initialData: _data[page],
+            postProcessFn: (result) async {
+              final uiImage = await result.asUiImage;
+
+              setState(() {
+                _croppedImage[page] = uiImage;
+                _data[page] = result.transformationsData;
+              });
+
+              return result;
+            },
+          );
+        },
+        child: const Icon(Icons.crop),
+      ),
+      body: Stack(
+        children: [
+          const Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('Croppy Demo'),
             ),
-            TextButton(
-              onPressed: () async {
-                await showCupertinoImageCropper(
-                  context,
-                  heroTag: _heroTag,
-                  imageProvider: _imageProvider,
-                  initialData: _data,
-                  postProcessFn: (result) async {
-                    final uiImage = await result.asUiImage;
-
-                    setState(() {
-                      _croppedImage = uiImage;
-                      _data = result.transformationsData;
-                    });
-
-                    return result;
-                  },
+          ),
+          Center(
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: _imageProviders.length,
+              scrollDirection: Axis.horizontal,
+              padEnds: true,
+              itemBuilder: (context, i) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Center(
+                    child: Hero(
+                      tag: 'image-$i',
+                      placeholderBuilder: (context, size, child) =>
+                          Visibility.maintain(
+                        visible: false,
+                        child: child,
+                      ),
+                      child: _croppedImage[i] != null
+                          ? RawImage(image: _croppedImage[i])
+                          : Image(image: _imageProviders[i]),
+                    ),
+                  ),
                 );
               },
-              child: const Text('Crop (Hero)'),
             ),
-            TextButton(
-              onPressed: () async {
-                await showCupertinoImageCropper(
-                  context,
-                  imageProvider: _imageProvider,
-                  initialData: _data,
-                  postProcessFn: (result) async {
-                    final uiImage = await result.asUiImage;
-
-                    setState(() {
-                      _croppedImage = uiImage;
-                      _data = result.transformationsData;
-                    });
-
-                    return result;
-                  },
-                );
-              },
-              child: const Text('Crop (Without Hero)'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

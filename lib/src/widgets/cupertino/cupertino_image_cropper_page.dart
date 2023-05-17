@@ -1,6 +1,8 @@
 import 'package:croppy/src/src.dart';
 import 'package:croppy/src/widgets/cupertino/cupertino_image_cropper_app_bar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const kCupertinoImageCropperBackgroundColor = Color(0xFF0A0A0A);
 
@@ -81,64 +83,75 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
   Widget build(BuildContext context) {
     return HeroMode(
       enabled: _areHeroesEnabled,
-      child: ClipRect(
-        child: CupertinoPageScaffold(
-          backgroundColor: kCupertinoImageCropperBackgroundColor,
-          navigationBar: CupertinoImageCropperAppBar(
-            controller: widget.controller,
-          ),
-          child: SafeArea(
-            top: false,
-            bottom: true,
-            minimum: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Expanded(
-                  child: RepaintBoundary(
-                    child: CroppableImageViewport(
-                      controller: widget.controller,
-                      gesturePadding: widget.gesturePadding,
-                      heroTag: widget.heroTag,
-                      heroChild: ListenableBuilder(
-                        listenable: widget.controller,
-                        builder: (context, _) => CroppedHeroImageWidget(
-                          controller: widget.controller,
-                          child: Image(image: widget.controller.imageProvider),
-                        ),
-                      ),
-                      child: ListenableBuilder(
-                        listenable: widget.controller,
-                        builder: (context, _) => CroppableImageWidget(
-                          controller: widget.controller,
-                          overlayOpacity: _overlayOpacityAnimation.value,
-                          image: Image(image: widget.controller.imageProvider),
-                          cropHandles: CupertinoImageCropHandles(
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          systemNavigationBarColor: kCupertinoImageCropperBackgroundColor,
+          statusBarBrightness: Brightness.dark,
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
+        child: ClipRect(
+          child: CupertinoPageScaffold(
+            backgroundColor: kCupertinoImageCropperBackgroundColor,
+            navigationBar: CupertinoImageCropperAppBar(
+              controller: widget.controller,
+            ),
+            child: SafeArea(
+              top: false,
+              bottom: true,
+              minimum: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: RepaintBoundary(
+                      child: CroppableImageViewport(
+                        controller: widget.controller,
+                        gesturePadding: widget.gesturePadding,
+                        heroTag: widget.heroTag,
+                        heroChild: ListenableBuilder(
+                          listenable: widget.controller,
+                          builder: (context, _) => CroppedHeroImageWidget(
                             controller: widget.controller,
+                            child:
+                                Image(image: widget.controller.imageProvider),
+                          ),
+                        ),
+                        child: ListenableBuilder(
+                          listenable: widget.controller,
+                          builder: (context, _) => CroppableImageWidget(
+                            controller: widget.controller,
+                            overlayOpacity: _overlayOpacityAnimation.value,
+                            image:
+                                Image(image: widget.controller.imageProvider),
+                            cropHandles: CupertinoImageCropHandles(
+                              controller: widget.controller,
+                              gesturePadding: widget.gesturePadding,
+                            ),
                             gesturePadding: widget.gesturePadding,
                           ),
-                          gesturePadding: widget.gesturePadding,
                         ),
                       ),
                     ),
                   ),
-                ),
-                RepaintBoundary(
-                  child: Opacity(
-                    opacity: _overlayOpacityAnimation.value,
-                    child: Column(
-                      children: [
-                        CupertinoImageTransformationToolbar(
-                          controller: widget.controller,
-                        ),
-                        CupertinoImageCropperBottomAppBar(
-                          controller: widget.controller,
-                          onSubmit: () => setHeroesEnabled(true),
-                        ),
-                      ],
+                  RepaintBoundary(
+                    child: Opacity(
+                      opacity: _overlayOpacityAnimation.value,
+                      child: Column(
+                        children: [
+                          CupertinoImageTransformationToolbar(
+                            controller: widget.controller,
+                          ),
+                          CupertinoImageCropperBottomAppBar(
+                            controller: widget.controller,
+                            onSubmit: () => setHeroesEnabled(true),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
