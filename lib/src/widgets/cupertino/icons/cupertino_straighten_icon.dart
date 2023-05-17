@@ -92,7 +92,6 @@ class _CupertinoStraightenIconPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(_CupertinoStraightenIconPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

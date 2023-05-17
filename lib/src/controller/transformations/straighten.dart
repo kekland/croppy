@@ -47,8 +47,8 @@ mixin StraightenTransformation on BaseCroppableImageController {
     onTransformationEnd();
   }
 
-  /// The cached rotation around Z axis of the image in radians.
-  double? _cachedRotationZ;
+  /// The rotation around Z axis of the image in radians.
+  final rotationZNotifier = ValueNotifier(0.0);
 
   /// Computes the current rotation around Z axis of the image in radians.
   double _computeRotationZ() {
@@ -59,15 +59,9 @@ mixin StraightenTransformation on BaseCroppableImageController {
     return angle;
   }
 
-  /// Returns the current rotation around Z axis of the image in radians.
-  double get rotationZ {
-    _cachedRotationZ ??= _computeRotationZ();
-    return _cachedRotationZ!;
-  }
-
   @override
-  void clearCachedParams() {
-    super.clearCachedParams();
-    _cachedRotationZ = null;
+  void recomputeValueNotifiers() {
+    super.recomputeValueNotifiers();
+    rotationZNotifier.value = _computeRotationZ();
   }
 }

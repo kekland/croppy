@@ -165,7 +165,6 @@ class _CupertinoFlipHorizontalIconPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(_CupertinoFlipHorizontalIconPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

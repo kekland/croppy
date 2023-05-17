@@ -13,7 +13,10 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     required this.imageProvider,
     required CroppableImageData data,
     this.postProcessFn,
-  }) : _data = data.copyWith();
+  })  : _data = data.copyWith(),
+        _resetData = CroppableImageData.initial(imageSize: data.imageSize) {
+    recomputeValueNotifiers();
+  }
 
   /// The image provider that represents the image to be cropped.
   final ImageProvider imageProvider;
@@ -33,9 +36,12 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   set data(CroppableImageData newData) {
     if (_data == newData) return;
     _data = newData;
-    clearCachedParams();
+    recomputeValueNotifiers();
     notifyListeners();
   }
+
+  /// The initial crop data that is used when the controller is reset.
+  final CroppableImageData _resetData;
 
   /// The scale of the viewport.
   double get viewportScale;
@@ -107,17 +113,19 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
 
   /// Whether the controller can be reset to its initial state, i.e. whether
   /// the image has been transformed.
-  bool get canReset =>
-      data != CroppableImageData.initial(imageSize: data.imageSize);
+  final canResetNotifier = ValueNotifier(false);
 
   /// Resets the controller to its initial state.
   void reset() {
-    data = CroppableImageData.initial(imageSize: data.imageSize);
+    data = _resetData;
     notifyListeners();
   }
 
-  /// Clears the cached parameters.
-  void clearCachedParams() {}
+  /// Recomputes the value notifiers. This is called when the [data] changes.
+  @mustCallSuper
+  void recomputeValueNotifiers() {
+    canResetNotifier.value = data != _resetData;
+  }
 
   /// Crops the image and returns the cropped image as a [Uint8List].
   @mustCallSuper

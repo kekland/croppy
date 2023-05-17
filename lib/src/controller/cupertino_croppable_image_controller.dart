@@ -246,10 +246,6 @@ class CupertinoCroppableImageController extends CroppableImageController
   }
 
   @override
-  bool get canReset =>
-      data != CroppableImageData.initial(imageSize: data.imageSize);
-
-  @override
   void reset() {
     final oldData = data.copyWith();
     super.reset();

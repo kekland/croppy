@@ -16,27 +16,31 @@ class CupertinoImageTransformationToolbar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CupertinoKnob(
-          key: Key('rotation-knob'),
-          value: controller.rotationZ * 180 / pi,
-          extent: 45,
-          onChanged: (v) {
-            controller.onStraighten(angleRad: v);
-          },
-          inactiveChild: const CupertinoStraightenIcon(
-            color: CupertinoColors.white,
+        ValueListenableBuilder(
+          valueListenable: controller.rotationZNotifier,
+          builder: (context, rotationZ, _) => CupertinoKnob(
+            value: rotationZ * 180 / pi,
+            extent: 45,
+            onChanged: (v) {
+              controller.onStraighten(angleRad: v);
+            },
+            inactiveChild: const CupertinoStraightenIcon(
+              color: CupertinoColors.white,
+            ),
           ),
         ),
         const SizedBox(height: 8.0),
-        CupertinoRotationSlider(
-          key: Key('rotation-slider'),
-          value: controller.rotationZ,
-          extent: pi / 4,
-          onStart: controller.onStraightenStart,
-          onEnd: controller.onStraightenEnd,
-          onChanged: (v) {
-            controller.onStraighten(angleRad: v);
-          },
+        ValueListenableBuilder(
+          valueListenable: controller.rotationZNotifier,
+          builder: (context, rotationZ, _) => CupertinoRotationSlider(
+            value: rotationZ,
+            extent: pi / 4,
+            onStart: controller.onStraightenStart,
+            onEnd: controller.onStraightenEnd,
+            onChanged: (v) {
+              controller.onStraighten(angleRad: v);
+            },
+          ),
         ),
       ],
     );

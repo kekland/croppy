@@ -125,19 +125,16 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
                 RepaintBoundary(
                   child: Opacity(
                     opacity: _overlayOpacityAnimation.value,
-                    child: ListenableBuilder(
-                      listenable: widget.controller,
-                      builder: (context, _) => Column(
-                        children: [
-                          CupertinoImageTransformationToolbar(
-                            controller: widget.controller,
-                          ),
-                          CupertinoImageCropperBottomAppBar(
-                            controller: widget.controller,
-                            onSubmit: () => setHeroesEnabled(true),
-                          ),
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                        CupertinoImageTransformationToolbar(
+                          controller: widget.controller,
+                        ),
+                        CupertinoImageCropperBottomAppBar(
+                          controller: widget.controller,
+                          onSubmit: () => setHeroesEnabled(true),
+                        ),
+                      ],
                     ),
                   ),
                 ),
