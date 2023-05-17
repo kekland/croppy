@@ -51,6 +51,22 @@ final result = await showCupertinoImageCropper(
 );
 ```
 
+`showCupertinoImageCropper` accepts the following arguments:
+
+- `imageProvider` - an image provider that will be used to load the image. You can use any image provider, such as `NetworkImage`, `FileImage`, `MemoryImage`, etc.
+
+- `CroppableImageData? initialData` - an optional argument that can be used to provide initial data for the crop editor. If not provided, the image will be loaded from the `imageProvider` and the crop editor will be initialized with the image's size.
+
+- `CroppableImagePostProcessFn? postProcessFn` - an optional argument that can be used to provide a function that will be called after the user finishes cropping the image, but before the cropper is closed. This function can be used to perform any additional processing on the image, such as compressing it, etc. The function accepts `CropImageResult` as an argument (see below for more information).
+
+- `CropShapeFn? cropPathFn` - an optional argument that can be used to provide a function that will be used as a custom crop path. The function accepts `Size` as an argument and should return a `CropShape` that will be used as a crop shape. By default, `aabbCropShapeFn` is used, which will crop the image with a rectangle. For ellipses or circles - there's `ellipseCropShapeFn`. See the `CropShape` method for more information.
+
+- `List<CropAspectRatio?>? allowedAspectRatios` - an optional argument that can be used to provide a list of allowed aspect ratios. If not provided, the user will be able to crop the image with any aspect ratio. A `null` value in the list means that any aspect ratio is allowed. See the `CropAspectRatio` class for more information.
+
+- `List<Transformation>? enabledTransformations` - an optional argument that can be used to provide a list of transformations that will be enabled in the cropper. If not provided, all transformations will be enabled. See the `Transformation` class for more information.
+
+- `Object? heroTag` - an optional argument that can be used to provide a hero tag for the cropper. If provided, the cropper will be opened with a hero animation. See the documentation for information about the constraints of using hero animations with `croppy`.
+
 The return value of `showCupertinoImageCropper` is `CropImageResult`, which contains the image data encoded with the `image` package. To convert it to `dart:ui`'s `Image`, you can use `await result.asUiImage`. Check out the `image` package to convert the image to any of the supported formats (png, jpg, etc).
 
 For a complete runnable example, see `./example`.
