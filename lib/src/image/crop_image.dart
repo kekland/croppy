@@ -191,14 +191,4 @@ Future<CropImageResult> cropImageCanvas(
     image: imgImage,
     transformationsData: data,
   );
-
-  // Canvas(pictureRecorder).drawImageRect(
-  //   image,
-  //   cropSize,
-  //   Offset.zero & cropSize.size,
-  //   Paint()..filterQuality = quality,
-  // );
-  // return await pictureRecorder
-  //     .endRecording()
-  //     .toImage(cropSize.width.round(), cropSize.height.round());
 }
