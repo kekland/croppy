@@ -19,15 +19,15 @@ Check out the example at https://kekland.github.io/croppy (you can scroll horizo
 - iOS Photos app-like image cropper
 - Supports any linear transformations on the image: scaling, rotating, skewing, flipping, etc
 - Completely customizable (will create documentation with later releases)
+- Fixed aspect ratios
+- Kickass animations
 
 In progress:
 
 - Material image cropper (something similar to Google Photos)
 - Image editing module (?) (brightness, contrast, etc)
-- Fixed aspect ratios
 - Custom cropping shapes
 - Localization
-- Kickass animations
 
 ## Getting started
 
