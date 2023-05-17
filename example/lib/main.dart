@@ -58,9 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 visible: false,
                 child: child,
               ),
-              child: _croppedImage != null
-                  ? RawImage(image: _croppedImage)
-                  : Image(image: _imageProvider),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height - 70,
+                ),
+                child: _croppedImage != null
+                    ? RawImage(image: _croppedImage)
+                    : Image(image: _imageProvider),
+              ),
             ),
             TextButton(
               onPressed: () async {
