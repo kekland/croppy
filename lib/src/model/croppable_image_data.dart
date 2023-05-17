@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:croppy/src/src.dart';
@@ -82,7 +83,7 @@ class CroppableImageData extends Equatable {
 
   /// The total transformation applied to the image.
   Matrix4 get totalImageTransform =>
-      currentImageTransform * imageTransform * translatedBaseTransformations;
+      translatedBaseTransformations * currentImageTransform * imageTransform;
 
   /// The original quad of the image, before any transformations are applied.
   Quad2 get originalImageQuad => Quad2.fromSize(imageSize);
@@ -201,6 +202,16 @@ class BaseTransformations extends Equatable {
       rotationZ: rotationZ ?? this.rotationZ,
       scaleX: scaleX ?? this.scaleX,
       scaleY: scaleY ?? this.scaleY,
+    );
+  }
+
+  /// Returns a copy of this [BaseTransformations] with all of the rotation
+  /// values normalized to be between 0 and 2π.
+  BaseTransformations get normalized {
+    return copyWith(
+      rotationX: rotationX % (2 * pi),
+      rotationY: rotationY % (2 * pi),
+      rotationZ: rotationZ % (2 * pi),
     );
   }
 

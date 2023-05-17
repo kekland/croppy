@@ -362,6 +362,10 @@ class CupertinoCroppableImageController extends CroppableImageController
 
   @override
   void reset() {
+    data = data.copyWith(
+      baseTransformations: data.baseTransformations.normalized,
+    );
+
     animatedNormalizeAfterTransform(
       () => super.reset(),
     );
