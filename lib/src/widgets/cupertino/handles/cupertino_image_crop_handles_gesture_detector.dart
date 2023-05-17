@@ -42,11 +42,15 @@ class _CupertinoImageCropHandlesGestureDetectorState
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = widget.controller.isTransformationEnabled(
+      Transformation.panAndScale,
+    );
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onScaleStart: _onScaleStart,
-      onScaleUpdate: _onScaleUpdate,
-      onScaleEnd: _onScaleEnd,
+      onScaleStart: isEnabled ? _onScaleStart : null,
+      onScaleUpdate: isEnabled ? _onScaleUpdate : null,
+      onScaleEnd: isEnabled ? _onScaleEnd : null,
       // Don't use ResizableGestureDetector if we have a non-aabb crop shape
       child: widget.controller.data.cropShape.type == CropShapeType.aabb
           ? ResizableGestureDetector(

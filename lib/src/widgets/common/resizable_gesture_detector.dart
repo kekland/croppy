@@ -10,7 +10,7 @@ class ResizableGestureDetector extends StatelessWidget {
     required this.gesturePadding,
   });
 
-  final ResizeTransformation controller;
+  final CroppableImageController controller;
   final Widget child;
   final double gesturePadding;
 
@@ -121,7 +121,7 @@ class _ResizeGestureDetector extends StatefulWidget {
     required this.direction,
   });
 
-  final ResizeTransformation controller;
+  final CroppableImageController controller;
   final ResizeDirection direction;
 
   @override
@@ -151,13 +151,17 @@ class _ResizeGestureDetectorState extends State<_ResizeGestureDetector> {
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = widget.controller.isTransformationEnabled(
+      Transformation.resize,
+    );
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       dragStartBehavior: DragStartBehavior.down,
-      onPanStart: _onPanStart,
-      onPanUpdate: _onPanUpdate,
-      onPanEnd: (_) => _onPanEnd(),
-      onPanCancel: _onPanEnd,
+      onPanStart: isEnabled ? _onPanStart : null,
+      onPanUpdate: isEnabled ? _onPanUpdate : null,
+      onPanEnd: isEnabled ? (_) => _onPanEnd() : null,
+      onPanCancel: isEnabled ? _onPanEnd : null,
       child: const SizedBox.expand(),
     );
   }
