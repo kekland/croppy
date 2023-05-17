@@ -258,11 +258,22 @@ class CupertinoCroppableImageController extends CroppableImageController
   }
 
   @override
+  void onResizeStart() {
+    super.onResizeStart();
+
+    if (_viewportScaleAnimationController.isAnimating) {
+      _viewportScaleAnimationController.stop();
+    }
+  }
+
+  @override
   void onResize({
     required Offset offset,
     required ResizeDirection direction,
   }) {
     super.onResize(offset: offset, direction: direction);
+
+    _staticCropRectTween?.end = staticCropRect;
     setViewportScale(overrideCropRect: staticCropRect);
   }
 

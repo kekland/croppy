@@ -31,10 +31,7 @@ extension RectToAabb2 on Rect {
 
 extension RectTransform on Rect {
   Rect transform(Matrix4 t) {
-    final topLeft = MatrixUtils.transformPoint(t, Offset(left, top));
-    final bottomRight = MatrixUtils.transformPoint(t, Offset(right, bottom));
-
-    return Rect.fromPoints(topLeft, bottomRight);
+    return MatrixUtils.transformRect(t, this);
   }
 }
 

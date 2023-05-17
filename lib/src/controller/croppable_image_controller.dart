@@ -127,10 +127,10 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   Matrix4 getMatrixForBaseTransformations(
     BaseTransformations newBaseTransformations,
   ) {
-    final oldTransform = data.translatedBaseTransformations;
-    final newTransform = data.translateTransformation(
-      newBaseTransformations.matrix,
-    );
+    var oldTransform = data.totalImageTransform;
+    final newTransform = data
+        .copyWith(baseTransformations: newBaseTransformations)
+        .totalImageTransform;
 
     return newTransform * Matrix4.inverted(oldTransform);
   }
