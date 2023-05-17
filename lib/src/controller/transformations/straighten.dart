@@ -47,12 +47,27 @@ mixin StraightenTransformation on BaseCroppableImageController {
     onTransformationEnd();
   }
 
-  /// Returns the current rotation around Z axis of the image in radians.
-  double get rotationZ {
+  /// The cached rotation around Z axis of the image in radians.
+  double? _cachedRotationZ;
+
+  /// Computes the current rotation around Z axis of the image in radians.
+  double _computeRotationZ() {
     final Matrix4 transform = data.currentImageTransform * data.imageTransform;
     final rotation = transform.getRotation();
     final angle = atan2(rotation.right.y, rotation.right.x);
 
     return angle;
+  }
+
+  /// Returns the current rotation around Z axis of the image in radians.
+  double get rotationZ {
+    _cachedRotationZ ??= _computeRotationZ();
+    return _cachedRotationZ!;
+  }
+
+  @override
+  void clearCachedParams() {
+    super.clearCachedParams();
+    _cachedRotationZ = null;
   }
 }

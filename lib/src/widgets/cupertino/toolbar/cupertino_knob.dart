@@ -141,5 +141,6 @@ class _CupertinoKnobProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CupertinoKnobProgressPainter oldDelegate) => true;
+  bool shouldRepaint(_CupertinoKnobProgressPainter oldDelegate) =>
+      oldDelegate.value != value || oldDelegate.primaryColor != primaryColor;
 }

@@ -172,5 +172,8 @@ class _CupertinoSliderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CupertinoSliderPainter oldDelegate) => true;
+  bool shouldRepaint(_CupertinoSliderPainter oldDelegate) =>
+      primaryColor != oldDelegate.primaryColor ||
+      value != oldDelegate.value ||
+      isDragging != oldDelegate.isDragging;
 }

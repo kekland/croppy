@@ -13,7 +13,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     required this.imageProvider,
     required CroppableImageData data,
     this.postProcessFn,
-  }) : data = data.copyWith();
+  }) : _data = data.copyWith();
 
   /// The image provider that represents the image to be cropped.
   final ImageProvider imageProvider;
@@ -24,7 +24,18 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   final CroppableImagePostProcessFn? postProcessFn;
 
   /// The current crop data.
-  CroppableImageData data;
+  CroppableImageData _data;
+
+  /// The current crop data.
+  CroppableImageData get data => _data;
+
+  /// Sets the current crop data.
+  set data(CroppableImageData newData) {
+    if (_data == newData) return;
+    _data = newData;
+    clearCachedParams();
+    notifyListeners();
+  }
 
   /// The scale of the viewport.
   double get viewportScale;
@@ -104,6 +115,9 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     data = CroppableImageData.initial(imageSize: data.imageSize);
     notifyListeners();
   }
+
+  /// Clears the cached parameters.
+  void clearCachedParams() {}
 
   /// Crops the image and returns the cropped image as a [Uint8List].
   @mustCallSuper

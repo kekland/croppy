@@ -132,7 +132,7 @@ class _CupertinoImageCropHandlesPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CupertinoImageCropHandlesPainter oldDelegate) => true;
+  bool shouldRepaint(_CupertinoImageCropHandlesPainter oldDelegate) => false;
 }
 
 class _CupertinoImageCropperFineGuidesPainter extends CustomPainter {
@@ -220,5 +220,5 @@ class _CupertinoImageCropperFineGuidesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_CupertinoImageCropperFineGuidesPainter oldDelegate) =>
-      true;
+      false;
 }

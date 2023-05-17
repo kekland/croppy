@@ -17,6 +17,7 @@ class CupertinoImageTransformationToolbar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CupertinoKnob(
+          key: Key('rotation-knob'),
           value: controller.rotationZ * 180 / pi,
           extent: 45,
           onChanged: (v) {
@@ -28,6 +29,7 @@ class CupertinoImageTransformationToolbar extends StatelessWidget {
         ),
         const SizedBox(height: 8.0),
         CupertinoRotationSlider(
+          key: Key('rotation-slider'),
           value: controller.rotationZ,
           extent: pi / 4,
           onStart: controller.onStraightenStart,

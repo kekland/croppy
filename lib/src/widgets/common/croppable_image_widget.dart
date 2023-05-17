@@ -165,6 +165,7 @@ class CroppableImageRenderObject extends RenderBox
 
   final _backgroundOpacityLayer = LayerHandle<OpacityLayer>();
   final _backgroundTransformLayer = LayerHandle<TransformLayer>();
+  final _colorFilterLayer = LayerHandle<ColorFilterLayer>();
   void paintBackgroundImage(
     PaintingContext context,
     Offset offset,
@@ -196,31 +197,54 @@ class CroppableImageRenderObject extends RenderBox
     //   Offset.zero,
     // );
 
-    _backgroundOpacityLayer.layer = context.pushOpacity(
+    _colorFilterLayer.layer = context.pushColorFilter(
       offset,
-      _overlayAlpha,
+      ColorFilter.mode(
+        Colors.black.withOpacity(0.9),
+        BlendMode.darken,
+      ),
       (context, offset) {
-        _backgroundTransformLayer.layer = context.pushTransform(
-          false,
+        _backgroundOpacityLayer.layer = context.pushOpacity(
           offset,
-          transform,
+          _overlayAlpha,
           (context, offset) {
-            context.paintChild(image!, offset);
+            _backgroundTransformLayer.layer = context.pushTransform(
+              false,
+              offset,
+              transform,
+              (context, offset) {
+                context.paintChild(image!, offset);
+              },
+              oldLayer: _backgroundTransformLayer.layer,
+            );
           },
-          oldLayer: _backgroundTransformLayer.layer,
+          oldLayer: _backgroundOpacityLayer.layer,
         );
       },
-      oldLayer: _backgroundOpacityLayer.layer,
+      oldLayer: _colorFilterLayer.layer,
     );
   }
 
-  void paintBackgroundImageForeground(PaintingContext context, Rect rect) {
+  void paintBackgroundImageForeground(
+    PaintingContext context,
+    Offset offset,
+    Path path,
+    Rect rect,
+  ) {
     if (_overlayOpacity == 0.0) return;
 
-    context.canvas.drawRect(
-      rect,
-      Paint()..color = Colors.black.withOpacity(0.9),
-    );
+    // context.pushClipPath(
+    //   false,
+    //   offset,
+    //   rect,
+    //   path,
+    //   (context, offset) {
+    //     context.canvas.drawRect(
+    //       rect,
+    //       Paint()..color = Colors.black.withOpacity(0.9),
+    //     );
+    //   },
+    // );
   }
 
   final _transformLayer = LayerHandle<TransformLayer>();
@@ -298,7 +322,12 @@ class CroppableImageRenderObject extends RenderBox
     backgroundImageRect = backgroundImageRect.inflate(1.0);
 
     paintBackgroundImage(context, _offset, matrix);
-    paintBackgroundImageForeground(context, backgroundImageRect);
+    paintBackgroundImageForeground(
+      context,
+      Offset.zero,
+      backgroundImageQuad.path,
+      backgroundImageRect,
+    );
 
     paintCroppedImage(
       context,
