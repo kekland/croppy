@@ -1,6 +1,5 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CupertinoImageCropperAppBar extends StatelessWidget
@@ -24,20 +23,19 @@ class CupertinoImageCropperAppBar extends StatelessWidget
             children: [
               Row(
                 children: [
-                  // TODO: Cupertino icons are not available in Flutter yet
                   CupertinoButton(
                     onPressed: controller.onMirrorHorizontal,
                     minSize: 44.0,
-                    child: const Icon(
-                      Icons.flip_rounded,
+                    child: const CupertinoFlipHorizontalIcon(
                       color: CupertinoColors.systemGrey2,
+                      size: 24.0,
                     ),
                   ),
                   CupertinoButton(
                     onPressed: controller.onRotateCCW,
                     minSize: 44.0,
                     child: const Icon(
-                      Icons.rotate_90_degrees_ccw_rounded,
+                      CupertinoIcons.rotate_left_fill,
                       color: CupertinoColors.systemGrey2,
                     ),
                   ),

@@ -4,6 +4,8 @@ export 'common/cropped_hero_image_widget.dart';
 export 'common/resizable_gesture_detector.dart';
 export 'cupertino/handles/cupertino_image_crop_handles_gesture_detector.dart';
 export 'cupertino/handles/cupertino_image_crop_handles.dart';
+export 'cupertino/icons/cupertino_flip_horizontal_icon.dart';
+export 'cupertino/icons/cupertino_straighten_icon.dart';
 export 'cupertino/route/cupertino_image_cropper_route.dart';
 export 'cupertino/toolbar/cupertino_image_transformation_toolbar.dart';
 export 'cupertino/toolbar/cupertino_knob.dart';

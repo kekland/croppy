@@ -214,11 +214,11 @@ class CroppableImageRenderObject extends RenderBox
     );
   }
 
-  void paintBackgroundImageForeground(PaintingContext context, Path path) {
+  void paintBackgroundImageForeground(PaintingContext context, Rect rect) {
     if (_overlayOpacity == 0.0) return;
 
-    context.canvas.drawPath(
-      path,
+    context.canvas.drawRect(
+      rect,
       Paint()..color = Colors.black.withOpacity(0.9),
     );
   }
@@ -291,10 +291,14 @@ class CroppableImageRenderObject extends RenderBox
       Matrix4.copy(matrix)..leftTranslate(_offset.dx, _offset.dy),
     );
 
-    final backgroundImagePath = backgroundImageQuad.path;
+    final backgroundImageBoundingBox = backgroundImageQuad.boundingBox;
+    var backgroundImageRect = backgroundImageBoundingBox.rect;
+
+    // Inflate this rect by 1px to avoid aliasing issues
+    backgroundImageRect = backgroundImageRect.inflate(1.0);
 
     paintBackgroundImage(context, _offset, matrix);
-    paintBackgroundImageForeground(context, backgroundImagePath);
+    paintBackgroundImageForeground(context, backgroundImageRect);
 
     paintCroppedImage(
       context,

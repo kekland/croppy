@@ -22,7 +22,7 @@ class CupertinoImageTransformationToolbar extends StatelessWidget {
           onChanged: (v) {
             controller.onStraighten(angleRad: v);
           },
-          inactiveChild: const _CupertinoStraightenIconWidget(
+          inactiveChild: const CupertinoStraightenIcon(
             color: CupertinoColors.white,
           ),
         ),
@@ -39,53 +39,4 @@ class CupertinoImageTransformationToolbar extends StatelessWidget {
       ],
     );
   }
-}
-
-class _CupertinoStraightenIconWidget extends StatelessWidget {
-  const _CupertinoStraightenIconWidget({required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 24.0,
-      height: 24.0,
-      child: CustomPaint(
-        painter: _CupertinoStraightenIconPainter(color),
-      ),
-    );
-  }
-}
-
-class _CupertinoStraightenIconPainter extends CustomPainter {
-  _CupertinoStraightenIconPainter(this.color);
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final circlePath = Path()
-      ..addOval(
-        Rect.fromCircle(
-          center: size.center(Offset.zero),
-          radius: size.width / 2 - 3.0,
-        ),
-      );
-
-    final linePath = Path()
-      ..addRect(
-        Rect.fromCenter(
-          center: size.center(Offset.zero),
-          width: size.width,
-          height: 1.0,
-        ),
-      );
-
-    final path = Path.combine(PathOperation.xor, circlePath, linePath);
-    canvas.drawPath(path, Paint()..color = color);
-  }
-
-  @override
-  bool shouldRepaint(_CupertinoStraightenIconPainter oldDelegate) => true;
 }
