@@ -41,7 +41,7 @@ class CropShape extends Equatable {
             vg.globalPathBuilder.addOval(ellipse.boundingBox.rect).toPath();
 
   const CropShape.custom(vg.Path customPath)
-      : type = CropShapeType.ellipse,
+      : type = CropShapeType.custom,
         path = customPath,
         vgPath = customPath;
 
@@ -129,4 +129,23 @@ CropShape ellipseCropShapeFn(vg.PathBuilder builder, Size size) {
       radii: Offset(size.width / 2, size.height / 2).vector2,
     ),
   );
+}
+
+/// A function that provides a star crop path for a given size.
+CropShape starCropShapeFn(vg.PathBuilder builder, Size size) {
+  final path = builder
+      .moveTo(size.width / 2, 0)
+      .lineTo(size.width * 0.6, size.height * 0.4)
+      .lineTo(size.width, size.height * 0.4)
+      .lineTo(size.width * 0.7, size.height * 0.6)
+      .lineTo(size.width * 0.8, size.height)
+      .lineTo(size.width / 2, size.height * 0.7)
+      .lineTo(size.width * 0.2, size.height)
+      .lineTo(size.width * 0.3, size.height * 0.6)
+      .lineTo(0, size.height * 0.4)
+      .lineTo(size.width * 0.4, size.height * 0.4)
+      .close()
+      .toPath();
+
+  return CropShape.custom(path);
 }
