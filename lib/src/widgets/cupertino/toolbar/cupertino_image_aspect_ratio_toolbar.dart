@@ -219,6 +219,7 @@ class _AspectRatioChipWidget extends StatelessWidget {
           horizontal: 10.0,
           vertical: 2.0,
         ),
+        alignment: Alignment.center,
         child: Text(
           aspectRatio,
           style: TextStyle(

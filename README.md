@@ -9,9 +9,10 @@ Big difference of this package from other popular ones (such as `image_cropper`)
 Check out the example at https://kekland.github.io/croppy (you can scroll horizontally there).
 
 <p float="left">
-  <img src="https://github.com/kekland/croppy/raw/master/doc/assets/video.gif" width="200" />
-  <img src="https://github.com/kekland/croppy/raw/master/doc/assets/image1.png" width="200" />
-  <img src="https://github.com/kekland/croppy/raw/master/doc/assets/image3.png" width="200" />
+  <img src="https://github.com/kekland/croppy/raw/master/doc/assets/video.gif" width="160" />
+  <img src="https://github.com/kekland/croppy/raw/master/doc/assets/image1.png" width="160" />
+  <img src="https://github.com/kekland/croppy/raw/master/doc/assets/image2.png" width="160" />
+  <img src="https://github.com/kekland/croppy/raw/master/doc/assets/image3.png" width="160" />
 </p>
 
 ## Features

@@ -1,3 +1,12 @@
+# 0.1.0
+
+* Added custom shapes
+* Added allowed aspect ratios
+* Added supported transformations list
+* Minor design tweaks
+* Better image cropping algorithm (now uses Flutter's Canvas instead of a barebones bilinear interpolation)
+* Bugfixes
+
 # 0.0.4
 
 * Updated the example app
