@@ -60,6 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
     for (var i = 0; i < 80; i++) {
       final image = NetworkImage(
         'https://test-photos-qklwjen.s3.eu-west-3.amazonaws.com/image${random.nextInt(80) + 1}.jpg',
+        headers: const {'accept': '*/*'},
       );
 
       _imageProviders.add(image);
@@ -88,14 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
             imageProvider: _imageProviders[page],
             heroTag: 'image-$page',
             initialData: _data[page],
-            cropPathFn: aabbCropShapeFn,
+            cropPathFn: starCropShapeFn,
             postProcessFn: (result) async {
-              final uiImage = await result.asUiImage;
-
               _croppedImage[page]?.dispose();
 
               setState(() {
-                _croppedImage[page] = uiImage;
+                _croppedImage[page] = result.uiImage;
                 _data[page] = result.transformationsData;
               });
 

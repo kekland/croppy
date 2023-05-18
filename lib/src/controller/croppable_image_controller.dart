@@ -166,7 +166,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   @mustCallSuper
   Future<CropImageResult> crop() async {
     final image = await obtainImage(imageProvider);
-    final result = await cropImageCanvas(image, data);
+    final result = await cropImage(image, data);
 
     if (postProcessFn != null) {
       return postProcessFn!(result);

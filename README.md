@@ -68,7 +68,7 @@ final result = await showCupertinoImageCropper(
 
 - `Object? heroTag` - an optional argument that can be used to provide a hero tag for the cropper. If provided, the cropper will be opened with a hero animation. See the documentation for information about the constraints of using hero animations with `croppy`.
 
-The return value of `showCupertinoImageCropper` is `CropImageResult`, which contains the image data encoded with the `image` package. To convert it to `dart:ui`'s `Image`, you can use `await result.asUiImage`. Check out the `image` package to convert the image to any of the supported formats (png, jpg, etc).
+The return value of `showCupertinoImageCropper` is `CropImageResult`, which contains the `dart:ui.Image` of the cropped image and the `CroppableImageData` that was used to crop the image. The `CroppableImageData` can be used to crop the image again with the same transformations.
 
 For a complete runnable example, see `./example`.
 
