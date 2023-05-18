@@ -179,7 +179,7 @@ class CroppedHeroImageRenderObject extends RenderBox
       _imageData.cropShape.getTransformedPath(
         -cropRect.topLeft,
         viewportScale,
-      ),
+      ).toUiPath(),
       matrix,
     );
   }

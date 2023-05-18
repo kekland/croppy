@@ -98,7 +98,7 @@ mixin ResizeTransformation on BaseCroppableImageController {
       currentImageTransform: Matrix4.identity(),
     );
 
-    notifyListeners();
+    onTransformation((offset, direction));
   }
 
   /// Called when the user ends resizing the crop rect.

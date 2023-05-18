@@ -38,23 +38,34 @@ class Quad2 {
   /// Returns a list of the vertices of this [Quad2].
   List<Vector2> get vertices => [point0, point1, point2, point3];
 
-  /// Whether this [Quad2] contains the given [point].
-  bool containsPoint(Vector2 point) {
-    final tri0 = Triangle.points(
+  Triangle? _cachedTri1;
+  Triangle get tri1 {
+    if (_cachedTri1 != null) return _cachedTri1!;
+
+    return _cachedTri1 = Triangle.points(
       point0.vector3,
       point1.vector3,
       point2.vector3,
     );
+  }
 
-    final tri1 = Triangle.points(
+  Triangle? _cachedTri2;
+  Triangle get tri2 {
+    if (_cachedTri2 != null) return _cachedTri2!;
+
+    return _cachedTri2 = Triangle.points(
       point0.vector3,
       point2.vector3,
       point3.vector3,
     );
+  }
 
-    return [tri0, tri1].any(
-      (triangle) => triangle.containsPoint(point.vector3),
-    );
+  /// Whether this [Quad2] contains the given [point].
+  bool containsPoint(Vector2 point) {
+    if (tri1.containsPoint(point.vector3)) return true;
+    if (tri2.containsPoint(point.vector3)) return true;
+
+    return false;
   }
 
   /// Transforms this [Quad2] by the given transformation matrix.

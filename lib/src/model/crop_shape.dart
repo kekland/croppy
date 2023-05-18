@@ -2,6 +2,7 @@ import 'package:croppy/src/geometry/ellipse2.dart';
 import 'package:croppy/src/src.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:croppy/src/utils/path.dart' as vg;
 
 /// The shape type of a [CropShape].
 enum CropShapeType {
@@ -25,22 +26,29 @@ class CropShape extends Equatable {
   const CropShape({
     required this.type,
     required this.path,
+    required this.vgPath,
   });
 
-  const CropShape.aabb(Aabb2 aabb)
+  CropShape.aabb(Aabb2 aabb)
       : type = CropShapeType.aabb,
-        path = aabb;
+        path = aabb,
+        vgPath = vg.globalPathBuilder.addRect(aabb.rect).toPath();
 
-  const CropShape.ellipse(Ellipse2 ellipse)
+  CropShape.ellipse(Ellipse2 ellipse)
       : type = CropShapeType.ellipse,
-        path = ellipse;
+        path = ellipse,
+        vgPath =
+            vg.globalPathBuilder.addOval(ellipse.boundingBox.rect).toPath();
 
-  const CropShape.custom(Path customPath)
+  const CropShape.custom(vg.Path customPath)
       : type = CropShapeType.ellipse,
-        path = customPath;
+        path = customPath,
+        vgPath = customPath;
 
   final CropShapeType type;
   final dynamic path;
+
+  final vg.Path vgPath;
 
   Aabb2 get aabb {
     assert(type == CropShapeType.aabb);
@@ -52,9 +60,9 @@ class CropShape extends Equatable {
     return path as Ellipse2;
   }
 
-  Path get customPath {
+  vg.Path get customPath {
     assert(type == CropShapeType.custom);
-    return path as Path;
+    return path as vg.Path;
   }
 
   @override
@@ -66,29 +74,24 @@ class CropShape extends Equatable {
     return CropShape(
       type: t > 0.5 ? b.type : a.type,
       path: t > 0.5 ? b.path : a.path,
+      vgPath: t > 0.5 ? b.vgPath : a.vgPath,
     );
   }
 
-  Path get asPath {
-    if (type == CropShapeType.custom) {
-      return customPath;
-    } else if (type == CropShapeType.aabb) {
-      return Path()..addRect(aabb.rect);
-    } else {
-      return Path()..addOval(ellipse.boundingBox.rect);
-    }
-  }
-
-  Path getTransformedPath(Offset offset, double scale) {
+  vg.Path getTransformedPath(Offset offset, double scale) {
+    final translationTransform = Matrix4.identity()
+      ..translate(offset.dx, offset.dy);
     final scaleTransform = Matrix4.identity()..scale(scale);
-    return asPath.transform(scaleTransform.storage).shift(offset);
+
+    final transform = translationTransform * scaleTransform;
+    return vgPath.transformed(transform);
   }
 
-  Path getTransformedPathForSize(Size size) {
+  vg.Path getTransformedPathForSize(Size size) {
     late final Rect bounds;
 
     if (type == CropShapeType.custom) {
-      bounds = customPath.getBounds();
+      bounds = customPath.toUiPath().getBounds();
     } else if (type == CropShapeType.aabb) {
       bounds = aabb.rect;
     } else {
@@ -98,20 +101,28 @@ class CropShape extends Equatable {
     final scale = size.shortestSide / bounds.shortestSide;
     return getTransformedPath(Offset.zero, scale);
   }
+
+  Polygon2 get polygon {
+    if (type == CropShapeType.aabb) {
+      return aabb.polygon;
+    }
+
+    return vgPath.toApproximatePolygon();
+  }
 }
 
+/// A function that provides the crop path for a given size.
+typedef CropShapeFn = CropShape Function(vg.PathBuilder builder, Size size);
+
 /// A function that provides a rectangular crop path for a given size.
-CropShape aabbCropShapeFn(Size size) {
+CropShape aabbCropShapeFn(vg.PathBuilder builder, Size size) {
   return CropShape.aabb(
     Aabb2.minMax(Vector2.zero(), Vector2(size.width, size.height)),
   );
 }
 
 /// A function that provides an elliptical crop path for a given size.
-///
-/// Warning: this is currently not implemented fully. The normalization
-/// algorithm for elliptical crop shapes is not yet implemented.
-CropShape ellipseCropShapeFn(Size size) {
+CropShape ellipseCropShapeFn(vg.PathBuilder builder, Size size) {
   return CropShape.ellipse(
     Ellipse2(
       center: size.center(Offset.zero).vector2,

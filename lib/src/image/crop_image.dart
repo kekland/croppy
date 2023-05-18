@@ -162,7 +162,7 @@ Future<CropImageResult> cropImageCanvas(
   final canvas = Canvas(pictureRecorder);
   final cropRect = data.cropRect;
 
-  canvas.clipPath(data.cropShape.asPath);
+  canvas.clipPath(data.cropShape.vgPath.toUiPath());
 
   canvas.translate(-cropRect.left, -cropRect.top);
   canvas.transform(data.totalImageTransform.storage);

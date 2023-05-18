@@ -21,12 +21,12 @@ Check out the example at https://kekland.github.io/croppy (you can scroll horizo
 - Completely customizable (will create documentation with later releases)
 - Fixed aspect ratios
 - Kickass animations
+- Custom cropping shapes
 
 In progress:
 
 - Material image cropper (something similar to Google Photos)
 - Image editing module (?) (brightness, contrast, etc)
-- Custom cropping shapes
 - Localization
 
 ## Getting started

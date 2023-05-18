@@ -5,6 +5,8 @@ import 'package:croppy/src/src.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:croppy/src/utils/path.dart' as vg;
+
 @immutable
 class CroppableImageData extends Equatable {
   const CroppableImageData({
@@ -28,7 +30,10 @@ class CroppableImageData extends Equatable {
     required this.imageSize,
     required CropShapeFn cropPathFn,
   })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
-        cropShape = cropPathFn(imageSize),
+        cropShape = cropPathFn(
+          vg.globalPathBuilder,
+          imageSize,
+        ),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
         baseTransformations = const BaseTransformations.initial();
@@ -94,6 +99,17 @@ class CroppableImageData extends Equatable {
 
   /// An axis-aligned bounding box of the crop area.
   Aabb2 get cropAabb => cropRect.aabb2;
+
+  /// Whether the crop area is normalized.
+  bool get isNormalized {
+    for (final v in cropAabb.vertices) {
+      if (!transformedImageQuad.containsPoint(v)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   /// Copies this [CroppableImageData] with the given parameters.
   CroppableImageData copyWith({

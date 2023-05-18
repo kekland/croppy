@@ -27,7 +27,7 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
     transform.translate(-pivot.dx, -pivot.dy);
 
     data = data.copyWith(currentImageTransform: transform);
-    notifyListeners();
+    onTransformation(angleNew);
   }
 
   /// Called when the user starts rotating the crop rect around the Z axis.
@@ -78,6 +78,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
         rotationY: angleRad,
       ),
     );
+
+    onTransformation(angleRad);
   }
 
   /// Called when the user stops rotating the crop rect around the Y axis.
@@ -109,6 +111,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
         rotationX: angleRad,
       ),
     );
+
+    onTransformation(angleRad);
   }
 
   /// Called when the user stops rotating the crop rect around the X axis.

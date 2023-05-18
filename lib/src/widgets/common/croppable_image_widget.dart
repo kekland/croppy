@@ -301,10 +301,12 @@ class CroppableImageRenderObject extends RenderBox
       context,
       _offset,
       cropRect,
-      _imageData.cropShape.getTransformedPath(
-        additionalOffset,
-        viewportScale,
-      ),
+      _imageData.cropShape
+          .getTransformedPath(
+            additionalOffset,
+            viewportScale,
+          )
+          .toUiPath(),
       matrix,
     );
 

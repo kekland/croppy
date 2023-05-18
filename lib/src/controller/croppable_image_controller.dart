@@ -3,15 +3,14 @@ import 'dart:typed_data';
 import 'package:croppy/src/src.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:croppy/src/utils/path.dart' as vg;
+
 /// A function that is called in [crop] as a post-processing function. Use it
 /// to, for example, compress the image, or update the state in the preview
 /// page.
 typedef CroppableImagePostProcessFn = Future<CropImageResult> Function(
   CropImageResult result,
 );
-
-/// A function that provides the crop path for a given size.
-typedef CropShapeFn = CropShape Function(Size size);
 
 /// A base class for controllers that can be used with this package.
 abstract class BaseCroppableImageController extends ChangeNotifier {
@@ -50,7 +49,10 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     if (_data == newData) return;
 
     _data = newData.copyWith(
-      cropShape: cropShapeFn(newData.cropRect.size),
+      cropShape: cropShapeFn(
+        vg.globalPathBuilder,
+        newData.cropRect.size,
+      ),
     );
 
     recomputeValueNotifiers();
@@ -92,6 +94,15 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     notifyListeners();
   }
 
+  dynamic lastTransformationArgs;
+
+  /// Called during a transformation.
+  @mustCallSuper
+  void onTransformation(dynamic args) {
+    lastTransformationArgs = args;
+    notifyListeners();
+  }
+
   /// Called when a transformation ends.
   @mustCallSuper
   void onTransformationEnd() {
@@ -113,8 +124,8 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
 
   /// Normalizes the crop rect to fit inside the transformed image quad.
   void normalize() {
-    final normalizedAabb = FitAabbInQuadSolver.solve(
-      data.cropAabb,
+    final normalizedAabb = FitPolygonInQuadSolver.solve(
+      data.cropShape.polygon.shift(data.cropRect.topLeft.vector2),
       data.transformedImageQuad,
     );
 
@@ -186,7 +197,7 @@ abstract class CroppableImageController extends BaseCroppableImageController
   final List<Transformation> enabledTransformations;
 
   /// Whether the given transformation is enabled.
-  /// 
+  ///
   /// This is used in the UI to determine whether to show the transformation
   /// button, or whether to accept the gestures.
   bool isTransformationEnabled(Transformation t) {

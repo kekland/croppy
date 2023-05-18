@@ -357,10 +357,12 @@ class CupertinoCroppableImageController extends CroppableImageController
   }
 
   Rect normalizeWithAnimation() {
-    final normalizedAabb = FitAabbInQuadSolver.solve(
-      data.cropAabb,
-      data.transformedImageQuad,
-    );
+    final oldData = data.copyWith();
+    
+    normalize();
+    final normalizedAabb = data.cropAabb;
+
+    data = oldData;
 
     if (normalizedAabb == data.cropAabb) {
       return normalizedAabb.rect;

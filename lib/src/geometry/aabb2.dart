@@ -18,6 +18,8 @@ extension Aabb2Utils on Aabb2 {
         max.x,
         max.y,
       );
+
+  Polygon2 get polygon => Polygon2(vertices);
 }
 
 /// Some utility methods for working with [Rect] and [Aabb2].

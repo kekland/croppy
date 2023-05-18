@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
             imageProvider: _imageProviders[page],
             heroTag: 'image-$page',
             initialData: _data[page],
-            cropPathFn: aabbCropShapeFn,
+            cropPathFn: ellipseCropShapeFn,
             postProcessFn: (result) async {
               final uiImage = await result.asUiImage;
 
@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           );
         },
-        child: const Icon(Icons.crop),
+        child: const Icon(Icons.crop_rounded),
       ),
       body: Stack(
         children: [

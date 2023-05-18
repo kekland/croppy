@@ -163,8 +163,8 @@ class _CupertinoImageCustomCropHandlesPainter extends CustomPainter {
       ..strokeWidth = 1;
 
     // Draw the path
-    canvas.drawPath(cropPath, pathPaint);
-    canvas.clipPath(cropPath);
+    canvas.drawPath(cropPath.toUiPath(), pathPaint);
+    canvas.clipPath(cropPath.toUiPath());
   }
 
   @override
@@ -305,7 +305,7 @@ class _CupertinoImageCropHandlesClipper extends CustomClipper<Path> {
   final CropShape cropShape;
 
   @override
-  Path getClip(Size size) => cropShape.getTransformedPathForSize(size);
+  Path getClip(Size size) => cropShape.getTransformedPathForSize(size).toUiPath();
 
   @override
   bool shouldReclip(_CupertinoImageCropHandlesClipper oldClipper) =>

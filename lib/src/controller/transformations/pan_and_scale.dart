@@ -33,7 +33,7 @@ mixin PanAndScaleTransformation on BaseCroppableImageController {
     );
 
     data = initialData.copyWith(cropRect: newRect);
-    notifyListeners();
+    onTransformation((scale, offset));
   }
 
   /// Called when the user ends panning and scaling.

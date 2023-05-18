@@ -1,13 +1,30 @@
 import 'package:croppy/src/src.dart';
 import 'package:cassowary/cassowary.dart';
 
-class FitAabbInQuadSolver {
-  /// Solves the problem of fitting an [Aabb2] into a [Quad2].
-  static Aabb2 solve(Aabb2 aabb, Quad2 quad) {
+class FitPolygonInQuadSolver {
+  // TODO (Erzhan): This currently takes quite a long time to solve. Maybe we
+  // should try to find a faster way to solve this.
+
+  // FitPolygonInQuadSolver() : _solver = Solver();
+
+  // final xNew = Param();
+  // final yNew = Param();
+  // final alpha = Param();
+  // final yDist = Param();
+  // final xDist = Param();
+
+  // final Solver _solver;
+
+  // void init() {
+  //   _solver.addConstraint(xNew <= )
+  // }
+
+  /// Solves the problem of fitting an [Polygon2] into a [Quad2].
+  static Aabb2 solve(Polygon2 polygon, Quad2 quad) {
     // Check if we even need to solve anything first.
     final verticesNotInQuad = <Vector2>[];
 
-    for (final v in aabb.vertices) {
+    for (final v in polygon.vertices) {
       if (!quad.containsPoint(v)) {
         verticesNotInQuad.add(v);
       }
@@ -15,7 +32,7 @@ class FitAabbInQuadSolver {
 
     // If all vertices are in the quad, we don't need to do anything.
     if (verticesNotInQuad.isEmpty) {
-      return aabb;
+      return polygon.boundingBox;
     }
 
     late final Quad2 normalizedQuad;
@@ -33,7 +50,9 @@ class FitAabbInQuadSolver {
       normalizedQuad = quad;
     }
 
+    final aabb = polygon.boundingBox;
     final aabbSize = aabb.max - aabb.min;
+
     final solver = Solver();
 
     final quadMin = normalizedQuad.boundingBox.min;
@@ -66,23 +85,25 @@ class FitAabbInQuadSolver {
       alphaUpperConstraint,
     ]);
 
+    final dv = polygon.vertices.map((v) => v - aabb.min).toList();
+
     // Quadrilateral fitting constraints
-    for (final dx in [0.0, aabbSize.x]) {
-      for (final dy in [0.0, aabbSize.y]) {
-        for (final i in [0, 1, 2, 3]) {
-          final j = (i + 1) % 4;
+    for (final d in dv) {
+      final dx = d.x;
+      final dy = d.y;
 
-          final quadI = normalizedQuad.vertices[i];
-          final quadJ = normalizedQuad.vertices[j];
+      for (final i in [0, 1, 2, 3]) {
+        final j = (i + 1) % 4;
 
-          final constraint =
-              cm(quadJ.x - quadI.x) * (yNew + alpha * cm(dy) - cm(quadI.y)) -
-                      cm(quadJ.y - quadI.y) *
-                          (xNew + alpha * cm(dx) - cm(quadI.x)) <=
-                  cm(0);
+        final quadI = normalizedQuad.vertices[i];
+        final quadJ = normalizedQuad.vertices[j];
 
-          solver.addConstraint(constraint);
-        }
+        final constraint = cm(quadJ.x - quadI.x) *
+                    (yNew + alpha * cm(dy) - cm(quadI.y)) -
+                cm(quadJ.y - quadI.y) * (xNew + alpha * cm(dx) - cm(quadI.x)) <=
+            cm(0);
+
+        solver.addConstraint(constraint).message;
       }
     }
 
