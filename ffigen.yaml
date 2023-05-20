@@ -18,9 +18,6 @@ comments:
   style: any
   length: full
 
-compiler-opts:
-  - '-Os'
-
 functions:
   leaf:
     include:

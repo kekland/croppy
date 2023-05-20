@@ -1,9 +1,0 @@
-{
-  "files.associations": {
-    "croppy.h": "c",
-    "chrono": "cpp",
-    "limits": "cpp",
-    "algorithm": "cpp",
-    "fit_polygon_in_quad.h": "c"
-  }
-}

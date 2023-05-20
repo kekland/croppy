@@ -3,13 +3,13 @@
 # the plugin to fail to compile for some customers of the plugin.
 cmake_minimum_required(VERSION 3.10)
 
-project(croppy_library VERSION 0.0.1 LANGUAGES C)
+project(croppy VERSION 0.0.1 LANGUAGES C CXX)
 
 include_directories(kiwi)
 
 add_library(croppy SHARED
-  "croppy.c"
   "fit_polygon_in_quad.cpp"
+  "croppy.c"
 )
 
 set_target_properties(croppy PROPERTIES
