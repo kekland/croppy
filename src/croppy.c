@@ -1,8 +1,8 @@
-﻿#include "croppy_ffi.h"
-#include "fit_polygon_in_quad_c_connector.h"
+﻿#include "croppy.h"
+#include "fit_polygon_in_quad.h"
 
 FFI_PLUGIN_EXPORT Aabb2 fit_polygon_in_quad(double *points, int length) {
-	return c_fit_polygon_in_quad_impl(points, length);
+	return fit_polygon_in_quad_impl(points, length);
 }
 
 // Aabb2 fit_polygon_in_quad(float* points, int length)

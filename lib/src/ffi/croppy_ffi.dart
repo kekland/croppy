@@ -30,7 +30,7 @@ Future<Aabb2> fitPolygonInQuadAsync(List<double> points) async {
   return completer.future;
 }
 
-const String _libName = 'croppy_ffi';
+const String _libName = 'croppy';
 
 /// The dynamic library in which the symbols for [CroppyFfiBindings] can be found.
 final DynamicLibrary _dylib = () {

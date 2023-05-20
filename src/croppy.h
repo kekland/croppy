@@ -1,5 +1,5 @@
-#ifndef CROPPY_FFI_H
-#define CROPPY_FFI_H
+#ifndef CROPPY_H
+#define CROPPY_H
 
 #include <stdint.h>
 #include <stdio.h>

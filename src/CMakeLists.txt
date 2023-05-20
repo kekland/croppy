@@ -3,19 +3,18 @@
 # the plugin to fail to compile for some customers of the plugin.
 cmake_minimum_required(VERSION 3.10)
 
-project(croppy_ffi_library VERSION 0.0.1 LANGUAGES C)
+project(croppy_library VERSION 0.0.1 LANGUAGES C)
 
 include_directories(kiwi)
 
-add_library(croppy_ffi SHARED
-  "croppy_ffi.c"
-  "fit_polygon_in_quad_c_connector.cpp"
+add_library(croppy SHARED
+  "croppy.c"
   "fit_polygon_in_quad.cpp"
 )
 
-set_target_properties(croppy_ffi PROPERTIES
-  PUBLIC_HEADER croppy_ffi.h
-  OUTPUT_NAME "croppy_ffi"
+set_target_properties(croppy PROPERTIES
+  PUBLIC_HEADER croppy.h
+  OUTPUT_NAME "croppy"
 )
 
-target_compile_definitions(croppy_ffi PUBLIC DART_SHARED_LIB)
+target_compile_definitions(croppy PUBLIC DART_SHARED_LIB)
