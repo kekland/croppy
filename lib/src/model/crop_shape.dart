@@ -66,7 +66,15 @@ class CropShape extends Equatable {
   }
 
   @override
-  List<Object?> get props => [type, path];
+  List<Object?> get props {
+    if (type == CropShapeType.aabb) {
+      return [type, aabb.min, aabb.max];
+    } else if (type == CropShapeType.ellipse) {
+      return [type, ellipse.center, ellipse.radii];
+    } else {
+      return [type, customPath];
+    }
+  }
 
   static CropShape? lerp(CropShape? a, CropShape? b, double t) {
     if (a == null || b == null) return null;

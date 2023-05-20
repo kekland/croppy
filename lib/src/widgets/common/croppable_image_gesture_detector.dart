@@ -1,8 +1,8 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 
-class CupertinoImageCropHandlesGestureDetector extends StatefulWidget {
-  const CupertinoImageCropHandlesGestureDetector({
+class CroppableImageGestureDetector extends StatefulWidget {
+  const CroppableImageGestureDetector({
     super.key,
     required this.gesturePadding,
     required this.controller,
@@ -14,24 +14,19 @@ class CupertinoImageCropHandlesGestureDetector extends StatefulWidget {
   final Widget child;
 
   @override
-  State<CupertinoImageCropHandlesGestureDetector> createState() =>
-      _CupertinoImageCropHandlesGestureDetectorState();
+  State<CroppableImageGestureDetector> createState() =>
+      _CroppableImageGestureDetectorState();
 }
 
-class _CupertinoImageCropHandlesGestureDetectorState
-    extends State<CupertinoImageCropHandlesGestureDetector> {
-  late ScaleStartDetails _scaleStartDetails;
-
+class _CroppableImageGestureDetectorState
+    extends State<CroppableImageGestureDetector> {
   void _onScaleStart(ScaleStartDetails details) {
-    _scaleStartDetails = details;
     widget.controller.onPanAndScaleStart();
   }
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
-    final delta = details.focalPoint - _scaleStartDetails.focalPoint;
-
     widget.controller.onPanAndScale(
-      offset: -delta,
+      offsetDelta: -details.focalPointDelta,
       scale: 1 / details.scale,
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:croppy/src/src.dart';
+import 'package:flutter/widgets.dart';
 
 /// Provides methods for rotating the image.
 mixin RotateTransformation on BaseCroppableImageController {
@@ -20,5 +21,14 @@ mixin RotateTransformation on BaseCroppableImageController {
       cropRect: cropRect,
       baseTransformations: newBaseTransformations,
     ));
+  }
+
+  /// The base rotation around Z axis of the image in radians.
+  final baseRotationZNotifier = ValueNotifier(0.0);
+
+  @override
+  void recomputeValueNotifiers() {
+    super.recomputeValueNotifiers();
+    baseRotationZNotifier.value = data.baseTransformations.rotationZ;
   }
 }

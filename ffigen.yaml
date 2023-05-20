@@ -1,0 +1,27 @@
+# Run with `flutter pub run ffigen --config ffigen.yaml`.
+name: CroppyFfiBindings
+description: |
+  Bindings for `src/croppy_ffi.h`.
+
+  Regenerate bindings with `flutter pub run ffigen --config ffigen.yaml`.
+output: 'lib/src/ffi/croppy_ffi_bindings_generated.dart'
+headers:
+  entry-points:
+    - 'src/croppy_ffi.h'
+  include-directives:
+    - 'src/croppy_ffi.h'
+preamble: |
+  // ignore_for_file: always_specify_types
+  // ignore_for_file: camel_case_types
+  // ignore_for_file: non_constant_identifier_names
+comments:
+  style: any
+  length: full
+
+compiler-opts:
+  - '-Os'
+
+functions:
+  leaf:
+    include:
+      - 'fit_polygon_in_quad'

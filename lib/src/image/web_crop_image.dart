@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:croppy/src/model/_model.dart';
 import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 

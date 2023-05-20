@@ -19,21 +19,19 @@ mixin PanAndScaleTransformation on BaseCroppableImageController {
   /// [BaseCroppableImageController.data] and notify listeners.
   void onPanAndScale({
     required double scale,
-    required Offset offset,
+    required Offset offsetDelta,
   }) {
-    final scaledOffset = offset / viewportScale;
+    final scaledOffsetDelta = offsetDelta / viewportScale;
 
-    final initialData = transformationInitialData!;
-    final rect = initialData.cropRect;
-
+    final rect = data.cropRect;
     final newRect = Rect.fromCenter(
-      center: rect.center + scaledOffset,
+      center: rect.center + scaledOffsetDelta,
       width: rect.width * scale,
       height: rect.height * scale,
     );
 
-    data = initialData.copyWith(cropRect: newRect);
-    onTransformation((scale, offset));
+    data = data.copyWith(cropRect: newRect);
+    onTransformation((scale, offsetDelta));
   }
 
   /// Called when the user ends panning and scaling.

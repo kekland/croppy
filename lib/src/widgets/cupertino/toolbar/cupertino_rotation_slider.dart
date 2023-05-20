@@ -144,10 +144,10 @@ class _CupertinoSliderPainter extends CustomPainter {
     for (var i = -20; i <= 20; i++) {
       final isHighlighted = i % 10 == 0;
       final x = i * (size.width / 20) / 2;
-      var paint = isHighlighted ? highlightedDividerPaint : dividerPaint;
+      var _paint = isHighlighted ? highlightedDividerPaint : dividerPaint;
 
       if (i > 20) {
-        paint = outOfBoundsDividerPaint;
+        _paint = outOfBoundsDividerPaint;
       }
 
       final absoluteX = center.dx + x;
@@ -156,10 +156,10 @@ class _CupertinoSliderPainter extends CustomPainter {
       var opacity = 1.0 - (centerDiff.abs() / (size.width / 2)).clamp(0, 1);
       opacity = sqrt(opacity);
 
-      paint = Paint()
-        ..color = paint.color.withOpacity(opacity)
-        ..style = paint.style
-        ..strokeWidth = paint.strokeWidth;
+      final paint = Paint()
+        ..color = _paint.color.withOpacity(_paint.color.opacity * opacity)
+        ..style = _paint.style
+        ..strokeWidth = _paint.strokeWidth;
 
       canvas.drawLine(
         Offset(center.dx + x, 2),

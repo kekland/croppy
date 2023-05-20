@@ -157,4 +157,22 @@ mixin AspectRatioMixin on CroppableImageController {
 
   /// The aspect ratio notifier.
   final aspectRatioNotifier = ValueNotifier<CropAspectRatio?>(null);
+
+  /// Sets the aspect ratio to the first allowed aspect ratio if the current
+  /// aspect ratio is not allowed.
+  void maybeSetAspectRatioOnInit() {
+    // If the current aspect ratio is not allowed, set it to the first allowed
+    // aspect ratio.
+    if (!allowedAspectRatios.contains(currentAspectRatio)) {
+      aspectRatioNotifier.value = allowedAspectRatios.first;
+
+      final newCropRect = resizeCropRectWithAspectRatio(
+        data.cropRect,
+        allowedAspectRatios.first,
+      );
+
+      data = data.copyWith(cropRect: newCropRect);
+      normalize();
+    }
+  }
 }

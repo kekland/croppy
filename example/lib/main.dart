@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
       scrollBehavior: ExampleScrollBehavior(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.orange,
-          primary: Colors.orange,
+          seedColor: Colors.blueAccent,
+          primary: Colors.blueAccent,
           brightness: Brightness.light,
         ),
         useMaterial3: true,
@@ -80,29 +80,61 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final page = _pageController.page?.round() ?? 0;
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              final page = _pageController.page?.round() ?? 0;
 
-          showCupertinoImageCropper(
-            context,
-            imageProvider: _imageProviders[page],
-            heroTag: 'image-$page',
-            initialData: _data[page],
-            cropPathFn: starCropShapeFn,
-            postProcessFn: (result) async {
-              _croppedImage[page]?.dispose();
+              showCupertinoImageCropper(
+                context,
+                imageProvider: _imageProviders[page],
+                heroTag: 'image-$page',
+                initialData: _data[page],
+                cropPathFn: aabbCropShapeFn,
+                postProcessFn: (result) async {
+                  _croppedImage[page]?.dispose();
 
-              setState(() {
-                _croppedImage[page] = result.uiImage;
-                _data[page] = result.transformationsData;
-              });
+                  setState(() {
+                    _croppedImage[page] = result.uiImage;
+                    _data[page] = result.transformationsData;
+                  });
 
-              return result;
+                  return result;
+                },
+              );
             },
-          );
-        },
-        child: const Icon(Icons.crop_rounded),
+            heroTag: 'fab-cupertino',
+            child: const Icon(Icons.apple_rounded),
+          ),
+          const SizedBox(width: 16.0),
+          FloatingActionButton(
+            onPressed: () {
+              final page = _pageController.page?.round() ?? 0;
+
+              showMaterialImageCropper(
+                context,
+                imageProvider: _imageProviders[page],
+                heroTag: 'image-$page',
+                initialData: _data[page],
+                cropPathFn: starCropShapeFn,
+                postProcessFn: (result) async {
+                  _croppedImage[page]?.dispose();
+
+                  setState(() {
+                    _croppedImage[page] = result.uiImage;
+                    _data[page] = result.transformationsData;
+                  });
+
+                  return result;
+                },
+              );
+            },
+            heroTag: 'fab-material',
+            child: const Icon(Icons.android_rounded),
+          ),
+        ],
       ),
       body: Stack(
         children: [

@@ -20,10 +20,8 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     this.postProcessFn,
     this.cropShapeFn = aabbCropShapeFn,
   })  : _data = data.copyWith(),
-        _resetData = CroppableImageData.initialWithCropPathFn(
-          imageSize: data.imageSize,
-          cropPathFn: cropShapeFn,
-        ) {
+        _resetData = data.copyWith(),
+        _initialData = data.copyWith() {
     recomputeValueNotifiers();
   }
 
@@ -59,6 +57,9 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// The initial crop data that was passed to this controller.
+  final CroppableImageData _initialData;
+
   /// The initial crop data that is used when the controller is reset.
   final CroppableImageData _resetData;
 
@@ -72,6 +73,9 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
 
   /// Size of the available viewport.
   Size? get viewportSize => _viewportSize;
+
+  /// Whether the controller is currently transforming.
+  final isTransformingNotifier = ValueNotifier<bool>(false);
 
   /// Sets the size of the available viewport.
   @mustCallSuper
@@ -91,6 +95,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   @mustCallSuper
   void onTransformationStart() {
     transformationInitialData = data.copyWith();
+    isTransformingNotifier.value = true;
     notifyListeners();
   }
 
@@ -107,6 +112,8 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   @mustCallSuper
   void onTransformationEnd() {
     transformationInitialData = null;
+    isTransformingNotifier.value = false;
+
     data = data.copyWith(
       imageTransform: data.currentImageTransform * data.imageTransform,
       currentImageTransform: Matrix4.identity(),
@@ -150,6 +157,9 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   /// the image has been transformed.
   final canResetNotifier = ValueNotifier(false);
 
+  /// Whether the current data is different from the initial data.
+  final isChangedNotifier = ValueNotifier(false);
+
   /// Resets the controller to its initial state.
   void reset() {
     data = _resetData;
@@ -160,6 +170,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   @mustCallSuper
   void recomputeValueNotifiers() {
     canResetNotifier.value = data != _resetData;
+    isChangedNotifier.value = data != _initialData;
   }
 
   /// Crops the image and returns the cropped image as a [Uint8List].

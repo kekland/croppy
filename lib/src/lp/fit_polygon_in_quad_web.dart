@@ -2,24 +2,6 @@ import 'package:croppy/src/src.dart';
 import 'package:cassowary/cassowary.dart';
 
 class FitPolygonInQuadSolver {
-  // TODO (Erzhan): This currently takes quite a long time to solve. Maybe we
-  // should try to find a faster way to solve this.
-
-  // FitPolygonInQuadSolver() : _solver = Solver();
-
-  // final xNew = Param();
-  // final yNew = Param();
-  // final alpha = Param();
-  // final yDist = Param();
-  // final xDist = Param();
-
-  // final Solver _solver;
-
-  // void init() {
-  //   _solver.addConstraint(xNew <= )
-  // }
-
-  /// Solves the problem of fitting an [Polygon2] into a [Quad2].
   static Aabb2 solve(Polygon2 polygon, Quad2 quad) {
     // Check if we even need to solve anything first.
     final verticesNotInQuad = <Vector2>[];
@@ -50,6 +32,11 @@ class FitPolygonInQuadSolver {
       normalizedQuad = quad;
     }
 
+    final result = _dartCassowarySolver(polygon, normalizedQuad);
+    return result;
+  }
+
+  static Aabb2 _dartCassowarySolver(Polygon2 polygon, Quad2 normalizedQuad) {
     final aabb = polygon.boundingBox;
     final aabbSize = aabb.max - aabb.min;
 

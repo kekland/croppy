@@ -6,11 +6,9 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
   const CupertinoImageCropperBottomAppBar({
     super.key,
     required this.controller,
-    required this.onSubmit,
   });
 
   final CroppableImageController controller;
-  final VoidCallback onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +30,10 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
         const Spacer(),
         CupertinoButton(
           onPressed: () async {
-            onSubmit();
+            context
+                .findAncestorStateOfType<CroppableImagePageAnimatorState>()
+                ?.setHeroesEnabled(true);
+
             final result = await controller.crop();
 
             if (context.mounted) {

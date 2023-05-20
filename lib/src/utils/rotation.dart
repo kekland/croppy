@@ -1,12 +1,6 @@
 import 'dart:math';
 
-/// Clamps an angle to the range of -pi to pi.
+/// Clamps an angle to the range of 0 to 2pi
 double clampAngle(double angleRad) {
-  if (angleRad < -pi) {
-    return angleRad + 2 * pi;
-  } else if (angleRad > pi) {
-    return angleRad - 2 * pi;
-  } else {
-    return angleRad;
-  }
+  return angleRad % (2 * pi);
 }

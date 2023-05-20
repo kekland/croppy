@@ -95,7 +95,6 @@ mixin ResizeTransformation on BaseCroppableImageController {
 
     data = transformationInitialData!.copyWith(
       cropRect: newRect,
-      currentImageTransform: Matrix4.identity(),
     );
 
     onTransformation((offset, direction));

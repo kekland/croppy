@@ -159,8 +159,8 @@ class CroppableImageData extends Equatable {
         imageSize,
         cropRect,
         cropShape,
-        imageTransform,
-        currentImageTransform,
+        imageTransform.storage,
+        currentImageTransform.storage,
         baseTransformations,
       ];
 }

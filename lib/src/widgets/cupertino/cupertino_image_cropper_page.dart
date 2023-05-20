@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 const kCupertinoImageCropperBackgroundColor = Color(0xFF0A0A0A);
 
-class CupertinoImageCropperPage extends StatefulWidget {
+class CupertinoImageCropperPage extends StatelessWidget {
   const CupertinoImageCropperPage({
     super.key,
     required this.controller,
@@ -19,83 +19,23 @@ class CupertinoImageCropperPage extends StatefulWidget {
   final Object? heroTag;
 
   @override
-  State<CupertinoImageCropperPage> createState() =>
-      _CupertinoImageCropperPageState();
-}
-
-class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
-    with SingleTickerProviderStateMixin {
-  var _areHeroesEnabled = true;
-
-  late final AnimationController _overlayOpacityAnimationController;
-  late final Animation<double> _overlayOpacityAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _overlayOpacityAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
-    _overlayOpacityAnimation = CurvedAnimation(
-      parent: _overlayOpacityAnimationController,
-      curve: Curves.easeInOut,
-    );
-
-    _overlayOpacityAnimationController.addListener(() {
-      if (!mounted) return;
-      setState(() {});
-    });
-
-    if (widget.heroTag != null) {
-      Future.delayed(kCupertinoImageCropperPageTransitionDuration, () {
-        _overlayOpacityAnimationController.forward(from: 0.0);
-      });
-    } else {
-      _overlayOpacityAnimationController.forward(from: 0.0);
-    }
-
-    widget.controller.addListener(_onControllerChanged);
-  }
-
-  void _onControllerChanged() {
-    setHeroesEnabled(false);
-  }
-
-  void setHeroesEnabled(bool enabled) {
-    if (_areHeroesEnabled == enabled) return;
-
-    setState(() {
-      _areHeroesEnabled = enabled;
-    });
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_onControllerChanged);
-    _overlayOpacityAnimationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return HeroMode(
-      enabled: _areHeroesEnabled,
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-          systemNavigationBarColor: kCupertinoImageCropperBackgroundColor,
-          statusBarBrightness: Brightness.dark,
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          systemNavigationBarIconBrightness: Brightness.light,
-        ),
-        child: ClipRect(
-          child: CupertinoPageScaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        systemNavigationBarColor: kCupertinoImageCropperBackgroundColor,
+        statusBarBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+      child: CroppableImagePageAnimator(
+        controller: controller,
+        heroTag: heroTag,
+        builder: (context, overlayOpacityAnimation) {
+          return CupertinoPageScaffold(
             backgroundColor: kCupertinoImageCropperBackgroundColor,
             navigationBar: CupertinoImageCropperAppBar(
-              controller: widget.controller,
+              controller: controller,
             ),
             child: SafeArea(
               top: false,
@@ -106,58 +46,61 @@ class _CupertinoImageCropperPageState extends State<CupertinoImageCropperPage>
                   Expanded(
                     child: RepaintBoundary(
                       child: CroppableImageViewport(
-                        controller: widget.controller,
-                        gesturePadding: widget.gesturePadding,
-                        heroTag: widget.heroTag,
+                        controller: controller,
+                        gesturePadding: gesturePadding,
+                        heroTag: heroTag,
                         heroChild: ListenableBuilder(
-                          listenable: widget.controller,
+                          listenable: controller,
                           builder: (context, _) => CroppedHeroImageWidget(
-                            controller: widget.controller,
-                            child:
-                                Image(image: widget.controller.imageProvider),
+                            controller: controller,
+                            child: Image(image: controller.imageProvider),
                           ),
                         ),
-                        child: ListenableBuilder(
-                          listenable: widget.controller,
-                          builder: (context, _) => CroppableImageWidget(
-                            controller: widget.controller,
-                            overlayOpacity: _overlayOpacityAnimation.value,
-                            image:
-                                Image(image: widget.controller.imageProvider),
-                            cropHandles: CupertinoImageCropHandles(
-                              controller: widget.controller,
-                              gesturePadding: widget.gesturePadding,
+                        child: AnimatedBuilder(
+                          animation: overlayOpacityAnimation,
+                          builder: (context, _) => ListenableBuilder(
+                            listenable: controller,
+                            builder: (context, _) => CroppableImageWidget(
+                              controller: controller,
+                              overlayOpacity: overlayOpacityAnimation.value,
+                              image: Image(image: controller.imageProvider),
+                              cropHandles: CupertinoImageCropHandles(
+                                controller: controller,
+                                gesturePadding: gesturePadding,
+                              ),
+                              gesturePadding: gesturePadding,
                             ),
-                            gesturePadding: widget.gesturePadding,
                           ),
                         ),
                       ),
                     ),
                   ),
                   RepaintBoundary(
-                    child: Opacity(
-                      opacity: _overlayOpacityAnimation.value,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 96.0,
-                            child: CupertinoToolbar(
-                              controller: widget.controller,
+                    child: AnimatedBuilder(
+                      animation: overlayOpacityAnimation,
+                      builder: (context, _) => Opacity(
+                        opacity: overlayOpacityAnimation.value,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 96.0,
+                              child: CupertinoToolbar(
+                                controller: controller,
+                              ),
                             ),
-                          ),
-                          CupertinoImageCropperBottomAppBar(
-                            controller: widget.controller,
-                            onSubmit: () => setHeroesEnabled(true),
-                          ),
-                        ],
+                            CupertinoImageCropperBottomAppBar(
+                              controller: controller,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

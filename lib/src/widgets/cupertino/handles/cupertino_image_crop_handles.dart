@@ -41,17 +41,17 @@ class CupertinoImageCropHandles extends StatelessWidget {
               : _CupertinoImageCustomCropHandlesPainter(cropShape: cropShape),
         ),
         ClipPath(
-          clipper: _CupertinoImageCropHandlesClipper(cropShape),
+          clipper: CropShapeClipper(cropShape),
           child: guidesChild,
         ),
         ClipPath(
-          clipper: _CupertinoImageCropHandlesClipper(cropShape),
+          clipper: CropShapeClipper(cropShape),
           child: fineGuidesChild,
         )
       ],
     );
 
-    return CupertinoImageCropHandlesGestureDetector(
+    return CroppableImageGestureDetector(
       controller: controller,
       gesturePadding: gesturePadding,
       child: child,
@@ -297,17 +297,4 @@ class _CupertinoImageCropperFineGuidesPainter extends CustomPainter {
   @override
   bool shouldRepaint(_CupertinoImageCropperFineGuidesPainter oldDelegate) =>
       false;
-}
-
-class _CupertinoImageCropHandlesClipper extends CustomClipper<Path> {
-  _CupertinoImageCropHandlesClipper(this.cropShape);
-
-  final CropShape cropShape;
-
-  @override
-  Path getClip(Size size) => cropShape.getTransformedPathForSize(size).toUiPath();
-
-  @override
-  bool shouldReclip(_CupertinoImageCropHandlesClipper oldClipper) =>
-      oldClipper.cropShape != cropShape;
 }

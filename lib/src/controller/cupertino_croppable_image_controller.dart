@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 
 /// A croppable image controller that is similar to the iOS Photos app.
 class CupertinoCroppableImageController extends CroppableImageController
-    with AspectRatioMixin, ResizeStaticLayoutMixin {
+    with AspectRatioMixin, ResizeStaticLayoutMixin, ViewportScaleComputer {
   CupertinoCroppableImageController({
     required TickerProvider vsync,
     required super.data,
@@ -18,20 +17,7 @@ class CupertinoCroppableImageController extends CroppableImageController
   }) : allowedAspectRatios =
             allowedAspectRatios ?? createDefaultAspectRatios(data.imageSize) {
     _initAnimationControllers(vsync);
-
-    // If the current aspect ratio is not allowed, set it to the first allowed
-    // aspect ratio.
-    if (!this.allowedAspectRatios.contains(currentAspectRatio)) {
-      aspectRatioNotifier.value = this.allowedAspectRatios.first;
-
-      final newCropRect = resizeCropRectWithAspectRatio(
-        data.cropRect,
-        this.allowedAspectRatios.first,
-      );
-
-      data = data.copyWith(cropRect: newCropRect);
-      normalize();
-    }
+    maybeSetAspectRatioOnInit();
   }
 
   late final AnimationController _imageDataAnimationController;
@@ -111,59 +97,10 @@ class CupertinoCroppableImageController extends CroppableImageController
     });
   }
 
-  @override
-  double viewportScale = 1.0;
-
-  @override
-  set viewportSize(Size? size) {
-    if (viewportSize == size) return;
-
-    super.viewportSize = size;
-    setViewportScale(shouldNotify: false);
-  }
-
-  @override
-  void setViewportSizeInBuild(Size? size) {
-    if (viewportSize == size) return;
-    final shouldNotifyAfterFrame = viewportSize != null;
-
-    super.setViewportSizeInBuild(size);
-
-    if (shouldNotifyAfterFrame) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        notifyListeners();
-      });
-    }
-  }
-
-  double _computeViewportScale({Rect? overrideCropRect}) {
-    if (viewportSize == null) return 1.0;
-
-    final cropRect = overrideCropRect ?? data.cropRect;
-    final cropSize = cropRect.size;
-
-    final scaleX = viewportSize!.width / cropSize.width;
-    final scaleY = viewportSize!.height / cropSize.height;
-
-    final scale = min(scaleX, scaleY);
-    return scale;
-  }
-
-  void setViewportScale({
-    Rect? overrideCropRect,
-    bool shouldNotify = true,
-  }) {
-    viewportScale = _computeViewportScale(overrideCropRect: overrideCropRect);
-
-    if (shouldNotify) {
-      notifyListeners();
-    }
-  }
-
   void setViewportScaleWithAnimation({Rect? overrideCropRect}) {
     final cropRect = overrideCropRect ?? data.cropRect;
 
-    final scale = _computeViewportScale(
+    final scale = computeViewportScale(
       overrideCropRect: overrideCropRect,
     );
 
@@ -246,9 +183,9 @@ class CupertinoCroppableImageController extends CroppableImageController
   @override
   void onPanAndScale({
     required double scale,
-    required Offset offset,
+    required Offset offsetDelta,
   }) {
-    super.onPanAndScale(scale: scale, offset: offset);
+    super.onPanAndScale(scale: scale, offsetDelta: offsetDelta);
     _staticCropRectTween?.end = data.cropRect;
     setViewportScale();
   }
@@ -276,6 +213,7 @@ class CupertinoCroppableImageController extends CroppableImageController
     required ResizeDirection direction,
   }) {
     super.onResize(offset: offset, direction: direction);
+    computeStaticCropRectDuringResize();
 
     _staticCropRectTween?.end = staticCropRect;
     setViewportScale(overrideCropRect: staticCropRect);
@@ -358,7 +296,7 @@ class CupertinoCroppableImageController extends CroppableImageController
 
   Rect normalizeWithAnimation() {
     final oldData = data.copyWith();
-    
+
     normalize();
     final normalizedAabb = data.cropAabb;
 

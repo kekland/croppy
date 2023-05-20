@@ -3,18 +3,12 @@ import 'dart:math';
 import 'package:croppy/croppy.dart';
 import 'package:flutter/widgets.dart';
 
-/// A mixin for the [CroppableImageController] that allows to keep the layout 
+/// A mixin for the [CroppableImageController] that allows to keep the layout
 /// static while resizing.
 mixin ResizeStaticLayoutMixin on ResizeTransformation {
   Rect? staticCropRect;
 
-  @override
-  void onResize({
-    required Offset offset,
-    required ResizeDirection direction,
-  }) {
-    super.onResize(offset: offset, direction: direction);
-
+  void computeStaticCropRectDuringResize() {
     staticCropRect ??= data.cropRect;
 
     final newCropRect = data.cropRect;
