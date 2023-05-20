@@ -1,6 +1,10 @@
 import 'package:croppy/src/src.dart';
 import 'fit_polygon_in_quad_ffi.dart'
-    if (dart.library.html) 'fit_polygon_in_quad_web.dart';
+    if (dart.library.html) 'fit_polygon_in_quad_dart.dart';
+
+/// If true, the Dart implementation of [fitPolygonInQuadImpl] will be used
+/// instead of the C implementation.
+bool croppyForceUseCassowaryDartImpl = false;
 
 class FitPolygonInQuadSolver {
   static Aabb2 solve(Polygon2 polygon, Quad2 quad) {
@@ -34,7 +38,7 @@ class FitPolygonInQuadSolver {
     }
 
     // Use the appropriate implementation:
-    // - The FFI (C/C++) implementation is faster, but requires the croppy_ffi 
+    // - The FFI (C/C++) implementation is faster, but requires the croppy_ffi
     //   package to be installed. It's not available on the web.
     // - The Dart implementation is slower, but works everywhere.
     return fitPolygonInQuadImpl(polygon, normalizedQuad);

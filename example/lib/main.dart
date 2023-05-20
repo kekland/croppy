@@ -1,11 +1,20 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:croppy/croppy.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 void main() {
+  if (!kIsWeb) {
+    // For some reason, the FFI implementation of the Cassowary solver is super
+    // slow in debug mode. So we force the Dart implementation to be used in debug
+    // mode. This only applies to Windows.
+    croppyForceUseCassowaryDartImpl = kDebugMode && Platform.isWindows;
+  }
+
   runApp(const MyApp());
 }
 

@@ -95,17 +95,35 @@ extern "C" Aabb2 fit_polygon_in_quad_impl(double *points, int length)
     }
   }
 
-  solver.addEditVariable(out_x, strength::weak);
-  solver.addEditVariable(out_y, strength::weak);
-  solver.addEditVariable(out_a, strength::strong);
+  Constraint objective_constraint_1 = Constraint{out_a == 1.0 | strength::required - 1};
 
-  solver.suggestValue(out_x, polygon_min.x);
-  solver.suggestValue(out_y, polygon_min.y);
-  solver.suggestValue(out_a, 1);
+  out_x.setValue(polygon_min.x);
+  out_y.setValue(polygon_min.y);
+  out_a.setValue(1);
 
+  solver.addConstraint(objective_constraint_1);
   solver.updateVariables();
 
   double result_a = out_a.value();
+
+  solver.removeConstraint(objective_constraint_1);
+  solver.addConstraint(Constraint{out_a == result_a});
+
+  Variable x_dist("x_dist");
+  Variable y_dist("y_dist");
+
+  solver.addConstraint(Constraint{x_dist >= 0});
+  solver.addConstraint(Constraint{y_dist >= 0});
+
+  solver.addConstraint(Constraint{x_dist >= polygon_min.x - out_x});
+  solver.addConstraint(Constraint{x_dist >= out_x - polygon_min.x});
+  solver.addConstraint(Constraint{y_dist >= polygon_min.y - out_y});
+  solver.addConstraint(Constraint{y_dist >= out_y - polygon_min.y});
+
+  Constraint objective_constraint_2 = Constraint{x_dist + y_dist == 0 | strength::required - 1};
+
+  solver.addConstraint(objective_constraint_2);
+  solver.updateVariables();
 
   double result_x = out_x.value();
   double result_y = out_y.value();
