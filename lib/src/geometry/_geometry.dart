@@ -1,6 +1,8 @@
 export 'package:vector_math/vector_math_64.dart' hide Colors;
 
 export 'aabb2.dart';
+export 'ellipse2.dart';
+export 'line_segment2.dart';
 export 'matrix4.dart';
 export 'polygon2.dart';
 export 'quad2.dart';

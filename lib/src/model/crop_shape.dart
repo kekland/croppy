@@ -1,4 +1,3 @@
-import 'package:croppy/src/geometry/ellipse2.dart';
 import 'package:croppy/src/src.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';

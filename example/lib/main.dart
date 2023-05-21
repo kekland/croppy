@@ -9,9 +9,9 @@ import 'dart:ui' as ui;
 
 void main() {
   if (!kIsWeb) {
-    // For some reason, the FFI implementation of the Cassowary solver is super
-    // slow in debug mode. So we force the Dart implementation to be used in debug
-    // mode. This only applies to Windows.
+    // For some reason, the C++ implementation of the Cassowary solver is super
+    // slow in debug mode. So we force the Dart implementation to be used in 
+    // debug mode. This only applies to Windows.
     croppyForceUseCassowaryDartImpl = kDebugMode && Platform.isWindows;
   }
 
@@ -127,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 imageProvider: _imageProviders[page],
                 heroTag: 'image-$page',
                 initialData: _data[page],
-                cropPathFn: starCropShapeFn,
+                cropPathFn: aabbCropShapeFn,
                 postProcessFn: (result) async {
                   _croppedImage[page]?.dispose();
 

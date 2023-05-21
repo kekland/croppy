@@ -215,3 +215,17 @@ abstract class CroppableImageController extends BaseCroppableImageController
     return enabledTransformations.contains(t);
   }
 }
+
+/// An abstract controller for images with mixins for the different
+/// display properties (aspect ratio, resize static layout, viewport scale).
+abstract class CroppableImageControllerWithMixins
+    extends CroppableImageController
+    with AspectRatioMixin, ResizeStaticLayoutMixin, ViewportScaleComputerMixin {
+  CroppableImageControllerWithMixins({
+    required super.imageProvider,
+    required super.data,
+    super.postProcessFn,
+    super.cropShapeFn,
+    super.enabledTransformations,
+  });
+}

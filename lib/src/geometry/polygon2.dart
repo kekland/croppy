@@ -22,4 +22,15 @@ class Polygon2 {
   Polygon2 shift(Vector2 d) {
     return Polygon2(vertices.map((v) => v + d).toList());
   }
+
+  List<LineSegment2> get lineSegments {
+    final segments = <LineSegment2>[];
+
+    for (var i = 0; i < vertices.length; i++) {
+      final j = (i + 1) % vertices.length;
+      segments.add(LineSegment2(vertices[i], vertices[j]));
+    }
+
+    return segments;
+  }
 }

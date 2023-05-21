@@ -26,13 +26,30 @@ class MaterialImageCropperToolbar extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox.square(
-                          dimension: 48.0,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.aspect_ratio_rounded),
+                        if (controller is MaterialCroppableImageController)
+                          SizedBox.square(
+                            dimension: 48.0,
+                            child: ValueListenableBuilder(
+                              valueListenable: (controller
+                                      as MaterialCroppableImageController)
+                                  .aspectRatioNotifier,
+                              builder: (context, ar, _) => IconButton(
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    clipBehavior: Clip.antiAlias,
+                                    builder: (_) =>
+                                        MaterialAspectRatioBottomSheet(
+                                      controller: controller
+                                          as MaterialCroppableImageController,
+                                    ),
+                                  );
+                                },
+                                isSelected: ar != null,
+                                icon: const Icon(Icons.aspect_ratio_rounded),
+                              ),
+                            ),
                           ),
-                        ),
                         const SizedBox(width: 16.0),
                         SizedBox.square(
                           dimension: 48.0,
@@ -42,24 +59,23 @@ class MaterialImageCropperToolbar extends StatelessWidget {
                               onPressed: () {
                                 controller.onRotateCCW();
                               },
-                              color: clampAngle(rotationZ) > epsilon
-                                  ? Theme.of(context).colorScheme.primary
-                                  : null,
+                              isSelected: clampAngle(rotationZ) > epsilon,
                               icon: const Icon(
                                 Icons.rotate_90_degrees_ccw_rounded,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16.0),
-                        SizedBox.square(
-                          dimension: 48.0,
-                          child: IconButton(
-                            onPressed: () {},
-                            // TODO: Perspective icon
-                            icon: const Icon(Icons.transform_rounded),
-                          ),
-                        ),
+                        // TODO: Perspective transformations
+                        // const SizedBox(width: 16.0),
+                        // SizedBox.square(
+                        //   dimension: 48.0,
+                        //   child: IconButton(
+                        //     onPressed: () {},
+                        //     // TODO: Perspective icon
+                        //     icon: const Icon(Icons.transform_rounded),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

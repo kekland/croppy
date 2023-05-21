@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 
 /// A crop aspect ratio.
 ///
@@ -27,36 +26,4 @@ class CropAspectRatio extends Equatable {
 
   @override
   List<Object?> get props => [width, height];
-}
-
-/// A list of basic aspect ratios.
-const basicAspectRatios = [
-  CropAspectRatio(width: 1, height: 1),
-  CropAspectRatio(width: 16, height: 9),
-  CropAspectRatio(width: 9, height: 16),
-  CropAspectRatio(width: 5, height: 4),
-  CropAspectRatio(width: 4, height: 5),
-  CropAspectRatio(width: 7, height: 5),
-  CropAspectRatio(width: 5, height: 7),
-  CropAspectRatio(width: 4, height: 3),
-  CropAspectRatio(width: 3, height: 4),
-  CropAspectRatio(width: 5, height: 3),
-  CropAspectRatio(width: 3, height: 5),
-  CropAspectRatio(width: 3, height: 2),
-  CropAspectRatio(width: 2, height: 3),
-];
-
-List<CropAspectRatio?> createDefaultAspectRatios(Size imageSize) {
-  return [
-    CropAspectRatio(
-      width: imageSize.width.round(),
-      height: imageSize.height.round(),
-    ),
-    CropAspectRatio(
-      width: imageSize.height.round(),
-      height: imageSize.width.round(),
-    ),
-    null,
-    ...basicAspectRatios,
-  ];
 }

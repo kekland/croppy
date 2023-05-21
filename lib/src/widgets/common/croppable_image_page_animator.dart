@@ -43,9 +43,13 @@ class CroppableImagePageAnimatorState extends State<CroppableImagePageAnimator>
     );
 
     if (widget.heroTag != null) {
-      Future.delayed(kCupertinoImageCropperPageTransitionDuration, () {
-        _overlayOpacityAnimationController.forward(from: 0.0);
-      });
+      Future.delayed(
+        kCupertinoImageCropperPageTransitionDuration -
+            const Duration(milliseconds: 100),
+        () {
+          _overlayOpacityAnimationController.forward(from: 0.0);
+        },
+      );
     } else {
       _overlayOpacityAnimationController.forward(from: 0.0);
     }

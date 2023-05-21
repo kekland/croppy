@@ -16,17 +16,8 @@ class MaterialImageCropperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final outerTheme = Theme.of(context);
     return Theme(
-      data: ThemeData.from(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: outerTheme.primaryColor,
-          primary: outerTheme.primaryColor,
-          brightness: Brightness.dark,
-        ),
-        textTheme: outerTheme.textTheme,
-        useMaterial3: outerTheme.useMaterial3,
-      ),
+      data: generateMaterialImageCropperTheme(context),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
           statusBarBrightness: Brightness.dark,
@@ -48,43 +39,23 @@ class MaterialImageCropperPage extends StatelessWidget {
                       child: RepaintBoundary(
                         child: Padding(
                           padding: const EdgeInsets.all(48.0),
-                          child: CroppableImageViewport(
+                          child: MaterialCroppableImageViewport(
                             controller: controller,
                             gesturePadding: gesturePadding,
+                            overlayOpacityAnimation: overlayOpacityAnimation,
                             heroTag: heroTag,
-                            heroChild: ListenableBuilder(
-                              listenable: controller,
-                              builder: (context, _) => CroppedHeroImageWidget(
-                                controller: controller,
-                                child: Image(image: controller.imageProvider),
-                              ),
-                            ),
-                            child: AnimatedBuilder(
-                              animation: overlayOpacityAnimation,
-                              builder: (context, _) => ListenableBuilder(
-                                listenable: controller,
-                                builder: (context, _) => CroppableImageWidget(
-                                  controller: controller,
-                                  overlayOpacity: overlayOpacityAnimation.value,
-                                  image: Image(image: controller.imageProvider),
-                                  cropHandles: MaterialImageCropperHandles(
-                                    controller: controller,
-                                    gesturePadding: gesturePadding,
-                                  ),
-                                  gesturePadding: gesturePadding,
-                                ),
-                              ),
-                            ),
                           ),
                         ),
                       ),
                     ),
-                    AnimatedBuilder(
-                      animation: overlayOpacityAnimation,
-                      builder: (context, _) => Opacity(
-                        opacity: overlayOpacityAnimation.value,
-                        child: MaterialImageCropperToolbar(
-                          controller: controller,
+                    RepaintBoundary(
+                      child: AnimatedBuilder(
+                        animation: overlayOpacityAnimation,
+                        builder: (context, _) => Opacity(
+                          opacity: overlayOpacityAnimation.value,
+                          child: MaterialImageCropperToolbar(
+                            controller: controller,
+                          ),
                         ),
                       ),
                     ),

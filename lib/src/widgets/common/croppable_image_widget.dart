@@ -13,6 +13,7 @@ class CroppableImageWidget extends RenderObjectWidget
     required this.cropHandles,
     this.overlayOpacity = 1.0,
     this.gesturePadding = 0.0,
+    this.backgroundOpacity = 0.85,
   });
 
   final Widget image;
@@ -20,6 +21,7 @@ class CroppableImageWidget extends RenderObjectWidget
   final CroppableImageController controller;
   final double gesturePadding;
   final double overlayOpacity;
+  final double backgroundOpacity;
 
   @override
   CroppableImageRenderObject createRenderObject(BuildContext context) {
@@ -32,6 +34,7 @@ class CroppableImageWidget extends RenderObjectWidget
       controller.viewportScale,
       gesturePadding,
       overlayOpacity,
+      backgroundOpacity,
       staticCropRect,
     );
   }
@@ -45,6 +48,7 @@ class CroppableImageWidget extends RenderObjectWidget
     renderObject.viewportScale = controller.viewportScale;
     renderObject.gesturePadding = gesturePadding;
     renderObject.overlayOpacity = overlayOpacity;
+    renderObject.backgroundOpacity = backgroundOpacity;
     renderObject.staticCropRect = (controller is ResizeStaticLayoutMixin)
         ? (controller as ResizeStaticLayoutMixin).staticCropRect
         : null;
@@ -75,12 +79,14 @@ class CroppableImageRenderObject extends RenderBox
     CroppableImageData imageData,
     double viewportScale,
     double gestureSafeArea,
-    double overlaysOpacity, [
+    double overlaysOpacity,
+    double backgroundOpacity, [
     Rect? staticCropRect,
   ])  : _imageData = imageData,
         _viewportScale = viewportScale,
         _gesturePadding = gestureSafeArea,
         _staticCropRect = staticCropRect,
+        _backgroundOpacity = backgroundOpacity,
         _overlayOpacity = overlaysOpacity;
 
   CroppableImageData _imageData;
@@ -126,6 +132,14 @@ class CroppableImageRenderObject extends RenderBox
   set overlayOpacity(double value) {
     if (value == _overlayOpacity) return;
     _overlayOpacity = value;
+    markNeedsPaint();
+  }
+
+  double _backgroundOpacity;
+  double get backgroundOpacity => _backgroundOpacity;
+  set backgroundOpacity(double value) {
+    if (value == _backgroundOpacity) return;
+    _backgroundOpacity = value;
     markNeedsPaint();
   }
 
@@ -217,7 +231,7 @@ class CroppableImageRenderObject extends RenderBox
               // Avoids some anti-aliasing artifacts
               (offset & imageData.imageSize).inflate(0.5),
               Paint()
-                ..color = Colors.black.withOpacity(0.85)
+                ..color = Colors.black.withOpacity(backgroundOpacity)
                 ..blendMode = BlendMode.multiply,
             );
           },

@@ -104,4 +104,20 @@ class Quad2 {
     path.close();
     return path;
   }
+
+  List<LineSegment2> get lineSegments => [
+        LineSegment2(point0, point1),
+        LineSegment2(point1, point2),
+        LineSegment2(point2, point3),
+        LineSegment2(point3, point0),
+      ];
+
+  Vector2? intersectsWithLineSegment(LineSegment2 lineSegment) {
+    for (final segment in lineSegments) {
+      final intersection = segment.intersectsWithLineSegment(lineSegment);
+      if (intersection != null) return intersection;
+    }
+
+    return null;
+  }
 }

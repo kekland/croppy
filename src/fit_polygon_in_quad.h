@@ -10,6 +10,13 @@ extern "C"
 
   Aabb2 fit_polygon_in_quad_impl(double *, int);
 
+  Aabb2 fit_polygon_in_quad_on_resize_impl(double *points,
+                                     int length,
+                                     double aspectRatio,
+                                     bool isTopLeftStatic,
+                                     bool isTopRightStatic,
+                                     bool isBottomLeftStatic,
+                                     bool isBottomRightStatic);
 #ifdef __cplusplus
 }
 #endif

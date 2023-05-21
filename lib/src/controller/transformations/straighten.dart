@@ -157,4 +157,12 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
     rotationYNotifier.value = data.baseTransformations.rotationY;
     rotationZNotifier.value = rotation.yaw;
   }
+
+  @override
+  void dispose() {
+    rotationXNotifier.dispose();
+    rotationYNotifier.dispose();
+    rotationZNotifier.dispose();
+    super.dispose();
+  }
 }

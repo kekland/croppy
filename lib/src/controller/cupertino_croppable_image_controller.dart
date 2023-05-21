@@ -4,8 +4,8 @@ import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 
 /// A croppable image controller that is similar to the iOS Photos app.
-class CupertinoCroppableImageController extends CroppableImageController
-    with AspectRatioMixin, ResizeStaticLayoutMixin, ViewportScaleComputer {
+class CupertinoCroppableImageController
+    extends CroppableImageControllerWithMixins with AnimatedControllerMixin {
   CupertinoCroppableImageController({
     required TickerProvider vsync,
     required super.data,
@@ -15,21 +15,10 @@ class CupertinoCroppableImageController extends CroppableImageController
     super.enabledTransformations,
     List<CropAspectRatio?>? allowedAspectRatios,
   }) : allowedAspectRatios =
-            allowedAspectRatios ?? createDefaultAspectRatios(data.imageSize) {
-    _initAnimationControllers(vsync);
+            allowedAspectRatios ?? _createDefaultAspectRatios(data.imageSize) {
+    initAnimationControllers(vsync);
     maybeSetAspectRatioOnInit();
   }
-
-  late final AnimationController _imageDataAnimationController;
-  late final CurvedAnimation _imageDataAnimation;
-
-  late final AnimationController _viewportScaleAnimationController;
-  late final CurvedAnimation _viewportScaleAnimation;
-
-  CroppableImageDataTween? _imageDataTween;
-
-  RectTween? _staticCropRectTween;
-  Tween<double>? _viewportScaleTween;
 
   /// Allowed aspect ratios for the aspect ratio toolbar.
   @override
@@ -41,90 +30,6 @@ class CupertinoCroppableImageController extends CroppableImageController
   final toolbarNotifier = ValueNotifier<CupertinoCroppableImageToolbar>(
     CupertinoCroppableImageToolbar.transform,
   );
-
-  void _initAnimationControllers(TickerProvider vsync) {
-    _imageDataAnimationController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 150),
-    );
-
-    _imageDataAnimation = CurvedAnimation(
-      parent: _imageDataAnimationController,
-      curve: Curves.easeInOut,
-    );
-
-    _imageDataAnimationController.addListener(() {
-      if (_imageDataTween != null) {
-        data = _imageDataTween!.evaluate(_imageDataAnimation);
-      }
-
-      notifyListeners();
-    });
-
-    _viewportScaleAnimationController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 150),
-    );
-
-    _viewportScaleAnimation = CurvedAnimation(
-      parent: _viewportScaleAnimationController,
-      curve: Curves.easeInOut,
-    );
-
-    _viewportScaleAnimationController.addListener(() {
-      if (_viewportScaleTween != null) {
-        viewportScale = _viewportScaleTween!.evaluate(
-          _viewportScaleAnimation,
-        );
-      }
-
-      if (_staticCropRectTween != null) {
-        staticCropRect = _staticCropRectTween!.evaluate(
-          _viewportScaleAnimation,
-        );
-      }
-
-      notifyListeners();
-    });
-
-    _viewportScaleAnimationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (_staticCropRectTween != null) {
-          staticCropRect = null;
-          notifyListeners();
-        }
-      }
-    });
-  }
-
-  void setViewportScaleWithAnimation({Rect? overrideCropRect}) {
-    final cropRect = overrideCropRect ?? data.cropRect;
-
-    final scale = computeViewportScale(
-      overrideCropRect: overrideCropRect,
-    );
-
-    if (staticCropRect != null) {
-      _staticCropRectTween = overrideCropRect != null
-          ? RectTween(
-              begin: staticCropRect,
-              end: cropRect,
-            )
-          : MaterialRectCenterArcTween(
-              begin: staticCropRect,
-              end: cropRect,
-            );
-    } else {
-      _staticCropRectTween = null;
-    }
-
-    _viewportScaleTween = Tween<double>(
-      begin: viewportScale,
-      end: scale,
-    );
-
-    _viewportScaleAnimationController.forward(from: 0.0);
-  }
 
   @override
   void onStraighten({
@@ -186,7 +91,6 @@ class CupertinoCroppableImageController extends CroppableImageController
     required Offset offsetDelta,
   }) {
     super.onPanAndScale(scale: scale, offsetDelta: offsetDelta);
-    _staticCropRectTween?.end = data.cropRect;
     setViewportScale();
   }
 
@@ -199,23 +103,14 @@ class CupertinoCroppableImageController extends CroppableImageController
   }
 
   @override
-  void onResizeStart() {
-    super.onResizeStart();
-
-    if (_viewportScaleAnimationController.isAnimating) {
-      _viewportScaleAnimationController.stop();
-    }
-  }
-
-  @override
   void onResize({
     required Offset offset,
     required ResizeDirection direction,
   }) {
     super.onResize(offset: offset, direction: direction);
-    computeStaticCropRectDuringResize();
 
-    _staticCropRectTween?.end = staticCropRect;
+    computeStaticCropRectDuringResize();
+    setStaticCropRectTweenEnd(staticCropRect);
     setViewportScale(overrideCropRect: staticCropRect);
   }
 
@@ -244,32 +139,6 @@ class CupertinoCroppableImageController extends CroppableImageController
     maybeHideGuideLines();
   }
 
-  @override
-  void onBaseTransformation(CroppableImageData newData) {
-    _imageDataTween = CroppableImageDataTween(
-      begin: data,
-      end: newData,
-    );
-
-    staticCropRect = null;
-    setViewportScaleWithAnimation(overrideCropRect: newData.cropRect);
-    _imageDataAnimationController.forward(from: 0.0);
-
-    showGuideLines();
-    maybeHideGuideLines();
-  }
-
-  @override
-  set currentAspectRatio(CropAspectRatio? newAspectRatio) {
-    if (aspectRatioNotifier.value == newAspectRatio) return;
-
-    animatedNormalizeAfterTransform(
-      () => super.currentAspectRatio = newAspectRatio,
-    );
-
-    notifyListeners();
-  }
-
   Timer? _recomputeViewportScaleTimer;
   void recomputeViewportScaleWithDelay() {
     _recomputeViewportScaleTimer?.cancel();
@@ -294,42 +163,6 @@ class CupertinoCroppableImageController extends CroppableImageController
     );
   }
 
-  Rect normalizeWithAnimation() {
-    final oldData = data.copyWith();
-
-    normalize();
-    final normalizedAabb = data.cropAabb;
-
-    data = oldData;
-
-    if (normalizedAabb == data.cropAabb) {
-      return normalizedAabb.rect;
-    }
-
-    _imageDataTween = CroppableImageDataTween(
-      begin: data,
-      end: data.copyWith(
-        cropRect: normalizedAabb.rect,
-      ),
-    );
-
-    _imageDataAnimationController.forward(from: 0.0);
-    return normalizedAabb.rect;
-  }
-
-  void animatedNormalizeAfterTransform(VoidCallback action) {
-    final oldData = data.copyWith();
-    action();
-
-    _imageDataTween = CroppableImageDataTween(
-      begin: oldData,
-      end: data,
-    );
-
-    setViewportScaleWithAnimation(overrideCropRect: data.cropRect);
-    _imageDataAnimationController.forward(from: 0.0);
-  }
-
   @override
   void reset() {
     data = data.copyWith(
@@ -351,7 +184,11 @@ class CupertinoCroppableImageController extends CroppableImageController
 
   @override
   void dispose() {
-    _imageDataAnimationController.dispose();
+    guideLinesVisibility.dispose();
+    toolbarNotifier.dispose();
+    _recomputeViewportScaleTimer?.cancel();
+    _hideGuideLinesTimer?.cancel();
+
     super.dispose();
   }
 }
@@ -360,3 +197,34 @@ enum CupertinoCroppableImageToolbar {
   transform,
   aspectRatio,
 }
+
+List<CropAspectRatio?> _createDefaultAspectRatios(Size imageSize) {
+  return [
+    CropAspectRatio(
+      width: imageSize.width.round(),
+      height: imageSize.height.round(),
+    ),
+    CropAspectRatio(
+      width: imageSize.height.round(),
+      height: imageSize.width.round(),
+    ),
+    null,
+    ..._basicAspectRatios,
+  ];
+}
+
+const _basicAspectRatios = [
+  CropAspectRatio(width: 1, height: 1),
+  CropAspectRatio(width: 16, height: 9),
+  CropAspectRatio(width: 9, height: 16),
+  CropAspectRatio(width: 5, height: 4),
+  CropAspectRatio(width: 4, height: 5),
+  CropAspectRatio(width: 7, height: 5),
+  CropAspectRatio(width: 5, height: 7),
+  CropAspectRatio(width: 4, height: 3),
+  CropAspectRatio(width: 3, height: 4),
+  CropAspectRatio(width: 5, height: 3),
+  CropAspectRatio(width: 3, height: 5),
+  CropAspectRatio(width: 3, height: 2),
+  CropAspectRatio(width: 2, height: 3),
+];

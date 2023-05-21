@@ -23,11 +23,13 @@ mixin PanAndScaleTransformation on BaseCroppableImageController {
   }) {
     final scaledOffsetDelta = offsetDelta / viewportScale;
 
+    final initialSize = transformationInitialData!.cropRect.size;
     final rect = data.cropRect;
+
     final newRect = Rect.fromCenter(
       center: rect.center + scaledOffsetDelta,
-      width: rect.width * scale,
-      height: rect.height * scale,
+      width: initialSize.width * scale,
+      height: initialSize.height * scale,
     );
 
     data = data.copyWith(cropRect: newRect);

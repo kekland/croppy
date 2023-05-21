@@ -42,6 +42,35 @@ class CroppyFfiBindings {
       'fit_polygon_in_quad');
   late final _fit_polygon_in_quad = _fit_polygon_in_quadPtr
       .asFunction<Aabb2 Function(ffi.Pointer<ffi.Double>, int)>(isLeaf: true);
+
+  Aabb2 fit_polygon_in_quad_on_resize(
+    ffi.Pointer<ffi.Double> points,
+    int length,
+    double aspectRatio,
+    bool isTopLeftStatic,
+    bool isTopRightStatic,
+    bool isBottomLeftStatic,
+    bool isBottomRightStatic,
+  ) {
+    return _fit_polygon_in_quad_on_resize(
+      points,
+      length,
+      aspectRatio,
+      isTopLeftStatic,
+      isTopRightStatic,
+      isBottomLeftStatic,
+      isBottomRightStatic,
+    );
+  }
+
+  late final _fit_polygon_in_quad_on_resizePtr = _lookup<
+      ffi.NativeFunction<
+          Aabb2 Function(ffi.Pointer<ffi.Double>, ffi.Int, ffi.Double, ffi.Bool,
+              ffi.Bool, ffi.Bool, ffi.Bool)>>('fit_polygon_in_quad_on_resize');
+  late final _fit_polygon_in_quad_on_resize =
+      _fit_polygon_in_quad_on_resizePtr.asFunction<
+          Aabb2 Function(
+              ffi.Pointer<ffi.Double>, int, double, bool, bool, bool, bool)>();
 }
 
 final class Vector2 extends ffi.Struct {

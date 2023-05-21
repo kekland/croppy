@@ -17,14 +17,31 @@ mixin AspectRatioMixin on CroppableImageController {
     super.onResize(offset: offset, direction: direction);
     if (currentAspectRatio == null) return;
 
-    final newRect = data.cropRect;
+    data = transformationInitialData!.copyWith(
+      cropRect: onResizeCorrectAspectRatio(
+        rect: data.cropRect,
+        direction: direction,
+      ),
+    );
+
+    notifyListeners();
+  }
+
+  /// Corrects the aspect ratio of the given [rect] according to the given
+  /// [direction] during resizing.
+  Rect onResizeCorrectAspectRatio({
+    required Rect rect,
+    required ResizeDirection direction,
+  }) {
+    if (currentAspectRatio == null) return rect;
+
     final ar = currentAspectRatio!.ratio;
 
     late final Rect correctedRect;
     switch (direction) {
       case ResizeDirection.toTop:
-        final pivot = newRect.bottomCenter;
-        final height = newRect.height;
+        final pivot = rect.bottomCenter;
+        final height = rect.height;
         final width = height * ar;
 
         correctedRect = Rect.fromLTRB(
@@ -36,8 +53,8 @@ mixin AspectRatioMixin on CroppableImageController {
 
         break;
       case ResizeDirection.toBottom:
-        final pivot = newRect.topCenter;
-        final height = newRect.height;
+        final pivot = rect.topCenter;
+        final height = rect.height;
         final width = height * ar;
 
         correctedRect = Rect.fromLTRB(
@@ -49,8 +66,8 @@ mixin AspectRatioMixin on CroppableImageController {
 
         break;
       case ResizeDirection.toLeft:
-        final pivot = newRect.centerRight;
-        final width = newRect.width;
+        final pivot = rect.centerRight;
+        final width = rect.width;
         final height = width / ar;
 
         correctedRect = Rect.fromLTRB(
@@ -62,8 +79,8 @@ mixin AspectRatioMixin on CroppableImageController {
 
         break;
       case ResizeDirection.toRight:
-        final pivot = newRect.centerLeft;
-        final width = newRect.width;
+        final pivot = rect.centerLeft;
+        final width = rect.width;
         final height = width / ar;
 
         correctedRect = Rect.fromLTRB(
@@ -75,8 +92,8 @@ mixin AspectRatioMixin on CroppableImageController {
 
         break;
       case ResizeDirection.toTopLeft:
-        final pivot = newRect.bottomRight;
-        final width = newRect.width;
+        final pivot = rect.bottomRight;
+        final width = rect.width;
         final height = width / ar;
 
         correctedRect = Rect.fromLTRB(
@@ -88,8 +105,8 @@ mixin AspectRatioMixin on CroppableImageController {
 
         break;
       case ResizeDirection.toTopRight:
-        final pivot = newRect.bottomLeft;
-        final width = newRect.width;
+        final pivot = rect.bottomLeft;
+        final width = rect.width;
         final height = width / ar;
 
         correctedRect = Rect.fromLTRB(
@@ -101,8 +118,8 @@ mixin AspectRatioMixin on CroppableImageController {
 
         break;
       case ResizeDirection.toBottomLeft:
-        final pivot = newRect.topRight;
-        final width = newRect.width;
+        final pivot = rect.topRight;
+        final width = rect.width;
         final height = width / ar;
 
         correctedRect = Rect.fromLTRB(
@@ -114,8 +131,8 @@ mixin AspectRatioMixin on CroppableImageController {
 
         break;
       case ResizeDirection.toBottomRight:
-        final pivot = newRect.topLeft;
-        final width = newRect.width;
+        final pivot = rect.topLeft;
+        final width = rect.width;
         final height = width / ar;
 
         correctedRect = Rect.fromLTRB(
@@ -128,12 +145,7 @@ mixin AspectRatioMixin on CroppableImageController {
         break;
     }
 
-    data = transformationInitialData!.copyWith(
-      cropRect: correctedRect,
-      currentImageTransform: Matrix4.identity(),
-    );
-
-    notifyListeners();
+    return correctedRect;
   }
 
   /// Sets the current aspect ratio.
@@ -174,5 +186,11 @@ mixin AspectRatioMixin on CroppableImageController {
       data = data.copyWith(cropRect: newCropRect);
       normalize();
     }
+  }
+
+  @override
+  void dispose() {
+    aspectRatioNotifier.dispose();
+    super.dispose();
   }
 }

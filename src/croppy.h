@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #if _WIN32
 #define NOMINMAX
@@ -37,4 +38,11 @@ typedef struct Aabb2 Aabb2;
 
 FFI_PLUGIN_EXPORT Aabb2 fit_polygon_in_quad(double *points, int length);
 
+FFI_PLUGIN_EXPORT Aabb2 fit_polygon_in_quad_on_resize(double *points,
+                                                      int length,
+                                                      double aspectRatio,
+                                                      bool isTopLeftStatic,
+                                                      bool isTopRightStatic,
+                                                      bool isBottomLeftStatic,
+                                                      bool isBottomRightStatic);
 #endif

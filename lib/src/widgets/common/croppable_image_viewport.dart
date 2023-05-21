@@ -41,7 +41,10 @@ class CroppableImageViewport extends StatelessWidget {
                       flightDirection, fromHeroContext, toHeroContext) {
                     return _buildHeroChild(context);
                   },
-                  child: _buildHeroChild(context),
+                  child: Visibility.maintain(
+                    visible: false,
+                    child: _buildHeroChild(context),
+                  ),
                 ),
               ),
             Center(child: FittedBox(child: child)),

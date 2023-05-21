@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:croppy/src/src.dart';
 import 'package:flutter/widgets.dart';
 
-mixin ViewportScaleComputer on BaseCroppableImageController {
+mixin ViewportScaleComputerMixin on BaseCroppableImageController {
   @override
   double viewportScale = 1.0;
 

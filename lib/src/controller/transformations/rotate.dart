@@ -31,4 +31,10 @@ mixin RotateTransformation on BaseCroppableImageController {
     super.recomputeValueNotifiers();
     baseRotationZNotifier.value = data.baseTransformations.rotationZ;
   }
+
+  @override
+  void dispose() {
+    baseRotationZNotifier.dispose();
+    super.dispose();
+  }
 }
