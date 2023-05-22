@@ -1,3 +1,6 @@
+## 0.2.1
+* Accidentally dropped support for Web because of FFI - fixed.
+
 ## 0.2.0
 
 * Added a Material image cropper

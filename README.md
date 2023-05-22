@@ -15,6 +15,14 @@ Check out the example at https://kekland.github.io/croppy (you can scroll horizo
   <img src="https://github.com/kekland/croppy/raw/master/doc/assets/image3.png" width="160" />
 </p>
 
+Supported platforms:
+- Android 
+- iOS
+- Windows
+- Linux (untested, but should work)
+- macOS
+- Web (uses Dart's Cassowary instead of FFI because there's no FFI support in web)
+
 ## Features
 
 - Material image cropper (similar to Google Photos)

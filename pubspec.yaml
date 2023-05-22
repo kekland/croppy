@@ -1,6 +1,6 @@
 name: croppy
 description: A fully customizable image cropper for Flutter. Mobile-first, but supports Web and Desktop platforms.
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/kekland/croppy
 
 environment:
@@ -39,4 +39,6 @@ flutter:
         ffiPlugin: true
       windows:
         ffiPlugin: true
+      web: 
+
 
