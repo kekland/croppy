@@ -64,8 +64,33 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
           staticCropRect = null;
           notifyListeners();
         }
+
+        if (_viewportScaleTween != null) {
+          _viewportScaleTween = null;
+          notifyListeners();
+        }
       }
     });
+  }
+
+  @override
+  void setViewportScale({
+    Rect? overrideCropRect,
+    bool shouldNotify = true,
+  }) {
+    if (_viewportScaleTween != null) {
+      _staticCropRectTween?.end = overrideCropRect ?? data.cropRect;
+      _viewportScaleTween?.end = computeViewportScale(
+        overrideCropRect: overrideCropRect,
+      );
+
+      return;
+    }
+
+    super.setViewportScale(
+      overrideCropRect: overrideCropRect,
+      shouldNotify: false,
+    );
   }
 
   void setViewportScaleWithAnimation({Rect? overrideCropRect}) {
@@ -74,6 +99,11 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
     final scale = computeViewportScale(
       overrideCropRect: overrideCropRect,
     );
+
+    if (scale == viewportScale) {
+      staticCropRect = null;
+      return;
+    }
 
     if (staticCropRect != null) {
       _staticCropRectTween = overrideCropRect != null
@@ -131,27 +161,32 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
     notifyListeners();
   }
 
+  @override
+  void onTransformationStart() {
+    super.onTransformationStart();
+
+    if (imageDataAnimationController.isAnimating) {
+      imageDataAnimationController.stop();
+    }
+  }
+
   Rect normalizeWithAnimation() {
-    final oldData = data.copyWith();
+    final normalizedRect = normalizeImpl();
 
-    normalize();
-    final normalizedAabb = data.cropAabb;
-
-    data = oldData;
-
-    if (normalizedAabb == data.cropAabb) {
-      return normalizedAabb.rect;
+    if (normalizedRect == data.cropRect) {
+      return normalizedRect;
     }
 
     _imageDataTween = CroppableImageDataTween(
       begin: data,
-      end: data.copyWith(
-        cropRect: normalizedAabb.rect,
+      end: data.copyWithProperCropShape(
+        cropShapeFn: cropShapeFn,
+        cropRect: normalizedRect,
       ),
     );
 
     imageDataAnimationController.forward(from: 0.0);
-    return normalizedAabb.rect;
+    return normalizedRect;
   }
 
   void animatedNormalizeAfterTransform(VoidCallback action) {
@@ -168,19 +203,9 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
   }
 
   @override
-  void onTransformationStart() {
-    super.onTransformationStart();
-
-    if (imageDataAnimationController.isAnimating) {
-      imageDataAnimationController.stop();
-      data = _imageDataTween!.end!;
-    }
-  }
-
-  @override
   void onTransformation(dynamic args) {
     super.onTransformation(args);
-    _staticCropRectTween?.end = data.cropRect;
+    setStaticCropRectTweenEnd(data.cropRect);
   }
 
   void setStaticCropRectTweenEnd(Rect? end) {

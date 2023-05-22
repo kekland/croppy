@@ -15,15 +15,15 @@ mixin ResizeTransformation on BaseCroppableImageController {
     _isResizing = true;
   }
 
-  /// Called when the user is resizing the crop rect. This will update the
-  /// [BaseCroppableImageController.data] and notify listeners.
-  void onResize({
-    required Offset offset,
+  @protected
+  CroppableImageData onResizeImpl({
+    required CroppableImageData data,
+    required Offset offsetDelta,
     required ResizeDirection direction,
   }) {
-    final scaledOffset = offset / viewportScale;
+    final scaledOffset = offsetDelta / viewportScale;
 
-    final rect = transformationInitialData!.cropRect;
+    final rect = data.cropRect;
     Rect newRect;
 
     switch (direction) {
@@ -93,11 +93,25 @@ mixin ResizeTransformation on BaseCroppableImageController {
         break;
     }
 
-    data = transformationInitialData!.copyWith(
+    return data.copyWithProperCropShape(
+      cropShapeFn: cropShapeFn,
       cropRect: newRect,
     );
+  }
 
-    onTransformation((offset, direction));
+  /// Called when the user is resizing the crop rect. This will update the
+  /// [BaseCroppableImageController.data] and notify listeners.
+  void onResize({
+    required Offset offsetDelta,
+    required ResizeDirection direction,
+  }) {
+    data = onResizeImpl(
+      data: data,
+      offsetDelta: offsetDelta,
+      direction: direction,
+    );
+
+    onTransformation((offsetDelta, direction));
   }
 
   /// Called when the user ends resizing the crop rect.

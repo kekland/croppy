@@ -20,19 +20,33 @@ class CroppableImageGestureDetector extends StatefulWidget {
 
 class _CroppableImageGestureDetectorState
     extends State<CroppableImageGestureDetector> {
-  void _onScaleStart(ScaleStartDetails details) {
-    widget.controller.onPanAndScaleStart();
-  }
+  ScaleUpdateDetails? _lastUpdateDetails;
+  var _didStart = false;
+
+  void _onScaleStart(ScaleStartDetails details) {}
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
+    if (!_didStart) {
+      widget.controller.onPanAndScaleStart();
+      _didStart = true;
+    }
+
+    final _lastScale = _lastUpdateDetails?.scale ?? 1.0;
+
     widget.controller.onPanAndScale(
       offsetDelta: -details.focalPointDelta,
-      scale: 1 / details.scale,
+      scaleDelta: details.scale / _lastScale,
     );
+
+    _lastUpdateDetails = details;
   }
 
   void _onScaleEnd(ScaleEndDetails details) {
+    if (!_didStart) return;
+    _didStart = false;
+
     widget.controller.onPanAndScaleEnd();
+    _lastUpdateDetails = null;
   }
 
   @override

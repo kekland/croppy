@@ -15,25 +15,41 @@ mixin PanAndScaleTransformation on BaseCroppableImageController {
     _isPanAndScaling = true;
   }
 
-  /// Called when the user is panning and scaling. This will update the
-  /// [BaseCroppableImageController.data] and notify listeners.
-  void onPanAndScale({
-    required double scale,
+  @protected
+  CroppableImageData onPanAndScaleImpl({
+    required CroppableImageData data,
+    required double scaleDelta,
     required Offset offsetDelta,
   }) {
     final scaledOffsetDelta = offsetDelta / viewportScale;
 
-    final initialSize = transformationInitialData!.cropRect.size;
     final rect = data.cropRect;
 
     final newRect = Rect.fromCenter(
       center: rect.center + scaledOffsetDelta,
-      width: initialSize.width * scale,
-      height: initialSize.height * scale,
+      width: rect.width / scaleDelta,
+      height: rect.height / scaleDelta,
     );
 
-    data = data.copyWith(cropRect: newRect);
-    onTransformation((scale, offsetDelta));
+    return data.copyWithProperCropShape(
+      cropShapeFn: cropShapeFn,
+      cropRect: newRect,
+    );
+  }
+
+  /// Called when the user is panning and scaling. This will update the
+  /// [BaseCroppableImageController.data] and notify listeners.
+  void onPanAndScale({
+    required double scaleDelta,
+    required Offset offsetDelta,
+  }) {
+    data = onPanAndScaleImpl(
+      data: data,
+      scaleDelta: scaleDelta,
+      offsetDelta: offsetDelta,
+    );
+
+    onTransformation((scaleDelta, offsetDelta));
   }
 
   /// Called when the user ends panning and scaling.

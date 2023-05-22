@@ -17,16 +17,16 @@ Check out the example at https://kekland.github.io/croppy (you can scroll horizo
 
 ## Features
 
+- Material image cropper (similar to Google Photos)
 - iOS Photos app-like image cropper
-- Supports any linear transformations on the image: scaling, rotating, skewing, flipping, etc
+- Support for any linear transformations on the image: scaling, rotating, skewing, flipping, etc
 - Completely customizable (will create documentation with later releases)
 - Fixed aspect ratios
-- Kickass animations
 - Custom cropping shapes
+- Kickass animations
 
 In progress:
 
-- Material image cropper (something similar to Google Photos)
 - Image editing module (?) (brightness, contrast, etc)
 - Localization
 
@@ -43,16 +43,21 @@ Enjoy using it :)
 
 ## Usage
 
-Currently `croppy` supports an iOS-like image cropper:
+Currently `croppy` supports a Material (Google Photos-like) and a Cupertino (iOS Photos-like) image croppers:
 
 ```dart
+final result = await showMaterialImageCropper(
+  context,
+  imageProvider: const NetworkImage('MY_IMAGE_URL'), // Or any other image provider
+);
+
 final result = await showCupertinoImageCropper(
   context,
   imageProvider: const NetworkImage('MY_IMAGE_URL'), // Or any other image provider
 );
 ```
 
-`showCupertinoImageCropper` accepts the following arguments:
+They both accept the following arguments:
 
 - `imageProvider` - an image provider that will be used to load the image. You can use any image provider, such as `NetworkImage`, `FileImage`, `MemoryImage`, etc.
 

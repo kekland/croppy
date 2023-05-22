@@ -41,7 +41,11 @@ class CupertinoImageCropperAppBar extends StatelessWidget
             ),
           ),
         const Spacer(),
-        if (controller is CupertinoCroppableImageController)
+        if (controller is CupertinoCroppableImageController &&
+            (controller as CupertinoCroppableImageController)
+                    .allowedAspectRatios
+                    .length >
+                1)
           ValueListenableBuilder(
             valueListenable: (controller as CupertinoCroppableImageController)
                 .toolbarNotifier,

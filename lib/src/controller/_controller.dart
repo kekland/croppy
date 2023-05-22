@@ -1,6 +1,7 @@
 export 'mixins/animated_controller_mixin.dart';
 export 'mixins/aspect_ratio_mixin.dart';
 export 'mixins/resize_static_layout_mixin.dart';
+export 'mixins/transformation_friction_mixin.dart';
 export 'mixins/viewport_scale_computer_mixin.dart';
 
 export 'transformations/mirror.dart';

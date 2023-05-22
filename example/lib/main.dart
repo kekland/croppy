@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:croppy/croppy.dart';
+import 'package:example/settings_modal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +10,9 @@ import 'dart:ui' as ui;
 void main() {
   if (!kIsWeb) {
     // For some reason, the C++ implementation of the Cassowary solver is super
-    // slow in debug mode. So we force the Dart implementation to be used in 
+    // slow in debug mode. So we force the Dart implementation to be used in
     // debug mode. This only applies to Windows.
-    croppyForceUseCassowaryDartImpl = kDebugMode && Platform.isWindows;
+    croppyForceUseCassowaryDartImpl = false;
   }
 
   runApp(const MyApp());
@@ -24,6 +24,10 @@ class ExampleScrollBehavior extends MaterialScrollBehavior {
         PointerDeviceKind.touch,
         PointerDeviceKind.mouse,
       };
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      const BouncingScrollPhysics();
 }
 
 class MyApp extends StatelessWidget {
@@ -36,9 +40,9 @@ class MyApp extends StatelessWidget {
       scrollBehavior: ExampleScrollBehavior(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blueAccent,
-          primary: Colors.blueAccent,
-          brightness: Brightness.light,
+          seedColor: Colors.orange,
+          primary: Colors.orange,
+          brightness: Brightness.dark,
         ),
         useMaterial3: true,
       ),
@@ -57,6 +61,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final PageController _pageController;
+  var _cropSettings = CropSettings.initial();
 
   @override
   void initState() {
@@ -89,6 +94,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final newSettings = await showCropSettingsModal(
+                context: context,
+                initialSettings: _cropSettings,
+              );
+
+              setState(() {
+                _cropSettings = newSettings;
+              });
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       floatingActionButton: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -101,7 +123,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 imageProvider: _imageProviders[page],
                 heroTag: 'image-$page',
                 initialData: _data[page],
-                cropPathFn: aabbCropShapeFn,
+                cropPathFn: _cropSettings.cropShapeFn,
+                enabledTransformations: _cropSettings.enabledTransformations,
+                allowedAspectRatios: _cropSettings.forcedAspectRatio != null
+                    ? [_cropSettings.forcedAspectRatio!]
+                    : null,
                 postProcessFn: (result) async {
                   _croppedImage[page]?.dispose();
 
@@ -127,7 +153,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 imageProvider: _imageProviders[page],
                 heroTag: 'image-$page',
                 initialData: _data[page],
-                cropPathFn: aabbCropShapeFn,
+                cropPathFn: _cropSettings.cropShapeFn,
+                enabledTransformations: _cropSettings.enabledTransformations,
+                allowedAspectRatios: _cropSettings.forcedAspectRatio != null
+                    ? [_cropSettings.forcedAspectRatio!]
+                    : null,
                 postProcessFn: (result) async {
                   _croppedImage[page]?.dispose();
 
@@ -145,42 +175,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          const Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Croppy Demo'),
-            ),
-          ),
-          Center(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _imageProviders.length,
-              scrollDirection: Axis.horizontal,
-              padEnds: true,
-              itemBuilder: (context, i) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Center(
-                    child: Hero(
-                      tag: 'image-$i',
-                      placeholderBuilder: (context, size, child) =>
-                          Visibility.maintain(
-                        visible: false,
-                        child: child,
-                      ),
-                      child: _croppedImage[i] != null
-                          ? RawImage(image: _croppedImage[i])
-                          : Image(image: _imageProviders[i]),
-                    ),
+      body: Center(
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: _imageProviders.length,
+          scrollDirection: Axis.horizontal,
+          padEnds: true,
+          itemBuilder: (context, i) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Center(
+                child: Hero(
+                  tag: 'image-$i',
+                  placeholderBuilder: (context, size, child) =>
+                      Visibility.maintain(
+                    visible: false,
+                    child: child,
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+                  child: _croppedImage[i] != null
+                      ? RawImage(image: _croppedImage[i])
+                      : Image(image: _imageProviders[i]),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

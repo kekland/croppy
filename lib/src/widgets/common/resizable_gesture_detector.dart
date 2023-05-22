@@ -129,18 +129,13 @@ class _ResizeGestureDetector extends StatefulWidget {
 }
 
 class _ResizeGestureDetectorState extends State<_ResizeGestureDetector> {
-  late DragStartDetails _dragStartDetails;
-
   void _onPanStart(DragStartDetails details) {
-    _dragStartDetails = details;
     widget.controller.onResizeStart();
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    final delta = details.globalPosition - _dragStartDetails.globalPosition;
-
     widget.controller.onResize(
-      offset: -delta,
+      offsetDelta: -details.delta,
       direction: widget.direction,
     );
   }

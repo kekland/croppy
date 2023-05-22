@@ -11,10 +11,10 @@ mixin AspectRatioMixin on CroppableImageController {
 
   @override
   void onResize({
-    required Offset offset,
+    required Offset offsetDelta,
     required ResizeDirection direction,
   }) {
-    super.onResize(offset: offset, direction: direction);
+    super.onResize(offsetDelta: offsetDelta, direction: direction);
     if (currentAspectRatio == null) return;
 
     data = transformationInitialData!.copyWith(

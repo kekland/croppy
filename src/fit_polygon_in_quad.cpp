@@ -204,8 +204,8 @@ extern "C" Aabb2 fit_polygon_in_quad_on_resize_impl(double *points,
     static_point_x_expressions.push_back(Expression{out_x});
     static_point_y_expressions.push_back(Expression{out_y});
 
-    static_point_x_equal_values.push_back(quad_aabb.min.x);
-    static_point_y_equal_values.push_back(quad_aabb.min.y);
+    static_point_x_equal_values.push_back(polygon_aabb.min.x);
+    static_point_y_equal_values.push_back(polygon_aabb.min.y);
   }
 
   if (isTopRightStatic)
@@ -213,8 +213,8 @@ extern "C" Aabb2 fit_polygon_in_quad_on_resize_impl(double *points,
     static_point_x_expressions.push_back(Expression{out_x + out_ax * polygon_size.x});
     static_point_y_expressions.push_back(Expression{out_y});
 
-    static_point_x_equal_values.push_back(quad_aabb.max.x);
-    static_point_y_equal_values.push_back(quad_aabb.min.y);
+    static_point_x_equal_values.push_back(polygon_aabb.max.x);
+    static_point_y_equal_values.push_back(polygon_aabb.min.y);
   }
 
   if (isBottomLeftStatic)
@@ -222,8 +222,8 @@ extern "C" Aabb2 fit_polygon_in_quad_on_resize_impl(double *points,
     static_point_x_expressions.push_back(Expression{out_x});
     static_point_y_expressions.push_back(Expression{out_y + out_ay * polygon_size.y});
 
-    static_point_x_equal_values.push_back(quad_aabb.min.x);
-    static_point_y_equal_values.push_back(quad_aabb.max.y);
+    static_point_x_equal_values.push_back(polygon_aabb.min.x);
+    static_point_y_equal_values.push_back(polygon_aabb.max.y);
   }
 
   if (isBottomRightStatic)
@@ -231,15 +231,15 @@ extern "C" Aabb2 fit_polygon_in_quad_on_resize_impl(double *points,
     static_point_x_expressions.push_back(Expression{out_x + out_ax * polygon_size.x});
     static_point_y_expressions.push_back(Expression{out_y + out_ay * polygon_size.y});
 
-    static_point_x_equal_values.push_back(quad_aabb.max.x);
-    static_point_y_equal_values.push_back(quad_aabb.max.y);
+    static_point_x_equal_values.push_back(polygon_aabb.max.x);
+    static_point_y_equal_values.push_back(polygon_aabb.max.y);
   }
 
-  std::vector<Term> total_x_terms;
-  std::vector<Term> total_y_terms;
+  Expression x_points_expression = Expression{};
+  Expression y_points_expression = Expression{};
 
-  double total_x_constant = 0.0;
-  double total_y_constant = 0.0;
+  double x_points_equals = 0.0;
+  double y_points_equals = 0.0;
 
   for (int i = 0; i < static_point_x_expressions.size(); i++)
   {
@@ -249,22 +249,15 @@ extern "C" Aabb2 fit_polygon_in_quad_on_resize_impl(double *points,
     double x_equal_value = static_point_x_equal_values[i];
     double y_equal_value = static_point_y_equal_values[i];
 
-    for (auto term : x_expression.terms())
-    {
-      total_x_terms.push_back(term);
-    }
+    x_points_expression = x_points_expression + x_expression;
+    y_points_expression = y_points_expression + y_expression;
 
-    for (auto term : y_expression.terms())
-    {
-      total_y_terms.push_back(term);
-    }
-
-    total_x_constant += x_expression.constant() - x_equal_value;
-    total_y_constant += y_expression.constant() - y_equal_value;
+    x_points_equals += x_equal_value;
+    y_points_equals += y_equal_value;
   }
 
-  solver.addConstraint(Expression{total_x_terms, total_x_constant} == 0);
-  solver.addConstraint(Expression{total_y_terms, total_y_constant} == 0);
+  solver.addConstraint(Constraint{x_points_expression == x_points_equals});
+  solver.addConstraint(Constraint{y_points_expression == y_points_equals});
 
   Constraint objective_constraint_1 = Constraint{out_ax == 1.0 | strength::required - 1};
   Constraint objective_constraint_2 = Constraint{out_ay == 1.0 | strength::required - 1};

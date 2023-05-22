@@ -3,8 +3,6 @@ import 'dart:typed_data';
 import 'package:croppy/src/src.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:croppy/src/utils/path.dart' as vg;
-
 /// A function that is called in [crop] as a post-processing function. Use it
 /// to, for example, compress the image, or update the state in the preview
 /// page.
@@ -46,12 +44,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   set data(CroppableImageData newData) {
     if (_data == newData) return;
 
-    _data = newData.copyWith(
-      cropShape: cropShapeFn(
-        vg.globalPathBuilder,
-        newData.cropRect.size,
-      ),
-    );
+    _data = newData.copyWithProperCropShape(cropShapeFn: cropShapeFn);
 
     recomputeValueNotifiers();
     notifyListeners();
@@ -129,14 +122,19 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Normalizes the crop rect to fit inside the transformed image quad.
-  void normalize() {
+  @protected
+  Rect normalizeImpl() {
     final normalizedAabb = FitPolygonInQuadSolver.solve(
       data.cropShape.polygon.shift(data.cropRect.topLeft.vector2),
       data.transformedImageQuad,
     );
 
-    data = data.copyWith(cropRect: normalizedAabb.rect);
+    return normalizedAabb.rect;
+  }
+
+  /// Normalizes the crop rect to fit inside the transformed image quad.
+  void normalize() {
+    data = data.copyWith(cropRect: normalizeImpl());
   }
 
   /// Returns the transformation matrix that is needed to transform the crop

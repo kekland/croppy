@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 /// A croppable image controller that is similar to the iOS Photos app.
 class CupertinoCroppableImageController
-    extends CroppableImageControllerWithMixins with AnimatedControllerMixin {
+    extends CroppableImageControllerWithMixins
+    with AnimatedControllerMixin, TransformationFrictionMixin {
   CupertinoCroppableImageController({
     required TickerProvider vsync,
     required super.data,
@@ -87,10 +88,10 @@ class CupertinoCroppableImageController
 
   @override
   void onPanAndScale({
-    required double scale,
+    required double scaleDelta,
     required Offset offsetDelta,
   }) {
-    super.onPanAndScale(scale: scale, offsetDelta: offsetDelta);
+    super.onPanAndScale(scaleDelta: scaleDelta, offsetDelta: offsetDelta);
     setViewportScale();
   }
 
@@ -104,10 +105,10 @@ class CupertinoCroppableImageController
 
   @override
   void onResize({
-    required Offset offset,
+    required Offset offsetDelta,
     required ResizeDirection direction,
   }) {
-    super.onResize(offset: offset, direction: direction);
+    super.onResize(offsetDelta: offsetDelta, direction: direction);
 
     computeStaticCropRectDuringResize();
     setStaticCropRectTweenEnd(staticCropRect);

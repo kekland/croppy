@@ -22,32 +22,47 @@ class MaterialCroppableImageController
 
   @override
   void onPanAndScale({
-    required double scale,
+    required double scaleDelta,
     required Offset offsetDelta,
   }) {
-    super.onPanAndScale(scale: scale, offsetDelta: offsetDelta);
+    super.onPanAndScale(scaleDelta: scaleDelta, offsetDelta: offsetDelta);
 
     normalize();
     setViewportScale();
   }
 
   @override
-  void onResize({
-    required Offset offset,
+  CroppableImageData onResizeImpl({
+    required CroppableImageData data,
+    required Offset offsetDelta,
     required ResizeDirection direction,
   }) {
-    super.onResize(offset: offset, direction: direction);
+    var newData = super.onResizeImpl(
+      data: data,
+      offsetDelta: offsetDelta,
+      direction: direction,
+    );
 
     final newAabb = FitPolygonInQuadSolver.solveWithStaticPointsAndAspectRatio(
-      data.cropShape.polygon.shift(data.cropRect.topLeft.vector2),
-      data.transformedImageQuad,
+      newData.cropShape.polygon.shift(newData.cropRect.topLeft.vector2),
+      newData.transformedImageQuad,
       staticCorners: direction.staticCorners,
       aspectRatio: currentAspectRatio?.ratio,
     );
 
-    data = data.copyWith(
+    newData = newData.copyWith(
       cropRect: newAabb.rect,
     );
+
+    return newData;
+  }
+
+  @override
+  void onResize({
+    required Offset offsetDelta,
+    required ResizeDirection direction,
+  }) {
+    super.onResize(offsetDelta: offsetDelta, direction: direction);
 
     computeStaticCropRectDuringResize();
     setViewportScale(overrideCropRect: staticCropRect);

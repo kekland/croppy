@@ -125,6 +125,30 @@ class CroppableImageData extends Equatable {
     );
   }
 
+  /// Copies this [CroppableImageData] with the given parameters and
+  /// automatically sets the proper crop shape.
+  CroppableImageData copyWithProperCropShape({
+    Size? imageSize,
+    Rect? cropRect,
+    BaseTransformations? baseTransformations,
+    Matrix4? imageTransform,
+    Matrix4? currentImageTransform,
+    required CropShapeFn cropShapeFn,
+  }) {
+    return copyWith(
+      imageSize: imageSize ?? this.imageSize,
+      cropRect: cropRect ?? this.cropRect,
+      imageTransform: imageTransform ?? this.imageTransform,
+      currentImageTransform:
+          currentImageTransform ?? this.currentImageTransform,
+      baseTransformations: baseTransformations ?? this.baseTransformations,
+      cropShape: cropShapeFn(
+        vg.globalPathBuilder,
+        (cropRect ?? this.cropRect).size,
+      ),
+    );
+  }
+
   /// Linearly interpolates between two [CroppableImageData]s.
   static CroppableImageData? lerp(
     CroppableImageData? a,

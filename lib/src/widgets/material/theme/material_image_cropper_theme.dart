@@ -6,8 +6,8 @@ ThemeData generateMaterialImageCropperTheme(BuildContext context) {
   return ThemeData.localize(
     ThemeData.from(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: outerTheme.primaryColor,
-        primary: outerTheme.primaryColor,
+        seedColor: outerTheme.colorScheme.primary,
+        primary: outerTheme.colorScheme.primary,
         brightness: Brightness.dark,
       ),
       useMaterial3: outerTheme.useMaterial3,
