@@ -29,6 +29,10 @@ import 'package:flutter/material.dart';
 /// Use the [enabledTransformations] to define a list of transformations that
 /// the user can perform. If not provided, the user can apply any
 /// transformations. See [Transformation] for a list of every transformation.
+/// 
+/// [shouldPopAfterCrop] defines whether the page should be popped after the
+/// image has been cropped. If you want to control how the page is popped, set
+/// this to false and pop the page yourself using the [Navigator].
 Future<CropImageResult?> showMaterialImageCropper(
   BuildContext context, {
   required ImageProvider imageProvider,
@@ -38,6 +42,7 @@ Future<CropImageResult?> showMaterialImageCropper(
   List<CropAspectRatio?>? allowedAspectRatios,
   List<Transformation>? enabledTransformations,
   Object? heroTag,
+  bool shouldPopAfterCrop = true,
 }) async {
   late final CroppableImageData _initialData;
 
@@ -65,6 +70,7 @@ Future<CropImageResult?> showMaterialImageCropper(
       builder: (context, controller) => MaterialImageCropperPage(
         heroTag: heroTag,
         controller: controller,
+        shouldPopAfterCrop: shouldPopAfterCrop,
       ),
     );
   }

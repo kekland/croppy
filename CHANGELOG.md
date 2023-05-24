@@ -1,4 +1,9 @@
+## 0.2.2
+
+* Added `shouldPopAfterCrop`
+
 ## 0.2.1
+
 * Accidentally dropped support for Web because of FFI - fixed.
 
 ## 0.2.0

@@ -6,6 +6,7 @@ class MaterialImageCropperPage extends StatelessWidget {
   const MaterialImageCropperPage({
     super.key,
     required this.controller,
+    required this.shouldPopAfterCrop,
     this.gesturePadding = 16.0,
     this.heroTag,
   });
@@ -13,6 +14,7 @@ class MaterialImageCropperPage extends StatelessWidget {
   final CroppableImageController controller;
   final double gesturePadding;
   final Object? heroTag;
+  final bool shouldPopAfterCrop;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +67,7 @@ class MaterialImageCropperPage extends StatelessWidget {
                         opacity: overlayOpacityAnimation.value,
                         child: MaterialImageCropperBottomAppBar(
                           controller: controller,
+                          shouldPopAfterCrop: shouldPopAfterCrop,
                         ),
                       ),
                     ),

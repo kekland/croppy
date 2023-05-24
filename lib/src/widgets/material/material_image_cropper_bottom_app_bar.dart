@@ -5,9 +5,11 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
   const MaterialImageCropperBottomAppBar({
     super.key,
     required this.controller,
+    required this.shouldPopAfterCrop,
   });
 
   final CroppableImageController controller;
+  final bool shouldPopAfterCrop;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
 
                   final result = await controller.crop();
 
-                  if (context.mounted) {
+                  if (context.mounted && shouldPopAfterCrop) {
                     Navigator.of(context).pop(result);
                   }
                 },

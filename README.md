@@ -81,6 +81,8 @@ They both accept the following arguments:
 
 - `Object? heroTag` - an optional argument that can be used to provide a hero tag for the cropper. If provided, the cropper will be opened with a hero animation. See the documentation for information about the constraints of using hero animations with `croppy`.
 
+- `bool shouldPopAfterCrop = true` - an optional argument that can be used to specify whether the cropper should be closed after the user finishes cropping the image. If set to `false`, the cropper will not be closed and you can handle the closing of the route yourself. This is useful if you want to perform some complex animations after the user finishes cropping the image.
+
 The return value of `showCupertinoImageCropper` is `CropImageResult`, which contains the `dart:ui.Image` of the cropped image and the `CroppableImageData` that was used to crop the image. The `CroppableImageData` can be used to crop the image again with the same transformations.
 
 For a complete runnable example, see `./example`.

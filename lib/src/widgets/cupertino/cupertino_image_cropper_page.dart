@@ -10,6 +10,7 @@ class CupertinoImageCropperPage extends StatelessWidget {
   const CupertinoImageCropperPage({
     super.key,
     required this.controller,
+    required this.shouldPopAfterCrop,
     this.gesturePadding = 16.0,
     this.heroTag,
   });
@@ -17,6 +18,7 @@ class CupertinoImageCropperPage extends StatelessWidget {
   final CroppableImageController controller;
   final double gesturePadding;
   final Object? heroTag;
+  final bool shouldPopAfterCrop;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,7 @@ class CupertinoImageCropperPage extends StatelessWidget {
                             ),
                             CupertinoImageCropperBottomAppBar(
                               controller: controller,
+                              shouldPopAfterCrop: shouldPopAfterCrop,
                             ),
                           ],
                         ),
