@@ -47,32 +47,15 @@ class CupertinoImageCropperPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: RepaintBoundary(
-                      child: CroppableImageViewport(
+                      child: AnimatedCroppableImageViewport(
                         controller: controller,
+                        overlayOpacityAnimation: overlayOpacityAnimation,
                         gesturePadding: gesturePadding,
                         heroTag: heroTag,
-                        heroChild: ListenableBuilder(
-                          listenable: controller,
-                          builder: (context, _) => CroppedHeroImageWidget(
-                            controller: controller,
-                            child: Image(image: controller.imageProvider),
-                          ),
-                        ),
-                        child: AnimatedBuilder(
-                          animation: overlayOpacityAnimation,
-                          builder: (context, _) => ListenableBuilder(
-                            listenable: controller,
-                            builder: (context, _) => CroppableImageWidget(
-                              controller: controller,
-                              overlayOpacity: overlayOpacityAnimation.value,
-                              image: Image(image: controller.imageProvider),
-                              cropHandles: CupertinoImageCropHandles(
-                                controller: controller,
-                                gesturePadding: gesturePadding,
-                              ),
-                              gesturePadding: gesturePadding,
-                            ),
-                          ),
+                        cropHandlesBuilder: (context) =>
+                            CupertinoImageCropHandles(
+                          controller: controller,
+                          gesturePadding: gesturePadding,
                         ),
                       ),
                     ),

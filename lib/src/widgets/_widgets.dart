@@ -1,3 +1,4 @@
+export 'common/animated_croppable_image_viewport.dart';
 export 'common/crop_shape_clipper.dart';
 export 'common/croppable_image_gesture_detector.dart';
 export 'common/croppable_image_page_animator.dart';

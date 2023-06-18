@@ -32,9 +32,7 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
         const Spacer(),
         CupertinoButton(
           onPressed: () async {
-            context
-                .findAncestorStateOfType<CroppableImagePageAnimatorState>()
-                ?.setHeroesEnabled(true);
+            CroppableImagePageAnimator.of(context)?.setHeroesEnabled(true);
 
             final result = await controller.crop();
 

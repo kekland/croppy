@@ -41,11 +41,16 @@ class MaterialImageCropperPage extends StatelessWidget {
                       child: RepaintBoundary(
                         child: Padding(
                           padding: const EdgeInsets.all(48.0),
-                          child: MaterialCroppableImageViewport(
+                          child: AnimatedCroppableImageViewport(
                             controller: controller,
                             gesturePadding: gesturePadding,
                             overlayOpacityAnimation: overlayOpacityAnimation,
                             heroTag: heroTag,
+                            cropHandlesBuilder: (context) =>
+                                MaterialImageCropperHandles(
+                              controller: controller,
+                              gesturePadding: gesturePadding,
+                            ),
                           ),
                         ),
                       ),

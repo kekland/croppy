@@ -2,6 +2,8 @@ import 'package:croppy/src/src.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+/// A GestureDetector that allows resizing an AABB crop rect from its corners
+/// and sides.
 class ResizableGestureDetector extends StatelessWidget {
   const ResizableGestureDetector({
     super.key,
@@ -10,8 +12,13 @@ class ResizableGestureDetector extends StatelessWidget {
     required this.gesturePadding,
   });
 
+  /// The [CroppableImageController] that is used to handle the gestures.
   final CroppableImageController controller;
+
+  /// The child widget that is wrapped by this widget.
   final Widget child;
+
+  /// The padding around the child that is used to detect gestures.
   final double gesturePadding;
 
   @override

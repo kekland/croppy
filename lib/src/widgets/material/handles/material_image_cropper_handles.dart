@@ -6,10 +6,19 @@ class MaterialImageCropperHandles extends StatelessWidget {
     super.key,
     required this.controller,
     required this.gesturePadding,
+    this.cornerColor = Colors.white,
+    this.frameColor = const Color.fromRGBO(255, 255, 255, 0.5),
+    this.guideColor = const Color.fromRGBO(255, 255, 255, 0.5),
+    this.fineGuideColor = const Color.fromRGBO(255, 255, 255, 0.5),
   });
 
   final CroppableImageController controller;
   final double gesturePadding;
+
+  final Color cornerColor;
+  final Color frameColor;
+  final Color guideColor;
+  final Color fineGuideColor;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +39,11 @@ class MaterialImageCropperHandles extends StatelessWidget {
               child: child,
             ),
             child: CustomPaint(
-              painter: _MaterialImageCropperGuidesPainter(cropShape),
+              painter: _MaterialImageCropperGuidesPainter(
+                cropShape,
+                frameColor,
+                guideColor,
+              ),
             ),
           ),
           ListenableBuilder(
@@ -47,13 +60,16 @@ class MaterialImageCropperHandles extends StatelessWidget {
             child: ClipPath(
               clipper: CropShapeClipper(cropShape),
               child: CustomPaint(
-                painter: _MaterialImageCropperFineGuidesPainter(),
+                painter: _MaterialImageCropperFineGuidesPainter(fineGuideColor),
               ),
             ),
           ),
           if (cropShape.type == CropShapeType.aabb)
             CustomPaint(
-              painter: _MaterialImageCropperCornersPainter(cropShape),
+              painter: _MaterialImageCropperCornersPainter(
+                cropShape,
+                cornerColor,
+              ),
             ),
         ],
       ),
@@ -62,12 +78,14 @@ class MaterialImageCropperHandles extends StatelessWidget {
 }
 
 class _MaterialImageCropperCornersPainter extends CustomPainter {
-  _MaterialImageCropperCornersPainter(this.cropShape);
+  _MaterialImageCropperCornersPainter(this.cropShape, this.color);
+
   final CropShape cropShape;
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white;
+    final paint = Paint()..color = color;
 
     final path = cropShape.getTransformedPathForSize(size);
 
@@ -82,18 +100,25 @@ class _MaterialImageCropperCornersPainter extends CustomPainter {
 }
 
 class _MaterialImageCropperGuidesPainter extends CustomPainter {
-  _MaterialImageCropperGuidesPainter(this.cropShape);
+  _MaterialImageCropperGuidesPainter(
+    this.cropShape,
+    this.frameColor,
+    this.guideColor,
+  );
+
   final CropShape cropShape;
+  final Color frameColor;
+  final Color guideColor;
 
   @override
   void paint(Canvas canvas, Size size) {
     final framePaint = Paint()
-      ..color = Colors.white.withOpacity(0.5)
+      ..color = frameColor
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
     final guidePaint = Paint()
-      ..color = Colors.white.withOpacity(0.5)
+      ..color = guideColor
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
@@ -128,16 +153,18 @@ class _MaterialImageCropperGuidesPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_MaterialImageCropperGuidesPainter oldDelegate) => false;
+  bool shouldRepaint(_MaterialImageCropperGuidesPainter oldDelegate) => true;
 }
 
 class _MaterialImageCropperFineGuidesPainter extends CustomPainter {
-  _MaterialImageCropperFineGuidesPainter();
+  _MaterialImageCropperFineGuidesPainter(this.color);
+
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final guidePaint = Paint()
-      ..color = Colors.white.withOpacity(0.5)
+      ..color = color
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
@@ -216,5 +243,5 @@ class _MaterialImageCropperFineGuidesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_MaterialImageCropperFineGuidesPainter oldDelegate) =>
-      false;
+      true;
 }

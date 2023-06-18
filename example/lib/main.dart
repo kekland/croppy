@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:croppy/croppy.dart';
+import 'package:example/custom_cropper.dart';
 import 'package:example/settings_modal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -12,7 +13,7 @@ void main() {
     // For some reason, the C++ implementation of the Cassowary solver is super
     // slow in debug mode. So we force the Dart implementation to be used in
     // debug mode. This only applies to Windows.
-    croppyForceUseCassowaryDartImpl = false;
+    croppyForceUseCassowaryDartImpl = true;
   }
 
   runApp(const MyApp());
@@ -172,6 +173,31 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             heroTag: 'fab-material',
             child: const Icon(Icons.android_rounded),
+          ),
+          const SizedBox(width: 16.0),
+          FloatingActionButton(
+            onPressed: () {
+              final page = _pageController.page?.round() ?? 0;
+
+              showCustomCropper(
+                context,
+                _imageProviders[page],
+                heroTag: 'image-$page',
+                initialData: _data[page],
+                onCropped: (result) async {
+                  _croppedImage[page]?.dispose();
+
+                  setState(() {
+                    _croppedImage[page] = result.uiImage;
+                    _data[page] = result.transformationsData;
+                  });
+
+                  return result;
+                },
+              );
+            },
+            heroTag: 'fab-custom',
+            child: const Icon(Icons.edit_rounded),
           ),
         ],
       ),

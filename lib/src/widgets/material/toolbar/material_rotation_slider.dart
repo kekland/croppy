@@ -7,9 +7,13 @@ class MaterialRotationSlider extends StatefulWidget {
   const MaterialRotationSlider({
     super.key,
     required this.controller,
+    this.color,
+    this.activeColor,
   });
 
   final CroppableImageController controller;
+  final Color? color;
+  final Color? activeColor;
 
   @override
   State<MaterialRotationSlider> createState() => _MaterialRotationSliderState();
@@ -30,11 +34,9 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
 
   void _onPanUpdate(DragUpdateDetails details) {
     final delta = details.globalPosition - _dragStartDetails!.globalPosition;
-
-    var dx = delta.dx;
+    final dx = delta.dx;
 
     // TODO: Change this so that "zero" has more width
-
     var value = _dragStartValue! + (-dx / _width) * ((pi / 4) * 2);
     value = value.clamp(-pi / 4, pi / 4);
 
@@ -63,10 +65,10 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final labelStyle = theme.textTheme.labelMedium?.copyWith(
-      color: theme.colorScheme.onBackground,
-    );
+    final color = widget.color ?? theme.colorScheme.onBackground;
+    final activeColor = widget.activeColor ?? theme.colorScheme.primary;
 
+    final labelStyle = theme.textTheme.labelMedium?.copyWith(color: color);
     final degreeSignWidth = _computeDegreeSignWidth(labelStyle);
 
     return GestureDetector(
@@ -104,8 +106,8 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
                       child: CustomPaint(
                         painter: _MaterialRotationSliderPainter(
                           value: value,
-                          baseColor: theme.colorScheme.onBackground,
-                          primaryColor: theme.colorScheme.primary,
+                          baseColor: color,
+                          primaryColor: activeColor,
                         ),
                       ),
                     ),

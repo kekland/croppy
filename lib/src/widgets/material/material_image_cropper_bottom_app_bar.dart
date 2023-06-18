@@ -42,9 +42,7 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
               height: 40.0,
               child: FilledButton(
                 onPressed: () async {
-                  context
-                      .findAncestorStateOfType<
-                          CroppableImagePageAnimatorState>()
+                  CroppableImagePageAnimator.of(context)
                       ?.setHeroesEnabled(true);
 
                   final result = await controller.crop();

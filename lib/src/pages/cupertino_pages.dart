@@ -18,18 +18,18 @@ import 'package:flutter/cupertino.dart';
 /// The [postProcessFn] is a function that is called after the image has been
 /// cropped. Use it to, for example, compress the image, or update the state in
 /// the preview page.
-/// 
+///
 /// Use the [cropPathFn] to define a custom crop shape. If not provided, the
 /// default crop shape is a rectangle.
-/// 
+///
 /// Use the [allowedAspectRatios] to define a list of aspect ratios that the
 /// user can choose from. If not provided, the user can choose any aspect ratio.
 /// See [CropAspectRatio] for more information.
-/// 
+///
 /// Use the [enabledTransformations] to define a list of transformations that
-/// the user can perform. If not provided, the user can apply any 
+/// the user can perform. If not provided, the user can apply any
 /// transformations. See [Transformation] for a list of every transformation.
-/// 
+///
 /// [shouldPopAfterCrop] defines whether the page should be popped after the
 /// image has been cropped. If you want to control how the page is popped, set
 /// this to false and pop the page yourself using the [Navigator].
@@ -49,12 +49,8 @@ Future<CropImageResult?> showCupertinoImageCropper(
   if (initialData != null) {
     _initialData = initialData;
   } else {
-    final image = await obtainImage(imageProvider);
-    _initialData = CroppableImageData.initialWithCropPathFn(
-      imageSize: Size(
-        image.width.toDouble(),
-        image.height.toDouble(),
-      ),
+    _initialData = await CroppableImageData.fromImageProvider(
+      imageProvider,
       cropPathFn: cropPathFn ?? aabbCropShapeFn,
     );
   }

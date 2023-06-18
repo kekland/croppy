@@ -6,10 +6,17 @@ class CupertinoImageCropHandles extends StatelessWidget {
     super.key,
     required this.controller,
     required this.gesturePadding,
+    this.handleColor = CupertinoColors.white,
+    this.guideColor = CupertinoColors.white,
+    this.fineGuideColor = const Color.fromRGBO(255, 255, 255, 0.3),
   });
 
   final CroppableImageController controller;
   final double gesturePadding;
+
+  final Color handleColor;
+  final Color guideColor;
+  final Color fineGuideColor;
 
   Widget _buildHandles(BuildContext context, bool areGuideLinesVisible) {
     final fineGuidesChild = AnimatedOpacity(
@@ -17,7 +24,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
       curve: Curves.easeInOut,
       opacity: controller.isRotating && areGuideLinesVisible ? 1.0 : 0.0,
       child: CustomPaint(
-        painter: _CupertinoImageCropperFineGuidesPainter(),
+        painter: _CupertinoImageCropperFineGuidesPainter(color: fineGuideColor),
       ),
     );
 
@@ -26,7 +33,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
       curve: Curves.easeInOut,
       opacity: areGuideLinesVisible ? 1.0 : 0.0,
       child: CustomPaint(
-        painter: _CupertinoImageCropperGuidesPainter(),
+        painter: _CupertinoImageCropperGuidesPainter(guideColor),
       ),
     );
 
@@ -37,8 +44,13 @@ class CupertinoImageCropHandles extends StatelessWidget {
       children: [
         CustomPaint(
           painter: cropShape.type == CropShapeType.aabb
-              ? const _CupertinoImageRectCropHandlesPainter()
-              : _CupertinoImageCustomCropHandlesPainter(cropShape: cropShape),
+              ? _CupertinoImageRectCropHandlesPainter(
+                  handleColor,
+                )
+              : _CupertinoImageCustomCropHandlesPainter(
+                  cropShape: cropShape,
+                  color: handleColor,
+                ),
         ),
         ClipPath(
           clipper: CropShapeClipper(cropShape),
@@ -74,11 +86,12 @@ class CupertinoImageCropHandles extends StatelessWidget {
 }
 
 class _CupertinoImageRectCropHandlesPainter extends CustomPainter {
-  const _CupertinoImageRectCropHandlesPainter();
+  const _CupertinoImageRectCropHandlesPainter(this.color);
+
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    const color = CupertinoColors.white;
     final rectPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -148,15 +161,16 @@ class _CupertinoImageRectCropHandlesPainter extends CustomPainter {
 class _CupertinoImageCustomCropHandlesPainter extends CustomPainter {
   _CupertinoImageCustomCropHandlesPainter({
     required this.cropShape,
+    required this.color,
   });
 
+  final Color color;
   final CropShape cropShape;
 
   @override
   void paint(Canvas canvas, Size size) {
     final cropPath = cropShape.getTransformedPathForSize(size);
 
-    const color = CupertinoColors.white;
     final pathPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -173,9 +187,12 @@ class _CupertinoImageCustomCropHandlesPainter extends CustomPainter {
 }
 
 class _CupertinoImageCropperGuidesPainter extends CustomPainter {
+  _CupertinoImageCropperGuidesPainter(this.color);
+
+  final Color color;
+
   @override
   void paint(Canvas canvas, Size size) {
-    const color = CupertinoColors.white;
     final guidePaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -212,10 +229,12 @@ class _CupertinoImageCropperGuidesPainter extends CustomPainter {
 }
 
 class _CupertinoImageCropperFineGuidesPainter extends CustomPainter {
+  _CupertinoImageCropperFineGuidesPainter({required this.color});
+
+  final Color color;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final color = CupertinoColors.white.withOpacity(0.3);
-
     final guidePaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke

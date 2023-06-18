@@ -1,6 +1,10 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 
+/// A [GestureDetector] that handles panning and scaling of the image.
+/// 
+/// If the crop shape is an AABB, then this widget will also handle resizing
+/// from the corners.
 class CroppableImageGestureDetector extends StatefulWidget {
   const CroppableImageGestureDetector({
     super.key,
@@ -9,8 +13,15 @@ class CroppableImageGestureDetector extends StatefulWidget {
     required this.child,
   });
 
+  /// The padding around the child that is used to detect gestures. The 
+  /// [child] is padded by this amount on all sides. This is to ensure that
+  /// it's easier to grab the corners of the crop shape.
   final double gesturePadding;
+
+  /// The [CroppableImageController] that is used to handle the gestures.
   final CroppableImageController controller;
+
+  /// The child widget that is wrapped by this widget.
   final Widget child;
 
   @override

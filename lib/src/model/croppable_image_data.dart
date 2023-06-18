@@ -35,6 +35,20 @@ class CroppableImageData extends Equatable {
         currentImageTransform = Matrix4.identity(),
         baseTransformations = const BaseTransformations.initial();
 
+  static Future<CroppableImageData> fromImageProvider(
+    ImageProvider imageProvider, {
+    CropShapeFn cropPathFn = aabbCropShapeFn,
+  }) async {
+    final image = await obtainImage(imageProvider);
+    return CroppableImageData.initialWithCropPathFn(
+      imageSize: Size(
+        image.width.toDouble(),
+        image.height.toDouble(),
+      ),
+      cropPathFn: cropPathFn,
+    );
+  }
+
   /// The size of the image to be cropped.
   final Size imageSize;
 

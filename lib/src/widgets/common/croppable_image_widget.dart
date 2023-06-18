@@ -4,6 +4,7 @@ import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+/// TODO: Document this
 class CroppableImageWidget extends RenderObjectWidget
     with SlottedMultiChildRenderObjectWidgetMixin<EditableImageSlot> {
   const CroppableImageWidget({

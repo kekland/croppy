@@ -14,7 +14,7 @@ class DefaultCupertinoCroppableImageController extends StatefulWidget {
   });
 
   final ImageProvider imageProvider;
-  final CroppableImageData initialData;
+  final CroppableImageData? initialData;
   final CroppableImagePostProcessFn? postProcessFn;
   final CropShapeFn? cropShapeFn;
   final List<CropAspectRatio?>? allowedAspectRatios;
@@ -33,32 +33,54 @@ class DefaultCupertinoCroppableImageController extends StatefulWidget {
 class _DefaultCupertinoCroppableImageControllerState
     extends State<DefaultCupertinoCroppableImageController>
     with TickerProviderStateMixin {
-  late final CupertinoCroppableImageController _controller;
+  CupertinoCroppableImageController? _controller;
 
   @override
   void initState() {
     super.initState();
+    _prepareController();
+  }
+
+  Future<void> _prepareController() async {
+    late final CroppableImageData initialData;
+
+    if (widget.initialData != null) {
+      initialData = widget.initialData!;
+    } else {
+      initialData = await CroppableImageData.fromImageProvider(
+        widget.imageProvider,
+        cropPathFn: widget.cropShapeFn ?? aabbCropShapeFn,
+      );
+    }
 
     _controller = CupertinoCroppableImageController(
       vsync: this,
       imageProvider: widget.imageProvider,
-      data: widget.initialData,
+      data: initialData,
       postProcessFn: widget.postProcessFn,
       cropShapeFn: widget.cropShapeFn ?? aabbCropShapeFn,
       allowedAspectRatios: widget.allowedAspectRatios,
       enabledTransformations:
           widget.enabledTransformations ?? Transformation.values,
     );
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, _controller);
+    if (_controller == null) {
+      return const SizedBox.shrink();
+    }
+
+    return widget.builder(context, _controller!);
   }
 }
