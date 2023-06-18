@@ -1,3 +1,8 @@
+## 0.2.3
+
+* You can now create your own custom croppers easily! Check out the documentation and the example app for more info.
+* Added documentation
+
 ## 0.2.2
 
 * Added `shouldPopAfterCrop`
