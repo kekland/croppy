@@ -41,13 +41,18 @@ mixin TransformationFrictionMixin on CroppableImageControllerWithMixins {
     required Offset offsetDelta,
     required ResizeDirection direction,
   }) {
+    final oldData = data.copyWith();
+
+    super.onResize(
+      offsetDelta: offsetDelta,
+      direction: direction,
+    );
+
     _applyFrictionToTransformation(
-      possibleNewData: onResizeImpl(
-        data: data,
-        offsetDelta: offsetDelta,
-        direction: direction,
-      ),
+      possibleNewData: data,
       onFriction: (friction) {
+        data = oldData;
+
         super.onResize(
           offsetDelta: offsetDelta * friction,
           direction: direction,
