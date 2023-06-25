@@ -17,8 +17,6 @@ mixin AspectRatioMixin on CroppableImageController {
     super.onResize(offsetDelta: offsetDelta, direction: direction);
     if (currentAspectRatio == null) return;
 
-    print('forcing aspect ratio');
-
     data = transformationInitialData!.copyWith(
       cropRect: onResizeCorrectAspectRatio(
         rect: data.cropRect,

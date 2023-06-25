@@ -1,3 +1,7 @@
+## 0.2.4
+
+* Hotfix: Cupertino cropper's `TransformationFrictionMixin` was not respecting fixed aspect ratios
+
 ## 0.2.3
 
 * You can now create your own custom croppers easily! Check out the documentation and the example app for more info.
