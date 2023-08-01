@@ -1,3 +1,7 @@
+## 0.2.5
+
+* Fix: Rotating an image with a forced aspect ratio inverts the aspect ratio (#7). Thanks @maRci002 and @siranov for the bug reports!
+
 ## 0.2.4
 
 * Hotfix: Cupertino cropper's `TransformationFrictionMixin` was not respecting fixed aspect ratios
