@@ -74,6 +74,19 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
   }
 
   @override
+  Future<void> maybeSetAspectRatioOnInit() async {
+    await Future.delayed(kCupertinoImageCropperPageTransitionDuration);
+
+    viewportScaleAnimationController.duration =
+        kCupertinoImageCropperPageTransitionDuration;
+
+    await animatedNormalizeAfterTransform(super.maybeSetAspectRatioOnInit);
+
+    viewportScaleAnimationController.duration =
+        const Duration(milliseconds: 150);
+  }
+
+  @override
   void setViewportScale({
     Rect? overrideCropRect,
     bool shouldNotify = true,
@@ -129,14 +142,8 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
 
   @override
   void onBaseTransformation(CroppableImageData newData) {
-    _imageDataTween = CroppableImageDataTween(
-      begin: data,
-      end: newData,
-    );
-
     staticCropRect = null;
-    setViewportScaleWithAnimation(overrideCropRect: newData.cropRect);
-    imageDataAnimationController.forward(from: 0.0);
+    animatedNormalizeAfterTransform(() => super.onBaseTransformation(newData));
   }
 
   @override
@@ -189,7 +196,7 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
     return normalizedRect;
   }
 
-  void animatedNormalizeAfterTransform(VoidCallback action) {
+  Future<void> animatedNormalizeAfterTransform(VoidCallback action) {
     final oldData = data.copyWith();
     action();
 
@@ -199,7 +206,7 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
     );
 
     setViewportScaleWithAnimation(overrideCropRect: data.cropRect);
-    imageDataAnimationController.forward(from: 0.0);
+    return imageDataAnimationController.forward(from: 0.0);
   }
 
   @override

@@ -122,14 +122,18 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     notifyListeners();
   }
 
-  @protected
-  Rect normalizeImpl() {
+  Rect getNormalizedRect(CroppableImageData data) {
     final normalizedAabb = FitPolygonInQuadSolver.solve(
       data.cropShape.polygon.shift(data.cropRect.topLeft.vector2),
       data.transformedImageQuad,
     );
 
     return normalizedAabb.rect;
+  }
+
+  @protected
+  Rect normalizeImpl() {
+    return getNormalizedRect(data);
   }
 
   /// Normalizes the crop rect to fit inside the transformed image quad.

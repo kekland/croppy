@@ -189,6 +189,19 @@ mixin AspectRatioMixin on CroppableImageController {
   }
 
   @override
+  void onBaseTransformation(CroppableImageData newData) {
+    final newCropRect = resizeCropRectWithAspectRatio(
+      newData.cropRect,
+      currentAspectRatio,
+    );
+
+    final modifiedData = newData.copyWith(cropRect: newCropRect);
+    super.onBaseTransformation(
+      modifiedData.copyWith(cropRect: getNormalizedRect(modifiedData)),
+    );
+  }
+
+  @override
   void dispose() {
     aspectRatioNotifier.dispose();
     super.dispose();
