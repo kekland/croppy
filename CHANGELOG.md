@@ -1,3 +1,7 @@
+## 0.2.6
+
+* Fix: Disallow tapping the "Done" button twice. This could trigger some weird behavior if you're using custom asynchronous operations when the cropper is cropping images.
+
 ## 0.2.5
 
 * Fix: Rotating an image with a forced aspect ratio inverts the aspect ratio (#7). Thanks @maRci002 and @siranov for the bug reports!
