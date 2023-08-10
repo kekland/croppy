@@ -14,6 +14,8 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = CupertinoTheme.of(context).primaryColor;
+
     return Row(
       children: [
         CupertinoButton(
@@ -30,8 +32,8 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
           ),
         ),
         const Spacer(),
-        CupertinoButton(
-          onPressed: () async {
+        FutureButton(
+          onTap: () async {
             CroppableImagePageAnimator.of(context)?.setHeroesEnabled(true);
 
             final result = await controller.crop();
@@ -40,13 +42,23 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
               Navigator.of(context).pop(result);
             }
           },
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 4.0,
-            top: 16.0,
-            bottom: 16.0,
+          builder: (context, onTap) => CupertinoButton(
+            onPressed: onTap,
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 4.0,
+              top: 16.0,
+              bottom: 16.0,
+            ),
+            child: Text(
+              'Done',
+              style: TextStyle(
+                color: onTap != null
+                    ? primaryColor
+                    : primaryColor.withOpacity(0.5),
+              ),
+            ),
           ),
-          child: const Text('Done'),
         ),
       ],
     );

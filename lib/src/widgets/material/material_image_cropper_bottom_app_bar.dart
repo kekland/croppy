@@ -40,8 +40,8 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
             const Spacer(),
             SizedBox(
               height: 40.0,
-              child: FilledButton(
-                onPressed: () async {
+              child: FutureButton(
+                onTap: () async {
                   CroppableImagePageAnimator.of(context)
                       ?.setHeroesEnabled(true);
 
@@ -51,7 +51,10 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
                     Navigator.of(context).pop(result);
                   }
                 },
-                child: const Text('Save'),
+                builder: (context, onTap) => FilledButton(
+                  onPressed: onTap,
+                  child: const Text('Save'),
+                ),
               ),
             ),
           ],
