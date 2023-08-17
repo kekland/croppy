@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Major breaking version. Updated to support Flutter 3.13.
+
 ## 0.2.6
 
 * Fix: Disallow tapping the "Done" button twice. This could trigger some weird behavior if you're using custom asynchronous operations when the cropper is cropping images.
