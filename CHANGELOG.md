@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Loosened the constraint to `3.13.0-0.3.pre` to pass Pub analysis
+
 ## 1.0.0
 
 * Major breaking version. Updated to support Flutter 3.13.
