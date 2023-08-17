@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:croppy/croppy.dart';
 import 'package:example/custom_cropper.dart';
 import 'package:example/settings_modal.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

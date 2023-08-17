@@ -29,7 +29,7 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
           ),
           child: Text(
             l10n.cancelLabel,
-            style: TextStyle(color: CupertinoColors.white),
+            style: const TextStyle(color: CupertinoColors.white),
           ),
         ),
         const Spacer(),
