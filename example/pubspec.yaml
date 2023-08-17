@@ -10,9 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
   croppy:
     path: ../
 
+  intl: any
   image: ^4.0.17
   cupertino_icons: ^1.0.2
 

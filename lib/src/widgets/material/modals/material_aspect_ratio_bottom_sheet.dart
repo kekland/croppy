@@ -9,9 +9,14 @@ class MaterialAspectRatioBottomSheet extends StatelessWidget {
 
   final MaterialCroppableImageController controller;
 
-  String _convertAspectRatioToString(CropAspectRatio? aspectRatio) {
+  String _convertAspectRatioToString(
+    BuildContext context,
+    CropAspectRatio? aspectRatio,
+  ) {
+    final l10n = CroppyLocalizations.of(context)!;
+
     if (aspectRatio == null) {
-      return 'Free';
+      return l10n.materialFreeformAspectRatioLabel;
     }
 
     final width = aspectRatio.width;
@@ -21,14 +26,14 @@ class MaterialAspectRatioBottomSheet extends StatelessWidget {
 
     if ((width == imageSize.width && height == imageSize.height) ||
         (width == imageSize.height && height == imageSize.width)) {
-      return 'Original';
+      return l10n.materialOriginalAspectRatioLabel;
     }
 
     if (aspectRatio.isSquare) {
-      return 'Square';
+      return l10n.materialSquareAspectRatioLabel;
     }
 
-    return '$width:$height';
+    return l10n.getAspectRatioLabel(width, height);
   }
 
   List<CropAspectRatio?> get aspectRatiosToDisplay {
@@ -76,13 +81,15 @@ class MaterialAspectRatioBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = CroppyLocalizations.of(context)!;
     final aspectRatio = controller.currentAspectRatio;
+
     return SingleChildScrollView(
       child: Column(
         children: [
           ...aspectRatiosToDisplay.map(
             (v) => ListTile(
-              title: Text(_convertAspectRatioToString(v)),
+              title: Text(_convertAspectRatioToString(context, v)),
               selected: v == aspectRatio || v?.complement == aspectRatio,
               onTap: () {
                 controller.currentAspectRatio = v;
@@ -93,7 +100,11 @@ class MaterialAspectRatioBottomSheet extends StatelessWidget {
           if (canFlipToComplement)
             ListTile(
               title: Text(
-                'Flip to ${aspectRatio!.isHorizontal ? 'vertical' : 'horizontal'}',
+                l10n.materialGetFlipLabel(
+                  aspectRatio!.isHorizontal
+                      ? LocalizationDirection.vertical
+                      : LocalizationDirection.horizontal,
+                ),
               ),
               onTap: () {
                 controller.currentAspectRatio =

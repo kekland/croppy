@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:croppy/croppy.dart';
 import 'package:example/custom_cropper.dart';
 import 'package:example/settings_modal.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   if (!kIsWeb) {
@@ -39,6 +42,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Croppy Demo',
       scrollBehavior: ExampleScrollBehavior(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.orange,
@@ -121,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               showCupertinoImageCropper(
                 context,
+                locale: _cropSettings.locale,
                 imageProvider: _imageProviders[page],
                 heroTag: 'image-$page',
                 initialData: _data[page],
@@ -151,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               showMaterialImageCropper(
                 context,
+                locale: _cropSettings.locale,
                 imageProvider: _imageProviders[page],
                 heroTag: 'image-$page',
                 initialData: _data[page],

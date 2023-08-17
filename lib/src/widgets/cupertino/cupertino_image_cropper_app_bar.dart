@@ -78,6 +78,8 @@ class CupertinoImageCropperAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final l10n = CroppyLocalizations.of(context)!;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: SafeArea(
@@ -107,7 +109,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
                       vertical: 10.0,
                     ),
                     child: Text(
-                      'RESET',
+                      l10n.cupertinoResetLabel,
                       style: CupertinoTheme.of(context)
                           .textTheme
                           .navActionTextStyle

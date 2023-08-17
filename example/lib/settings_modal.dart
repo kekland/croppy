@@ -6,6 +6,7 @@ class CropSettings {
     required this.cropShapeFn,
     required this.enabledTransformations,
     required this.forcedAspectRatio,
+    this.locale = const Locale('en'),
   });
 
   CropSettings.initial()
@@ -18,17 +19,20 @@ class CropSettings {
   final CropShapeFn cropShapeFn;
   final List<Transformation> enabledTransformations;
   final CropAspectRatio? forcedAspectRatio;
+  final Locale locale;
 
   CropSettings copyWith({
     CropShapeFn? cropShapeFn,
     List<Transformation>? enabledTransformations,
     CropAspectRatio? forcedAspectRatio,
+    Locale? locale,
   }) {
     return CropSettings(
       cropShapeFn: cropShapeFn ?? this.cropShapeFn,
       enabledTransformations:
           enabledTransformations ?? this.enabledTransformations,
       forcedAspectRatio: forcedAspectRatio ?? this.forcedAspectRatio,
+      locale: locale ?? this.locale,
     );
   }
 
@@ -37,6 +41,7 @@ class CropSettings {
       cropShapeFn: cropShapeFn,
       enabledTransformations: enabledTransformations,
       forcedAspectRatio: null,
+      locale: locale,
     );
   }
 }
@@ -131,6 +136,22 @@ class _SettingsModalWidgetState extends State<SettingsModalWidget> {
                   );
                 });
               },
+            ),
+            const ListTile(
+              enabled: false,
+              title: Text('Locale'),
+            ),
+            ...CroppyLocalizations.supportedLocales.map(
+              (v) => RadioListTile(
+                title: Text(v.toString()),
+                value: v,
+                groupValue: _settings.locale,
+                onChanged: (value) {
+                  setState(() {
+                    _settings = _settings.copyWith(locale: value as Locale);
+                  });
+                },
+              ),
             ),
             const ListTile(
               enabled: false,

@@ -34,11 +34,11 @@ Supported platforms:
 - Fixed aspect ratios
 - Custom cropping shapes
 - Kickass animations
+- Localization
 
 In progress:
 
 - Image editing module (?) (brightness, contrast, etc)
-- Localization
 
 ## Getting started
 
@@ -70,6 +70,30 @@ final result = await showCupertinoImageCropper(
 Voilà! You can now start cropping images.
 
 For a complete runnable example, see `./example`. For the full in-depth documentation, including customization, see the [documentation](./doc/doc.md).
+
+## Localization
+
+`croppy` currently supports the following languages:
+
+- English
+- Kazakh
+- Russian
+
+If there's a language that you would like, please see the [localization](./doc/localization.md) guide.
+
+It's recommended to insert the `CroppyLocalizationDelegate` in your `MaterialApp` or `CupertinoApp`:
+
+```dart
+MaterialApp(
+  localizationsDelegates: [
+    CroppyLocalizationDelegate(), // <- This here
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+  ...
+)
+```
 
 ## Additional information
 

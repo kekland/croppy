@@ -1,6 +1,7 @@
 export 'controller/_controller.dart';
 export 'geometry/_geometry.dart';
 export 'image/_image.dart';
+export 'l10n/_l10n.dart';
 export 'lp/_lp.dart';
 export 'model/_model.dart';
 export 'pages/_pages.dart';

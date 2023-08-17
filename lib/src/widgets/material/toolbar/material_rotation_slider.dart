@@ -51,9 +51,11 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
     setState(() {});
   }
 
-  double _computeDegreeSignWidth(TextStyle? style) {
+  double _computeDegreeSignWidth(BuildContext context, TextStyle? style) {
+    final l10n = CroppyLocalizations.of(context)!;
+
     final painter = TextPainter(
-      text: TextSpan(text: '°', style: style),
+      text: TextSpan(text: l10n.degreeSignCharacter, style: style),
       textDirection: TextDirection.ltr,
     );
 
@@ -63,13 +65,14 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = CroppyLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     final color = widget.color ?? theme.colorScheme.onBackground;
     final activeColor = widget.activeColor ?? theme.colorScheme.primary;
 
     final labelStyle = theme.textTheme.labelMedium?.copyWith(color: color);
-    final degreeSignWidth = _computeDegreeSignWidth(labelStyle);
+    final degreeSignWidth = _computeDegreeSignWidth(context, labelStyle);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -91,7 +94,7 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
                     Transform.translate(
                       offset: Offset(degreeSignWidth / 2, 0.0),
                       child: Text(
-                        '${(rotationZ * 180 / pi).round()}°',
+                        l10n.getRoundedDegrees(rotationZ * 180 / pi),
                         style: labelStyle?.copyWith(
                           color: value.abs() > epsilon
                               ? theme.colorScheme.primary

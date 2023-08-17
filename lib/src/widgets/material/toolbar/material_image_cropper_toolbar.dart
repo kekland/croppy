@@ -9,6 +9,8 @@ class MaterialImageCropperToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = CroppyLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
@@ -42,9 +44,12 @@ class MaterialImageCropperToolbar extends StatelessWidget {
                                   context: context,
                                   clipBehavior: Clip.antiAlias,
                                   builder: (_) =>
-                                      MaterialAspectRatioBottomSheet(
-                                    controller: controller
-                                        as MaterialCroppableImageController,
+                                      CroppyLocalizationProvider.passthrough(
+                                    context,
+                                    child: MaterialAspectRatioBottomSheet(
+                                      controller: controller
+                                          as MaterialCroppableImageController,
+                                    ),
                                   ),
                                 );
                               },
@@ -99,12 +104,15 @@ class MaterialImageCropperToolbar extends StatelessWidget {
                       child: child,
                     ),
                   ),
-                  child: SizedBox(
-                    width: 72.0,
-                    height: 48.0,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 72.0,
+                      minHeight: 48.0,
+                      maxHeight: 48.0,
+                    ),
                     child: TextButton(
                       onPressed: () => controller.reset(),
-                      child: const Text('Reset'),
+                      child: Text(l10n.materialResetLabel),
                     ),
                   ),
                 ),

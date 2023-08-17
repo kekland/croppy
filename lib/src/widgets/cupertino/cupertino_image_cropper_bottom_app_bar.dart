@@ -14,6 +14,7 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final l10n = CroppyLocalizations.of(context)!;
     final primaryColor = CupertinoTheme.of(context).primaryColor;
 
     return Row(
@@ -26,8 +27,8 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
             top: 16.0,
             bottom: 16.0,
           ),
-          child: const Text(
-            'Cancel',
+          child: Text(
+            l10n.cancelLabel,
             style: TextStyle(color: CupertinoColors.white),
           ),
         ),
@@ -51,7 +52,7 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
               bottom: 16.0,
             ),
             child: Text(
-              'Done',
+              l10n.doneLabel,
               style: TextStyle(
                 color: onTap != null
                     ? primaryColor

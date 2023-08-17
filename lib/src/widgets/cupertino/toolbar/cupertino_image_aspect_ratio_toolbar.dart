@@ -12,9 +12,14 @@ class CupertinoImageAspectRatioToolbar extends StatelessWidget {
   CropAspectRatio? get _aspectRatio => controller.currentAspectRatio;
   bool get _isHorizontal => _aspectRatio != null && _aspectRatio!.isHorizontal;
 
-  String _convertAspectRatioToString(CropAspectRatio? aspectRatio) {
+  String _convertAspectRatioToString(
+    BuildContext context,
+    CropAspectRatio? aspectRatio,
+  ) {
+    final l10n = CroppyLocalizations.of(context)!;
+
     if (aspectRatio == null) {
-      return 'FREEFORM';
+      return l10n.cupertinoFreeformAspectRatioLabel;
     }
 
     final width = aspectRatio.width;
@@ -24,14 +29,14 @@ class CupertinoImageAspectRatioToolbar extends StatelessWidget {
 
     if ((width == imageSize.width && height == imageSize.height) ||
         (width == imageSize.height && height == imageSize.width)) {
-      return 'ORIGINAL';
+      return l10n.cupertinoOriginalAspectRatioLabel;
     }
 
     if (aspectRatio.isSquare) {
-      return 'SQUARE';
+      return l10n.cupertinoSquareAspectRatioLabel;
     }
 
-    return '$width:$height';
+    return l10n.getAspectRatioLabel(width, height);
   }
 
   List<Widget> _buildAspectRatioChips(BuildContext context) {
@@ -76,7 +81,7 @@ class CupertinoImageAspectRatioToolbar extends StatelessWidget {
     return displayedAspectRatios
         .map(
           (aspectRatio) => _AspectRatioChipWidget(
-            aspectRatio: _convertAspectRatioToString(aspectRatio),
+            aspectRatio: _convertAspectRatioToString(context, aspectRatio),
             isSelected: aspectRatio == _aspectRatio,
             onTap: () {
               controller.currentAspectRatio = aspectRatio;

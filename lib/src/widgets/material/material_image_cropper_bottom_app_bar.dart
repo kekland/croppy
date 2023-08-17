@@ -13,6 +13,8 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = CroppyLocalizations.of(context)!;
+
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -34,7 +36,7 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
               height: 40.0,
               child: TextButton(
                 onPressed: () => Navigator.maybePop(context),
-                child: const Text('Cancel'),
+                child: Text(l10n.cancelLabel),
               ),
             ),
             const Spacer(),
@@ -53,7 +55,7 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
                 },
                 builder: (context, onTap) => FilledButton(
                   onPressed: onTap,
-                  child: const Text('Save'),
+                  child: Text(l10n.saveLabel),
                 ),
               ),
             ),

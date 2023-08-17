@@ -33,6 +33,9 @@ import 'package:flutter/cupertino.dart';
 /// [shouldPopAfterCrop] defines whether the page should be popped after the
 /// image has been cropped. If you want to control how the page is popped, set
 /// this to false and pop the page yourself using the [Navigator].
+///
+/// The [locale] is used to localize the UI. If not provided, the locale from
+/// the [WidgetsApp] is used.
 Future<CropImageResult?> showCupertinoImageCropper(
   BuildContext context, {
   required ImageProvider imageProvider,
@@ -43,6 +46,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
   List<Transformation>? enabledTransformations,
   Object? heroTag,
   bool shouldPopAfterCrop = true,
+  Locale? locale,
 }) async {
   late final CroppableImageData _initialData;
 
@@ -56,17 +60,20 @@ Future<CropImageResult?> showCupertinoImageCropper(
   }
 
   Widget builder(context) {
-    return DefaultCupertinoCroppableImageController(
-      imageProvider: imageProvider,
-      initialData: _initialData,
-      postProcessFn: postProcessFn,
-      cropShapeFn: cropPathFn,
-      allowedAspectRatios: allowedAspectRatios,
-      enabledTransformations: enabledTransformations,
-      builder: (context, controller) => CupertinoImageCropperPage(
-        heroTag: heroTag,
-        controller: controller,
-        shouldPopAfterCrop: shouldPopAfterCrop,
+    return CroppyLocalizationProvider(
+      locale: locale,
+      child: DefaultCupertinoCroppableImageController(
+        imageProvider: imageProvider,
+        initialData: _initialData,
+        postProcessFn: postProcessFn,
+        cropShapeFn: cropPathFn,
+        allowedAspectRatios: allowedAspectRatios,
+        enabledTransformations: enabledTransformations,
+        builder: (context, controller) => CupertinoImageCropperPage(
+          heroTag: heroTag,
+          controller: controller,
+          shouldPopAfterCrop: shouldPopAfterCrop,
+        ),
       ),
     );
   }
