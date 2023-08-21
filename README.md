@@ -4,9 +4,7 @@
 
 [![Pub Version](https://img.shields.io/pub/v/croppy?color=turquoise)](https://pub.dev/packages/croppy)
 
-An image cropper that Flutter deserves.
-
-Big difference of this package from other popular ones (such as `image_cropper`) is that `croppy` runs completely in Flutter, so there's no need to launch a separate activity/view when you want to crop an image. Another benefit is that `croppy` can be completely customized to fit any of your image cropping needs.
+A fully customizable image cropper for Flutter, with built-in Material and Cupertino croppers.
 
 Check out the example at https://kekland.github.io/croppy.
 
@@ -79,7 +77,7 @@ For a complete runnable example, see `./example`. For the full in-depth document
 - Kazakh
 - Russian
 
-If there's a language that you would like, please see the [localization](./doc/localization.md) guide.
+If there's a language that you would like to add, please see the [localization](./doc/localization.md) guide.
 
 It's recommended to insert the `CroppyLocalizationDelegate` in your `MaterialApp` or `CupertinoApp`:
 

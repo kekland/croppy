@@ -85,7 +85,7 @@ class _CroppyLocalizationsDelegate
   @override
   Future<CroppyLocalizations> load(Locale locale) {
     return SynchronousFuture<CroppyLocalizations>(
-      lookupAppLocalizations(locale),
+      lookupCroppyLocalizations(locale),
     );
   }
 
@@ -98,7 +98,7 @@ class _CroppyLocalizationsDelegate
   bool shouldReload(_CroppyLocalizationsDelegate old) => false;
 }
 
-CroppyLocalizations lookupAppLocalizations(Locale locale) {
+CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':
