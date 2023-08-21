@@ -177,10 +177,12 @@ class CroppedHeroImageRenderObject extends RenderBox
       context,
       _offset,
       additionalOffset & (imageData.cropRect.size * viewportScale),
-      _imageData.cropShape.getTransformedPath(
-        -cropRect.topLeft,
-        viewportScale,
-      ).toUiPath(),
+      _imageData.cropShape
+          .getTransformedPath(
+            -cropRect.topLeft,
+            viewportScale,
+          )
+          .toUiPath(),
       matrix,
     );
   }

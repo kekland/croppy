@@ -2,16 +2,16 @@ import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 
 /// Animates a page transition for a croppable image.
-/// 
+///
 /// This animation is used to animate the page when a Hero animation is being
 /// performed. During a Hero animation, it's necessary to hide any overlays
 /// above the image, such as the crop handles and the toolbar; otherwise they
 /// would suddenly pop-in when the Hero animation is finished.
-/// 
+///
 /// This widget automatically handles the animation of the overlay opacity. If
 /// [heroTag] is not null, then the animation will be triggered automatically
-/// when the widget is built. 
-/// 
+/// when the widget is built.
+///
 /// In some cases it's also necessary to enable/disable the Hero animation
 /// manually. This can be done by calling [setHeroesEnabled]. This is useful
 /// when the user is interacting with the image and the Hero animation should

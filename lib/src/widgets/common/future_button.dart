@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
 /// A button that executes a future when tapped.
-/// 
-/// This widget is useful for executing a future when a button is tapped. The 
+///
+/// This widget is useful for executing a future when a button is tapped. The
 /// button will be disabled while the future is executing.
 class FutureButton extends StatefulWidget {
   const FutureButton({
