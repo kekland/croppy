@@ -1,7 +1,6 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart' as intl;
 
 enum LocalizationDirection {
   vertical,
@@ -9,10 +8,7 @@ enum LocalizationDirection {
 }
 
 abstract class CroppyLocalizations {
-  CroppyLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(
-          locale.toString(),
-        );
+  CroppyLocalizations(this.localeName);
 
   final String localeName;
 

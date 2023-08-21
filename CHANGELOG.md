@@ -1,3 +1,8 @@
+## 1.1.0
+
+* Added localization! Currently supports English, Kazakh, and Russian.
+* Added documentation on how to add your own localization, or override an existing one.
+
 ## 1.0.1
 
 * Loosened the constraint to `3.13.0-0.3.pre` to pass Pub analysis
