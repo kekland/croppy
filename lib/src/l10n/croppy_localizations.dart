@@ -1,3 +1,4 @@
+import 'package:croppy/src/l10n/languages/croppy_ar.dart';
 import 'package:croppy/src/src.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -24,6 +25,7 @@ abstract class CroppyLocalizations {
     Locale('en'),
     Locale('ru'),
     Locale('kk'),
+    Locale('ar'),
   ];
 
   /// Defaults to °
@@ -103,6 +105,8 @@ CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
       return CroppyLocalizationsRu();
     case 'kk':
       return CroppyLocalizationsKk();
+    case 'ar':
+      return CroppyLocalizationsAr();
   }
 
   throw FlutterError(
