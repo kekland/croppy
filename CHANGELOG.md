@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Added Arabic localization (thanks @Milad-Akarie)
+
 ## 1.1.0
 
 * Added localization! Currently supports English, Kazakh, and Russian.

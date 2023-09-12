@@ -76,6 +76,7 @@ For a complete runnable example, see `./example`. For the full in-depth document
 - English
 - Kazakh
 - Russian
+- Arabic (thanks @Milad-Akarie)
 
 If there's a language that you would like to add, please see the [localization](./doc/localization.md) guide.
 
@@ -95,7 +96,7 @@ MaterialApp(
 
 ## Additional information
 
-This package is still WIP, so expect some major updates along the way. Feel free to report bugs/issues on GitHub.
+Feel free to report bugs/issues on GitHub.
 
 If you have questions, you can contact me directly at `kk.erzhan@gmail.com`.
 
