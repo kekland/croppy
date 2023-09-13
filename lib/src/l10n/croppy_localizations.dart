@@ -88,9 +88,7 @@ class _CroppyLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) => CroppyLocalizations.supportedLocales
-      .map((v) => v.languageCode)
-      .contains(locale.languageCode);
+  bool isSupported(Locale locale) => true;
 
   @override
   bool shouldReload(_CroppyLocalizationsDelegate old) => false;
@@ -109,9 +107,13 @@ CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
       return CroppyLocalizationsAr();
   }
 
-  throw FlutterError(
-    'CroppyLocalizations.delegate failed to load unsupported locale "$locale".'
-    'Please make sure to include [CroppyLocalizations.delegate] in your '
-    'app\'s `localizationDelegates` list. ',
-  );
+  if (kDebugMode) {
+    debugPrint(
+      'CroppyLocalizations.delegate failed to load locale "$locale". '
+      'Falling back to English localizations. You can override the locale '
+      'by explicitly passing [locale] when pushing the cropper.',
+    );
+  }
+
+  return CroppyLocalizationsEn();
 }

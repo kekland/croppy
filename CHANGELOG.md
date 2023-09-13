@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Croppy shouldn't fail when being launched with unsupported locales. Now it will default to English.
+
 ## 1.1.1
 
 * Added Arabic localization (thanks @Milad-Akarie)
