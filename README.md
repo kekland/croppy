@@ -77,6 +77,7 @@ For a complete runnable example, see `./example`. For the full in-depth document
 - Kazakh
 - Russian
 - Arabic (thanks @Milad-Akarie)
+- Vietnamese (thanks @ptanhVNU)
 
 If there's a language that you would like to add, please see the [localization](./doc/localization.md) guide.
 

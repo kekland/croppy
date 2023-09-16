@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               showCupertinoImageCropper(
                 context,
-                // locale: _cropSettings.locale,
+                locale: _cropSettings.locale,
                 imageProvider: _imageProviders[page],
                 heroTag: 'image-$page',
                 initialData: _data[page],
