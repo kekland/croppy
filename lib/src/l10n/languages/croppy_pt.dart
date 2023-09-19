@@ -1,7 +1,7 @@
 import 'package:croppy/src/l10n/croppy_localizations.dart';
 
-class CroppyLocalizationsEn extends CroppyLocalizations {
-  CroppyLocalizationsEn() : super('pt');
+class CroppyLocalizationsPt extends CroppyLocalizations {
+  CroppyLocalizationsPt() : super('pt');
 
   @override
   String get cancelLabel => 'Cancelar';
