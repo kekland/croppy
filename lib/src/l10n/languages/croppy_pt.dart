@@ -26,7 +26,7 @@ class CroppyLocalizationsPt extends CroppyLocalizations {
 
   @override
   String materialGetFlipLabel(LocalizationDirection direction) =>
-      'Flip to ${direction == LocalizationDirection.vertical ? 'vertical' : 'horizontal'}';
+      'Virar ${direction == LocalizationDirection.vertical ? 'verticalmente' : 'horizontalmente'}';
 
   @override
   String get materialOriginalAspectRatioLabel => 'Original';
