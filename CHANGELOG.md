@@ -1,3 +1,8 @@
+## 1.1.4
+
+* Added Portuguese localization (thanks @JCKodel)
+* Added documentation on how to save a cropped image to a file
+
 ## 1.1.3
 
 * Added Vietnamese localization (thanks @ptanhVNU)
