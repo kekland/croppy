@@ -2,7 +2,7 @@
 
 Here's the mostly up-to-date documentation for `croppy`. It's a work in progress, so please bear with me. If you have any questions, feel free to ask them in GitHub Issues.
 
-If you're searching for a way to save the resulting `ui.Image` to a file, take a look at the [saving images](./doc/saving-images.md) guide.
+If you're searching for a way to save the resulting `ui.Image` to a file, take a look at the [saving images](./saving-images.md) guide.
 
 - [croppy](#croppy)
   - [Getting started](#getting-started)
