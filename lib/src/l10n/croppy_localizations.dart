@@ -27,6 +27,7 @@ abstract class CroppyLocalizations {
     Locale('ar'),
     Locale('vi'),
     Locale('pt'),
+    Locale('es'),
   ];
 
   /// Defaults to °
