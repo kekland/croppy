@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:croppy/croppy.dart';
 import 'package:croppy/src/widgets/material/toolbar/material_rotation_slider.dart';
-import 'package:flutter/material.dart';
 
 class MaterialImageCropperToolbar extends StatelessWidget {
   const MaterialImageCropperToolbar({super.key, required this.controller});
@@ -112,7 +113,11 @@ class MaterialImageCropperToolbar extends StatelessWidget {
                     ),
                     child: TextButton(
                       onPressed: () => controller.reset(),
-                      child: Text(l10n.materialResetLabel),
+                      child: Text(
+                        l10n.materialResetLabel,
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 249, 168, 38)),
+                      ),
                     ),
                   ),
                 ),

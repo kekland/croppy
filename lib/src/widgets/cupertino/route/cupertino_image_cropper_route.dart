@@ -10,8 +10,8 @@ class CupertinoImageCropperWithHeroRoute<T> extends PageRoute<T> {
   CupertinoImageCropperWithHeroRoute({
     required this.builder,
     super.fullscreenDialog = true,
-    RouteSettings? settings,
-  }) : super(settings: settings);
+    super.settings,
+  });
 
   final WidgetBuilder builder;
 

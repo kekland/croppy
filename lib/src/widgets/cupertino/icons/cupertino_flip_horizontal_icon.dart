@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 /// `arrow-left-and-right-righttriangle-left-righttriangle-right-fill` icon.
 class CupertinoFlipHorizontalIcon extends StatelessWidget {
   const CupertinoFlipHorizontalIcon({
-    Key? key,
+    super.key,
     this.color,
     this.size = 22.0,
-  }) : super(key: key);
+  });
 
   final Color? color;
   final double size;

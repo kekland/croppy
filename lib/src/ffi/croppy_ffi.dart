@@ -62,7 +62,7 @@ Pointer<Double> doubleListToPointer(List<double> list) {
   final ptr = malloc.allocate<Double>(sizeOf<Double>() * list.length);
 
   for (var i = 0; i < list.length; i++) {
-    ptr.elementAt(i).value = list[i];
+    (ptr + i).value = list[i];
   }
 
   return ptr;

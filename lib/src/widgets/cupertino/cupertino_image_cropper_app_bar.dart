@@ -1,6 +1,7 @@
-import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+
+import 'package:croppy/src/src.dart';
 
 class CupertinoImageCropperAppBar extends StatelessWidget
     implements ObstructingPreferredSizeWidget {
@@ -113,7 +114,9 @@ class CupertinoImageCropperAppBar extends StatelessWidget
                       style: CupertinoTheme.of(context)
                           .textTheme
                           .navActionTextStyle
-                          .copyWith(fontSize: 14.0),
+                          .copyWith(
+                              fontSize: 14.0,
+                              color: const Color.fromARGB(255, 249, 168, 38)),
                     ),
                   ),
                 ),

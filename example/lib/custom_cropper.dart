@@ -1,7 +1,8 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
-import 'package:croppy/croppy.dart';
 import 'package:flutter/material.dart';
+
+import 'package:croppy/croppy.dart';
 
 Future<CropImageResult?> showCustomCropper(
   BuildContext context,
@@ -65,7 +66,11 @@ class CustomCropper extends StatelessWidget {
                 actions: [
                   Builder(
                     builder: (context) => TextButton(
-                      child: const Text('Done'),
+                      child: const Text(
+                        'Done',
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 249, 168, 38)),
+                      ),
                       onPressed: () async {
                         // Enable the Hero animations
                         CroppableImagePageAnimator.of(context)

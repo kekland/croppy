@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 /// A SFSymbols `aspectratio-fill` icon.
 class CupertinoAspectRatioIcon extends StatelessWidget {
   const CupertinoAspectRatioIcon({
-    Key? key,
+    super.key,
     this.color,
     this.size = 22.0,
-  }) : super(key: key);
+  });
 
   final Color? color;
   final double size;

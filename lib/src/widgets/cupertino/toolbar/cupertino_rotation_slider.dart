@@ -1,7 +1,8 @@
 import 'dart:math';
 
-import 'package:croppy/src/src.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'package:croppy/src/src.dart';
 
 class CupertinoRotationSlider extends StatefulWidget {
   const CupertinoRotationSlider({
@@ -94,7 +95,7 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
                       opacity: value.abs() > epsilon ? 1.0 : 0.5,
                       child: CustomPaint(
                         painter: _CupertinoSliderPainter(
-                          primaryColor: CupertinoTheme.of(context).primaryColor,
+                          primaryColor: const Color.fromARGB(255, 249, 168, 38),
                           value: value,
                           isDragging: _dragStartDetails != null,
                         ),

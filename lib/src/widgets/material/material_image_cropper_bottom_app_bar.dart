@@ -1,5 +1,6 @@
-import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
+
+import 'package:croppy/src/src.dart';
 
 class MaterialImageCropperBottomAppBar extends StatelessWidget {
   const MaterialImageCropperBottomAppBar({
@@ -36,7 +37,11 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
               height: 40.0,
               child: TextButton(
                 onPressed: () => Navigator.maybePop(context),
-                child: Text(l10n.cancelLabel),
+                child: Text(
+                  l10n.cancelLabel,
+                  style:
+                      const TextStyle(color: Color.fromARGB(255, 249, 168, 38)),
+                ),
               ),
             ),
             const Spacer(),
@@ -54,6 +59,9 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
                   }
                 },
                 builder: (context, onTap) => FilledButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          const Color.fromARGB(255, 249, 168, 38))),
                   onPressed: onTap,
                   child: Text(l10n.saveLabel),
                 ),
