@@ -184,7 +184,10 @@ mixin AspectRatioMixin on CroppableImageController {
       );
 
       data = data.copyWith(cropRect: newCropRect);
+      
       normalize();
+      resetData = data.copyWith();
+      initialData = data.copyWith();
     }
   }
 
