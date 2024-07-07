@@ -14,7 +14,7 @@ dependencies:
   cassowary: ^0.4.2
 
   plugin_platform_interface: ^2.0.2
-  ffi: ^2.0.2
+  ffi: ^2.1.2
 
   cupertino_icons: ^1.0.5
   equatable: ^2.0.5
