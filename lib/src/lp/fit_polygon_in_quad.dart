@@ -1,6 +1,5 @@
 import 'package:croppy/src/src.dart';
-import 'fit_polygon_in_quad_ffi.dart'
-    if (dart.library.html) 'fit_polygon_in_quad_dart.dart';
+import 'fit_polygon_in_quad_ffi.dart' if (dart.library.js_interop) 'fit_polygon_in_quad_dart.dart';
 
 /// If true, the Dart implementation of [fitPolygonInQuadImpl] will be used
 /// instead of the C++ implementation.
