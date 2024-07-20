@@ -59,9 +59,6 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
                   }
                 },
                 builder: (context, onTap) => FilledButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 249, 168, 38))),
                   onPressed: onTap,
                   child: Text(l10n.saveLabel),
                 ),

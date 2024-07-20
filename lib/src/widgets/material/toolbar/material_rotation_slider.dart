@@ -70,8 +70,7 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
     final theme = Theme.of(context);
 
     final color = widget.color ?? theme.colorScheme.onBackground;
-    final activeColor =
-        widget.activeColor ?? const Color.fromARGB(255, 249, 168, 38);
+    final activeColor = widget.activeColor ?? theme.colorScheme.primary;
 
     final labelStyle = theme.textTheme.labelMedium?.copyWith(color: color);
     final degreeSignWidth = _computeDegreeSignWidth(context, labelStyle);
@@ -99,7 +98,7 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
                         l10n.getRoundedDegrees(rotationZ * 180 / pi),
                         style: labelStyle?.copyWith(
                           color: value.abs() > epsilon
-                              ? const Color.fromARGB(255, 249, 168, 38)
+                              ? theme.colorScheme.primary
                               : null,
                         ),
                       ),

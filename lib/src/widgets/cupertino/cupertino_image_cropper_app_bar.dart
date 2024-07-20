@@ -114,9 +114,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
                       style: CupertinoTheme.of(context)
                           .textTheme
                           .navActionTextStyle
-                          .copyWith(
-                              fontSize: 14.0,
-                              color: const Color.fromARGB(255, 249, 168, 38)),
+                          .copyWith(fontSize: 14.0),
                     ),
                   ),
                 ),
