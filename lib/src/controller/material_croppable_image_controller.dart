@@ -28,6 +28,7 @@ class MaterialCroppableImageController
     super.onPanAndScale(scaleDelta: scaleDelta, offsetDelta: offsetDelta);
 
     normalize();
+   
     setViewportScale();
   }
 

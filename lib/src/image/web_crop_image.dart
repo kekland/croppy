@@ -3,20 +3,18 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:web/web.dart';
 
 import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:js' as js;
+
 
 /// Obtains an [ui.Image] from an [ImageProvider].
 Future<ui.Image> obtainImage(ImageProvider provider) {
   final completer = Completer<ui.Image>();
 
-  provider
-      .resolve(ImageConfiguration.empty)
-      .addListener(ImageStreamListener((ImageInfo info, bool _) {
+  provider.resolve(ImageConfiguration.empty).addListener(ImageStreamListener((ImageInfo info, bool _) {
     completer.complete(info.image);
   }));
 
@@ -188,10 +186,8 @@ Future<CropImageResult> cropImage(
   ui.Image image,
   CroppableImageData data,
 ) {
-  if (js.context['flutterCanvasKit'] != null) {
-    return cropImageCanvas(image, data);
-  }
-
+  
+  return cropImageCanvas(image, data);
   // For some reason, the canvas method doesn't work properly on web HTML
   // renderer. So, we use the bilinear method for now.
   //
