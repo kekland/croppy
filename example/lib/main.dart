@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
+      locale: Locale('he'),
     );
   }
 }

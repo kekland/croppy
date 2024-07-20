@@ -16,15 +16,15 @@ dependencies:
   croppy:
     path: ../
 
-  image: ^4.0.17
-  file_picker: ^6.1.1
-  cupertino_icons: ^1.0.2
+  image: ^4.2.0
+  file_picker: ^8.0.6
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.3
 
 flutter:
   uses-material-design: true
