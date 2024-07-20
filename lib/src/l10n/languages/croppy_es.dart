@@ -40,4 +40,3 @@ class CroppyLocalizationsEs extends CroppyLocalizations {
   @override
   String get saveLabel => 'Listo';
 }
-

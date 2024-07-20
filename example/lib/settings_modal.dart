@@ -92,7 +92,10 @@ class _SettingsModalWidgetState extends State<SettingsModalWidget> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) => Navigator.of(context).pop(_settings),
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        Navigator.of(context).pop(_settings);
+      },
       child: SingleChildScrollView(
         child: ListBody(
           children: [

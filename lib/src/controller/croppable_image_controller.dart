@@ -72,7 +72,6 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     recomputeValueNotifiers();
   }
 
-
   /// The scale of the viewport.
   double get viewportScale;
 

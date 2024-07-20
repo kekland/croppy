@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 Future<ui.Image> obtainImage(ImageProvider provider) {
   final completer = Completer<ui.Image>();
 
-  provider.resolve(ImageConfiguration.empty).addListener(ImageStreamListener((ImageInfo info, bool _) {
+  provider
+      .resolve(ImageConfiguration.empty)
+      .addListener(ImageStreamListener((ImageInfo info, bool _) {
     completer.complete(info.image);
   }));
 
@@ -183,9 +185,8 @@ Future<CropImageResult> cropImage(
   ui.Image image,
   CroppableImageData data,
 ) {
-  
   return cropImageCanvas(image, data);
-  
+
   // NOTE: With wasm, this seems to no longer be needed. I'm keeping it here
   // just in case though.
   // return cropImageBilinear(image, data);

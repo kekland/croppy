@@ -164,17 +164,6 @@ class CupertinoCroppableImageController
     );
   }
 
-  @override
-  void reset() {
-    data = data.copyWith(
-      baseTransformations: data.baseTransformations.normalized,
-    );
-
-    animatedNormalizeAfterTransform(
-      () => super.reset(),
-    );
-  }
-
   void toggleToolbar(CupertinoCroppableImageToolbar toolbar) {
     if (toolbarNotifier.value == toolbar) {
       toolbarNotifier.value = CupertinoCroppableImageToolbar.transform;

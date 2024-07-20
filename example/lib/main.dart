@@ -51,8 +51,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.orange,
-          primary: Colors.orange,
-          brightness: Brightness.dark,
+          // primary: Colors.purple,
+          brightness: Brightness.light,
         ),
         useMaterial3: true,
       ),

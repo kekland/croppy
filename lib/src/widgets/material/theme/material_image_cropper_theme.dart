@@ -7,11 +7,10 @@ ThemeData generateMaterialImageCropperTheme(BuildContext context) {
     ThemeData.from(
       colorScheme: ColorScheme.fromSeed(
         seedColor: outerTheme.colorScheme.primary,
-        primary: outerTheme.colorScheme.primary,
         brightness: Brightness.dark,
       ),
       useMaterial3: outerTheme.useMaterial3,
     ),
     outerTheme.textTheme,
-  );
+  ).copyWith(scaffoldBackgroundColor: Colors.black);
 }

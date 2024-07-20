@@ -5,6 +5,7 @@ export 'icons/cupertino_perspective_y_icon.dart';
 export 'icons/cupertino_perspective_x_icon.dart';
 export 'icons/cupertino_straighten_icon.dart';
 export 'route/cupertino_image_cropper_route.dart';
+export 'theme/cupertino_image_cropper_theme.dart';
 export 'toolbar/cupertino_image_aspect_ratio_toolbar.dart';
 export 'toolbar/cupertino_image_transformation_toolbar.dart';
 export 'toolbar/cupertino_knob.dart';

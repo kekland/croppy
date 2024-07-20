@@ -28,10 +28,7 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
             top: 16.0,
             bottom: 16.0,
           ),
-          child: Text(
-            l10n.cancelLabel,
-            style: const TextStyle(color: Color.fromARGB(255, 249, 168, 38)),
-          ),
+          child: Text(l10n.cancelLabel),
         ),
         const Spacer(),
         FutureButton(

@@ -37,11 +37,7 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
               height: 40.0,
               child: TextButton(
                 onPressed: () => Navigator.maybePop(context),
-                child: Text(
-                  l10n.cancelLabel,
-                  style:
-                      const TextStyle(color: Color.fromARGB(255, 249, 168, 38)),
-                ),
+                child: Text(l10n.cancelLabel),
               ),
             ),
             const Spacer(),

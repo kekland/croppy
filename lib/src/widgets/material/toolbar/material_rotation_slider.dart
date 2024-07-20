@@ -61,7 +61,10 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
     );
 
     painter.layout();
-    return painter.width;
+    final width = painter.width;
+    painter.dispose();
+
+    return width;
   }
 
   @override
@@ -69,7 +72,7 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
     final l10n = CroppyLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    final color = widget.color ?? theme.colorScheme.onBackground;
+    final color = widget.color ?? theme.colorScheme.onSurface;
     final activeColor = widget.activeColor ?? theme.colorScheme.primary;
 
     final labelStyle = theme.textTheme.labelMedium?.copyWith(color: color);
