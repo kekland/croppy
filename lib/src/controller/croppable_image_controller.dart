@@ -53,7 +53,8 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   /// The initial crop data that is used when the controller is reset.
   CroppableImageData _resetData;
 
-  /// Sets the current crop data.
+  /// Sets the value for [_resetData], i.e. the value that the controller will
+  /// default to when the "Reset" button is pressed.
   set resetData(CroppableImageData newData) {
     if (_resetData == newData) return;
     _resetData = newData;
@@ -63,7 +64,8 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   /// The initial crop data that was passed to this controller.
   CroppableImageData _initialData;
 
-  /// Sets the current crop data.
+  /// Sets the [_initialData], i.e. the data that was passed to this controller
+  /// when it was created.
   set initialData(CroppableImageData newData) {
     if (_initialData == newData) return;
     _initialData = newData;

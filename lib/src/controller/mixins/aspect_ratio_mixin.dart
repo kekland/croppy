@@ -186,6 +186,9 @@ mixin AspectRatioMixin on CroppableImageController {
       data = data.copyWith(cropRect: newCropRect);
       
       normalize();
+
+      // Reset the [resetData] and [initialData] to the new values so that
+      // pressing "Reset" will use the proper aspect ratio.
       resetData = data.copyWith();
       initialData = data.copyWith();
     }
