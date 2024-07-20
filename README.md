@@ -79,6 +79,9 @@ For a complete runnable example, see `./example`. For the full in-depth document
 - Arabic (thanks @Milad-Akarie)
 - Vietnamese (thanks @ptanhVNU)
 - Portuguese (thanks @JCKodel)
+- Spanish (thanks @Thesergiolg99)
+- Chinese (thanks @yohom and @zhushenwudi)
+- Hebrew (thanks @kfiross)
 
 If there's a language that you would like to add, please see the [localization](./doc/localization.md) guide.
 
