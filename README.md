@@ -23,6 +23,8 @@ Supported platforms:
 - macOS
 - Web (uses Dart's Cassowary instead of FFI because there's no FFI support in web)
 
+NOTE: see https://github.com/kekland/croppy/issues/38. Currently I'm very busy with other projects so support might be limited.
+
 ## Features
 
 - Material image cropper (similar to Google Photos)

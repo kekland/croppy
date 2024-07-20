@@ -1,3 +1,13 @@
+## 1.2.0
+
+* Added Chinese localization (thanks @yohom and @zhushenwudi)
+* Added Spanish localization (thanks @Thesergiolg99)
+* Added Hebrew localization (thanks @kfiross)
+* Fixed a bug where the reset button would ignore any aspect ratio constraints (thanks @talamaska)
+* Added WASM support and Flutter 3.22 (thanks @raldhafiri)
+* Updated dependencies and added Gradle namespace (thanks @orkun1675)
+* Add support for passing custom themes to the croppers instead of the default generated one, and fixed some more reset issues.
+
 ## 1.1.4
 
 * Added Portuguese localization (thanks @JCKodel)
