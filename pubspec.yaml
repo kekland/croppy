@@ -39,6 +39,4 @@ flutter:
         ffiPlugin: true
       windows:
         ffiPlugin: true
-      web: 
-
-
+      web:

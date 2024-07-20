@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 /// A SFSymbols `trapezoid-and-line-horizontal-fill` icon.
 class CupertinoPerspectiveYIcon extends StatelessWidget {
   const CupertinoPerspectiveYIcon({
-    Key? key,
+    super.key,
     this.color,
     this.size = 22.0,
-  }) : super(key: key);
+  });
 
   final Color? color;
   final double size;
