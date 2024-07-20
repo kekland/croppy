@@ -112,6 +112,8 @@ CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
       return CroppyLocalizationsVi();
     case 'pt':
       return CroppyLocalizationsPt();
+    case 'es':
+      return CroppyLocalizationsEs();
     case 'zh':
       return CroppyLocalizationsZh();
   }
