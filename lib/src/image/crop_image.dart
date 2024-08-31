@@ -9,12 +9,16 @@ import 'package:flutter/material.dart';
 /// Obtains an [ui.Image] from an [ImageProvider].
 Future<ui.Image> obtainImage(ImageProvider provider) {
   final completer = Completer<ui.Image>();
+  final stream = provider.resolve(ImageConfiguration.empty);
 
-  provider
-      .resolve(ImageConfiguration.empty)
-      .addListener(ImageStreamListener((ImageInfo info, bool _) {
+  late final ImageStreamListener listener;
+
+  listener = ImageStreamListener((ImageInfo info, bool _) {
     completer.complete(info.image);
-  }));
+    stream.removeListener(listener);
+  });
+
+  stream.addListener(listener);
 
   return completer.future;
 }
