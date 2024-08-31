@@ -1,3 +1,8 @@
+## 1.2.1
+
+* Fixed a bug where animated images would trigger a lot of exceptions in `obtainImage`. Now, the cropper will just display a static image if the image is animated.
+* Updated localization guide in README.md (thanks @Cellaryllis)
+
 ## 1.2.0
 
 * Added Chinese localization (thanks @yohom and @zhushenwudi)
