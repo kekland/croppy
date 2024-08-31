@@ -87,12 +87,12 @@ For a complete runnable example, see `./example`. For the full in-depth document
 
 If there's a language that you would like to add, please see the [localization](./doc/localization.md) guide.
 
-It's recommended to insert the `CroppyLocalizationDelegate` in your `MaterialApp` or `CupertinoApp`:
+It's recommended to insert the `CroppyLocalizations.delegate` in your `MaterialApp` or `CupertinoApp`:
 
 ```dart
 MaterialApp(
   localizationsDelegates: [
-    CroppyLocalizationDelegate(), // <- This here
+    CroppyLocalizations.delegate, // <- This here
     GlobalMaterialLocalizations.delegate,
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
