@@ -1,3 +1,7 @@
+## 1.3.1
+
+* Added German localization (thanks @jkoenig134)! 
+
 ## 1.3.0
 
 * Updated to `package:web` version `1.0.0`.
