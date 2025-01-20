@@ -30,8 +30,6 @@ class CupertinoToolbar extends StatelessWidget {
               controller: controller as AspectRatioMixin,
             );
             break;
-          default:
-            throw UnimplementedError();
         }
 
         return AnimatedSwitcher(

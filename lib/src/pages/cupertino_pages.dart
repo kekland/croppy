@@ -52,6 +52,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
   bool shouldPopAfterCrop = true,
   Locale? locale,
   CupertinoThemeData? themeData,
+  bool showLoadingIndicatorOnSubmit = false,
 }) async {
   late final CroppableImageData _initialData;
 
@@ -76,6 +77,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
         enabledTransformations: enabledTransformations,
         builder: (context, controller) => CupertinoImageCropperPage(
           heroTag: heroTag,
+          showLoadingIndicatorOnSubmit: showLoadingIndicatorOnSubmit,
           controller: controller,
           shouldPopAfterCrop: shouldPopAfterCrop,
           themeData: themeData,

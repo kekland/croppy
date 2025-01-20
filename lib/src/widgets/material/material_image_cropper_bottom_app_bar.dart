@@ -7,10 +7,12 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
     super.key,
     required this.controller,
     required this.shouldPopAfterCrop,
+    this.showLoadingIndicatorOnSubmit = false,
   });
 
   final CroppableImageController controller;
   final bool shouldPopAfterCrop;
+  final bool showLoadingIndicatorOnSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +56,33 @@ class MaterialImageCropperBottomAppBar extends StatelessWidget {
                     Navigator.of(context).pop(result);
                   }
                 },
-                builder: (context, onTap) => FilledButton(
-                  onPressed: onTap,
-                  child: Text(l10n.saveLabel),
-                ),
+                builder: (context, onTap) {
+                  final showActivityIndicator =
+                      showLoadingIndicatorOnSubmit && onTap == null;
+
+                  final child = AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 200),
+                    firstCurve: Curves.easeInOut,
+                    secondCurve: Curves.easeInOut,
+                    firstChild: const SizedBox.square(
+                      dimension: 24.0,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3.0,
+                        strokeAlign:
+                            CircularProgressIndicator.strokeAlignInside,
+                      ),
+                    ),
+                    secondChild: Text(l10n.doneLabel),
+                    crossFadeState: showActivityIndicator
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                  );
+
+                  return FilledButton(
+                    onPressed: onTap,
+                    child: child,
+                  );
+                },
               ),
             ),
           ],

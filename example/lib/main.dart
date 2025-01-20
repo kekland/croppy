@@ -159,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 heroTag: 'image-$page',
                 initialData: _data[page],
                 cropPathFn: _cropSettings.cropShapeFn,
+                showLoadingIndicatorOnSubmit: false,
                 enabledTransformations: _cropSettings.enabledTransformations,
                 allowedAspectRatios: _cropSettings.forcedAspectRatio != null
                     ? [_cropSettings.forcedAspectRatio!]
@@ -194,6 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 allowedAspectRatios: _cropSettings.forcedAspectRatio != null
                     ? [_cropSettings.forcedAspectRatio!]
                     : null,
+                showLoadingIndicatorOnSubmit: false,
                 postProcessFn: (result) async {
                   _croppedImage[page]?.dispose();
 

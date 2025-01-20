@@ -10,12 +10,14 @@ class MaterialImageCropperPage extends StatelessWidget {
     this.gesturePadding = 16.0,
     this.heroTag,
     this.themeData,
+    this.showLoadingIndicatorOnSubmit = false,
   });
 
   final CroppableImageController controller;
   final double gesturePadding;
   final Object? heroTag;
   final bool shouldPopAfterCrop;
+  final bool showLoadingIndicatorOnSubmit;
   final ThemeData? themeData;
 
   @override
@@ -77,6 +79,8 @@ class MaterialImageCropperPage extends StatelessWidget {
                         child: MaterialImageCropperBottomAppBar(
                           controller: controller,
                           shouldPopAfterCrop: shouldPopAfterCrop,
+                          showLoadingIndicatorOnSubmit:
+                              showLoadingIndicatorOnSubmit,
                         ),
                       ),
                     ),

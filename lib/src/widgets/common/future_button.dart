@@ -23,8 +23,10 @@ class FutureButton extends StatefulWidget {
 
 class _FutureButtonState extends State<FutureButton> {
   bool _isWaiting = false;
+  Size? _size;
 
   Future<void> _execute() async {
+    _size = context.size;
     setState(() => _isWaiting = true);
 
     try {
@@ -40,9 +42,12 @@ class _FutureButtonState extends State<FutureButton> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(
-      context,
-      _isWaiting ? null : _execute,
+    return SizedBox.fromSize(
+      size: _size,
+      child: widget.builder(
+        context,
+        _isWaiting ? null : _execute,
+      ),
     );
   }
 }

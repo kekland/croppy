@@ -52,6 +52,7 @@ Future<CropImageResult?> showMaterialImageCropper(
   bool shouldPopAfterCrop = true,
   Locale? locale,
   ThemeData? themeData,
+  bool showLoadingIndicatorOnSubmit = false,
 }) async {
   late final CroppableImageData _initialData;
 
@@ -78,6 +79,7 @@ Future<CropImageResult?> showMaterialImageCropper(
           heroTag: heroTag,
           controller: controller,
           shouldPopAfterCrop: shouldPopAfterCrop,
+          showLoadingIndicatorOnSubmit: showLoadingIndicatorOnSubmit,
           themeData: themeData,
         ),
       ),

@@ -217,7 +217,8 @@ class _AspectRatioChipWidget extends StatelessWidget {
       child: Container(
         height: 24.0,
         decoration: BoxDecoration(
-          color: isSelected ? CupertinoColors.white.withOpacity(0.2) : null,
+          color:
+              isSelected ? CupertinoColors.white.withValues(alpha: 0.2) : null,
           borderRadius: BorderRadius.circular(12.0),
         ),
         padding: const EdgeInsets.symmetric(
