@@ -57,7 +57,7 @@ class CupertinoImageCropperBottomAppBar extends StatelessWidget
                 style: TextStyle(
                   color: onTap != null
                       ? primaryColor
-                      : primaryColor.withValues(alpha: 0.5),
+                      : primaryColor.withOpacity(0.5),
                 ),
               ),
               crossFadeState: showActivityIndicator

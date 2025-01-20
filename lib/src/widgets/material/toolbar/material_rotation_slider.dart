@@ -184,7 +184,7 @@ class _MaterialRotationSliderPainter extends CustomPainter {
       final color = isInValueRange ? primaryColor : baseColor;
 
       final paint = Paint()
-        ..color = color.withValues(alpha: color.a * opacity)
+        ..color = color.withOpacity(color.opacity * opacity)
         ..style = _paint.style
         ..strokeWidth = _paint.strokeWidth;
 

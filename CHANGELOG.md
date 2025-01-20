@@ -1,3 +1,7 @@
+## 1.3.3
+
+* Reverted changes to `.withValues` and `.a` usage on colors, since the package currently targets Flutter 3.24
+
 ## 1.3.2
 
 * Added `showLoadingIndicatorOnSubmit` parameter to show a loading indicator when the user presses the "Done" button. This is useful if you're doing some heavy processing on the cropped image and want to show the user that something is happening.
