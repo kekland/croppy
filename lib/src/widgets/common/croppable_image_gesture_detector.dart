@@ -1,5 +1,11 @@
+import 'dart:async';
+
 import 'package:croppy/src/src.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+/// Used for handling zoom with [PointerScrollEvent]
+const double _kZoomFactor = 0.001;
 
 /// A [GestureDetector] that handles panning and scaling of the image.
 ///
@@ -32,6 +38,8 @@ class CroppableImageGestureDetector extends StatefulWidget {
 class _CroppableImageGestureDetectorState
     extends State<CroppableImageGestureDetector> {
   ScaleUpdateDetails? _lastUpdateDetails;
+  Timer? _debounceTimer;
+
   var _didStart = false;
 
   void _onScaleStart(ScaleStartDetails details) {}
@@ -60,28 +68,88 @@ class _CroppableImageGestureDetectorState
     _lastUpdateDetails = null;
   }
 
+  void _onPointerSignalEvent(PointerSignalEvent event) {
+    return switch (event) {
+      PointerScaleEvent event => _onPointerScaleEvent(event),
+      PointerScrollEvent event => _onPointerScrollEvent(event),
+      _ => null,
+    };
+  }
+
+  void _onPointerScaleEvent(PointerScaleEvent event) {
+    _debounceTimer?.cancel();
+
+    if (!_didStart) {
+      widget.controller.onPanAndScaleStart();
+      _didStart = true;
+    }
+
+    widget.controller.onPanAndScale(
+      offsetDelta: -event.delta,
+      scaleDelta: event.scale,
+    );
+
+    _resetTime();
+  }
+
+  void _onPointerScrollEvent(PointerScrollEvent event) {
+    _debounceTimer?.cancel();
+
+    if (!_didStart) {
+      widget.controller.onPanAndScaleStart();
+      _didStart = true;
+    }
+
+    widget.controller.onPanAndScale(
+      offsetDelta: -event.delta,
+      scaleDelta: 1.0 + event.scrollDelta.dy * _kZoomFactor,
+    );
+
+    _resetTime();
+  }
+
+  void _onPointerEventEnd() {
+    if (!_didStart) return;
+    _didStart = false;
+
+    widget.controller.onPanAndScaleEnd();
+  }
+
+  void _resetTime() {
+    _debounceTimer?.cancel();
+
+    _debounceTimer = Timer(
+      const Duration(milliseconds: 100),
+      _onPointerEventEnd,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEnabled = widget.controller.isTransformationEnabled(
       Transformation.panAndScale,
     );
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onScaleStart: isEnabled ? _onScaleStart : null,
-      onScaleUpdate: isEnabled ? _onScaleUpdate : null,
-      onScaleEnd: isEnabled ? _onScaleEnd : null,
-      // Don't use ResizableGestureDetector if we have a non-aabb crop shape
-      child: widget.controller.data.cropShape.type == CropShapeType.aabb
-          ? ResizableGestureDetector(
-              controller: widget.controller,
-              gesturePadding: widget.gesturePadding,
-              child: widget.child,
-            )
-          : Padding(
-              padding: EdgeInsets.all(widget.gesturePadding),
-              child: widget.child,
-            ),
+    return Listener(
+      behavior: HitTestBehavior.translucent, // Ensures all events are captured
+      onPointerSignal: isEnabled ? _onPointerSignalEvent : null,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onScaleStart: isEnabled ? _onScaleStart : null,
+        onScaleUpdate: isEnabled ? _onScaleUpdate : null,
+        onScaleEnd: isEnabled ? _onScaleEnd : null,
+        // Don't use ResizableGestureDetector if we have a non-aabb crop shape
+        child: widget.controller.data.cropShape.type == CropShapeType.aabb
+            ? ResizableGestureDetector(
+                controller: widget.controller,
+                gesturePadding: widget.gesturePadding,
+                child: widget.child,
+              )
+            : Padding(
+                padding: EdgeInsets.all(widget.gesturePadding),
+                child: widget.child,
+              ),
+      ),
     );
   }
 }
