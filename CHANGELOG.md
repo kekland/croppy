@@ -1,3 +1,7 @@
+## 1.3.5
+
+* Added minimum crop dimension, which can be specified with the `minimumCropDimension` parameter. Defaults to 8.0. Any attempt to transform the crop rect to a size smaller than this will be ignored.
+
 ## 1.3.4
 
 * Added mouse wheel and trackpad zooming (thanks @denysbohatyrov!).
