@@ -1,3 +1,7 @@
+## 1.3.4
+
+* Added mouse wheel and trackpad zooming (thanks @denysbohatyrov!).
+
 ## 1.3.3
 
 * Reverted changes to `.withValues` and `.a` usage on colors, since the package currently targets Flutter 3.24
