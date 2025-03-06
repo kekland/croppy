@@ -14,6 +14,7 @@ class CupertinoCroppableImageController
     super.postProcessFn,
     super.cropShapeFn,
     super.enabledTransformations,
+    super.minimumCropDimension,
     List<CropAspectRatio?>? allowedAspectRatios,
   }) : allowedAspectRatios =
             allowedAspectRatios ?? _createDefaultAspectRatios(data.imageSize) {

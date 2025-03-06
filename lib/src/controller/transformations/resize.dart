@@ -93,6 +93,26 @@ mixin ResizeTransformation on BaseCroppableImageController {
         break;
     }
 
+    // Apply checks for minimum crop dimension
+    
+    if (newRect.width < minimumCropDimension) {
+      newRect = Rect.fromLTWH(
+        rect.left,
+        newRect.top,
+        minimumCropDimension,
+        newRect.height,
+      );
+    }
+
+    if (newRect.height < minimumCropDimension) {
+      newRect = Rect.fromLTWH(
+        newRect.left,
+        rect.top,
+        newRect.width,
+        minimumCropDimension,
+      );
+    }
+
     return data.copyWithProperCropShape(
       cropShapeFn: cropShapeFn,
       cropRect: newRect,

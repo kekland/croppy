@@ -10,6 +10,7 @@ class MaterialCroppableImageController
     super.cropShapeFn,
     super.enabledTransformations,
     super.postProcessFn,
+    super.minimumCropDimension,
     List<CropAspectRatio?>? allowedAspectRatios,
   }) : allowedAspectRatios =
             allowedAspectRatios ?? _createDefaultAspectRatios(data.imageSize) {

@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:croppy/src/src.dart';
@@ -17,6 +18,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     required CroppableImageData data,
     this.postProcessFn,
     this.cropShapeFn = aabbCropShapeFn,
+    this.minimumCropDimension = 8.0,
   })  : _data = data.copyWith(),
         _resetData = data.copyWith(),
         _initialData = data.copyWith() {
@@ -33,6 +35,13 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
 
   /// A function that provides the crop path for a given size.
   final CropShapeFn cropShapeFn;
+
+  /// A minimum size that the crop rect can have. Any attemps to transform the
+  /// crop rect to a value smaller than this (in any dimension) will be snapped
+  /// to this value.
+  ///
+  /// Defaults to 8.0 (8 physical pixels).
+  final double minimumCropDimension;
 
   /// The current crop data.
   CroppableImageData _data;
@@ -100,6 +109,23 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     viewportSize = size;
   }
 
+  /// Checks the current crop rect size and applies the [minimumCropDimension]
+  /// if necessary.
+  void _maybeApplyMinimumCropRectSize() {
+    final newWidth = math.max(data.cropRect.width, minimumCropDimension);
+    final newHeight = math.max(data.cropRect.height, minimumCropDimension);
+
+    if (newWidth != data.cropRect.width || newHeight != data.cropRect.height) {
+      data = data.copyWith(
+        cropRect: Rect.fromCenter(
+          center: data.cropRect.center,
+          width: newWidth,
+          height: newHeight,
+        ),
+      );
+    }
+  }
+
   /// Called when a transformation starts.
   @mustCallSuper
   void onTransformationStart() {
@@ -114,6 +140,8 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   @mustCallSuper
   void onTransformation(dynamic args) {
     lastTransformationArgs = args;
+    _maybeApplyMinimumCropRectSize();
+
     notifyListeners();
   }
 
@@ -220,6 +248,7 @@ abstract class CroppableImageController extends BaseCroppableImageController
     super.postProcessFn,
     super.cropShapeFn,
     this.enabledTransformations = Transformation.values,
+    super.minimumCropDimension,
   });
 
   /// A list of transformations that are enabled.
@@ -245,5 +274,6 @@ abstract class CroppableImageControllerWithMixins
     super.postProcessFn,
     super.cropShapeFn,
     super.enabledTransformations,
+    super.minimumCropDimension,
   });
 }
