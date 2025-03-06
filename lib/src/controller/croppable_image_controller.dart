@@ -109,21 +109,13 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     viewportSize = size;
   }
 
-  /// Checks the current crop rect size and applies the [minimumCropDimension]
-  /// if necessary.
-  void _maybeApplyMinimumCropRectSize() {
-    final newWidth = math.max(data.cropRect.width, minimumCropDimension);
-    final newHeight = math.max(data.cropRect.height, minimumCropDimension);
-
-    if (newWidth != data.cropRect.width || newHeight != data.cropRect.height) {
-      data = data.copyWith(
-        cropRect: Rect.fromCenter(
-          center: data.cropRect.center,
-          width: newWidth,
-          height: newHeight,
-        ),
-      );
-    }
+  /// Checks the provided size and snaps it to [minimumCropDimension] if it's
+  /// smaller.
+  Size normalizeCropSize(Size size) {
+    return Size(
+      math.max(size.width, minimumCropDimension),
+      math.max(size.height, minimumCropDimension),
+    );
   }
 
   /// Called when a transformation starts.
@@ -140,8 +132,6 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   @mustCallSuper
   void onTransformation(dynamic args) {
     lastTransformationArgs = args;
-    _maybeApplyMinimumCropRectSize();
-
     notifyListeners();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:croppy/src/src.dart';
 import 'package:flutter/widgets.dart';
 
@@ -25,6 +27,25 @@ mixin AspectRatioMixin on CroppableImageController {
     );
 
     notifyListeners();
+  }
+
+  /// Checks the provided size and snaps it to [minimumCropDimension] if it's
+  /// smaller. This method also respects the current aspect ratio.
+  @override
+  Size normalizeCropSize(Size size) {
+    if (aspectRatioNotifier.value == null) {
+      return super.normalizeCropSize(size);
+    }
+
+    final ar = aspectRatioNotifier.value!.ratio;
+    final width = math.max(size.width, minimumCropDimension);
+    final height = math.max(size.height, minimumCropDimension);
+
+    if (ar > 1) {
+      return Size(width, width / ar);
+    } else {
+      return Size(height * ar, height);
+    }
   }
 
   /// Corrects the aspect ratio of the given [rect] according to the given
@@ -205,6 +226,14 @@ mixin AspectRatioMixin on CroppableImageController {
     super.onBaseTransformation(
       modifiedData.copyWith(cropRect: getNormalizedRect(modifiedData)),
     );
+  }
+
+  @override
+  void reset() {
+    super.reset();
+
+    aspectRatioNotifier.value = null;
+    maybeSetAspectRatioOnInit();
   }
 
   @override
