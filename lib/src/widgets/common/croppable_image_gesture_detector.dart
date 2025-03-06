@@ -36,11 +36,54 @@ class CroppableImageGestureDetector extends StatefulWidget {
 }
 
 class _CroppableImageGestureDetectorState
-    extends State<CroppableImageGestureDetector> {
+    extends State<CroppableImageGestureDetector>
+    with SingleTickerProviderStateMixin {
+  // Used for double-tap
+  late final AnimationController _doubleTapAnimation;
+  late double _doubleTapLastScale;
+
+  // Used for mouse wheel and pinch-to-zoom on trackpads
   ScaleUpdateDetails? _lastUpdateDetails;
   Timer? _debounceTimer;
-
   var _didStart = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _doubleTapAnimation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+
+    _doubleTapAnimation.addStatusListener((status) {
+      if (status == AnimationStatus.forward) {
+        widget.controller.onPanAndScaleStart();
+        _doubleTapLastScale = 1.0;
+      } else if (status == AnimationStatus.completed) {
+        widget.controller.onPanAndScaleEnd();
+      }
+    });
+
+    _doubleTapAnimation.addListener(() {
+      final scaleDelta =
+          (1.0 + _doubleTapAnimation.value) / _doubleTapLastScale;
+      _doubleTapLastScale = _doubleTapLastScale * scaleDelta;
+
+      widget.controller.onPanAndScale(
+        offsetDelta: Offset.zero,
+        scaleDelta: scaleDelta,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _doubleTapAnimation.dispose();
+    _debounceTimer?.cancel();
+
+    super.dispose();
+  }
 
   void _onScaleStart(ScaleStartDetails details) {}
 
@@ -124,6 +167,13 @@ class _CroppableImageGestureDetectorState
     );
   }
 
+  void _onDoubleTap() {
+    if (_doubleTapAnimation.isAnimating) return;
+
+    _doubleTapLastScale = 1.0;
+    _doubleTapAnimation.forward(from: 0.0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEnabled = widget.controller.isTransformationEnabled(
@@ -138,6 +188,7 @@ class _CroppableImageGestureDetectorState
         onScaleStart: isEnabled ? _onScaleStart : null,
         onScaleUpdate: isEnabled ? _onScaleUpdate : null,
         onScaleEnd: isEnabled ? _onScaleEnd : null,
+        onDoubleTap: isEnabled ? _onDoubleTap : null,
         // Don't use ResizableGestureDetector if we have a non-aabb crop shape
         child: widget.controller.data.cropShape.type == CropShapeType.aabb
             ? ResizableGestureDetector(
