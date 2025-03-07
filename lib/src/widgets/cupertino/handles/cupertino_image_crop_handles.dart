@@ -6,6 +6,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
     super.key,
     required this.controller,
     required this.gesturePadding,
+    required this.showGestureHandlesOn,
     this.handleColor = CupertinoColors.white,
     this.guideColor = CupertinoColors.white,
     this.fineGuideColor = const Color.fromRGBO(255, 255, 255, 0.3),
@@ -13,6 +14,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
 
   final CroppableImageController controller;
   final double gesturePadding;
+  final List<CropShapeType> showGestureHandlesOn;
 
   final Color handleColor;
   final Color guideColor;
@@ -43,7 +45,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
       fit: StackFit.passthrough,
       children: [
         CustomPaint(
-          painter: cropShape.type == CropShapeType.aabb
+          painter: showGestureHandlesOn.contains(cropShape.type)
               ? _CupertinoImageRectCropHandlesPainter(
                   handleColor,
                 )
@@ -66,6 +68,7 @@ class CupertinoImageCropHandles extends StatelessWidget {
     return CroppableImageGestureDetector(
       controller: controller,
       gesturePadding: gesturePadding,
+      showGestureHandlesOn: showGestureHandlesOn,
       child: child,
     );
   }

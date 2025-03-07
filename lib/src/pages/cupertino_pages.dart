@@ -53,6 +53,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
   Locale? locale,
   CupertinoThemeData? themeData,
   bool showLoadingIndicatorOnSubmit = false,
+  List<CropShapeType> showGesturesHandlesOn = const [CropShapeType.aabb],
 }) async {
   late final CroppableImageData _initialData;
 
@@ -81,6 +82,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
           controller: controller,
           shouldPopAfterCrop: shouldPopAfterCrop,
           themeData: themeData,
+          showGestureHandlesOn: showGesturesHandlesOn,
         ),
       ),
     );
