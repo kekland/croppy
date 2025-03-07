@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:croppy/src/src.dart';
@@ -17,6 +18,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
     required CroppableImageData data,
     this.postProcessFn,
     this.cropShapeFn = aabbCropShapeFn,
+    this.minimumCropDimension = 8.0,
   })  : _data = data.copyWith(),
         _resetData = data.copyWith(),
         _initialData = data.copyWith() {
@@ -33,6 +35,13 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
 
   /// A function that provides the crop path for a given size.
   final CropShapeFn cropShapeFn;
+
+  /// A minimum size that the crop rect can have. Any attemps to transform the
+  /// crop rect to a value smaller than this (in any dimension) will be snapped
+  /// to this value.
+  ///
+  /// Defaults to 8.0 (8 physical pixels).
+  final double minimumCropDimension;
 
   /// The current crop data.
   CroppableImageData _data;
@@ -98,6 +107,15 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
   void setViewportSizeInBuild(Size? size) {
     if (viewportSize == size) return;
     viewportSize = size;
+  }
+
+  /// Checks the provided size and snaps it to [minimumCropDimension] if it's
+  /// smaller.
+  Size normalizeCropSize(Size size) {
+    return Size(
+      math.max(size.width, minimumCropDimension),
+      math.max(size.height, minimumCropDimension),
+    );
   }
 
   /// Called when a transformation starts.
@@ -220,6 +238,7 @@ abstract class CroppableImageController extends BaseCroppableImageController
     super.postProcessFn,
     super.cropShapeFn,
     this.enabledTransformations = Transformation.values,
+    super.minimumCropDimension,
   });
 
   /// A list of transformations that are enabled.
@@ -245,5 +264,6 @@ abstract class CroppableImageControllerWithMixins
     super.postProcessFn,
     super.cropShapeFn,
     super.enabledTransformations,
+    super.minimumCropDimension,
   });
 }
