@@ -7,6 +7,7 @@ class MaterialImageCropperPage extends StatelessWidget {
     super.key,
     required this.controller,
     required this.shouldPopAfterCrop,
+    required this.showGestureHandlesOn,
     this.gesturePadding = 16.0,
     this.heroTag,
     this.themeData,
@@ -19,6 +20,7 @@ class MaterialImageCropperPage extends StatelessWidget {
   final bool shouldPopAfterCrop;
   final bool showLoadingIndicatorOnSubmit;
   final ThemeData? themeData;
+  final List<CropShapeType> showGestureHandlesOn;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class MaterialImageCropperPage extends StatelessWidget {
                                 MaterialImageCropperHandles(
                               controller: controller,
                               gesturePadding: gesturePadding,
+                              showGestureHandlesOn: showGestureHandlesOn,
                             ),
                           ),
                         ),

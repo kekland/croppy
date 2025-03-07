@@ -6,6 +6,7 @@ class MaterialImageCropperHandles extends StatelessWidget {
     super.key,
     required this.controller,
     required this.gesturePadding,
+    required this.showGestureHandlesOn,
     this.cornerColor = Colors.white,
     this.frameColor = const Color.fromRGBO(255, 255, 255, 0.5),
     this.guideColor = const Color.fromRGBO(255, 255, 255, 0.5),
@@ -14,6 +15,7 @@ class MaterialImageCropperHandles extends StatelessWidget {
 
   final CroppableImageController controller;
   final double gesturePadding;
+  final List<CropShapeType> showGestureHandlesOn;
 
   final Color cornerColor;
   final Color frameColor;
@@ -27,6 +29,7 @@ class MaterialImageCropperHandles extends StatelessWidget {
     return CroppableImageGestureDetector(
       controller: controller,
       gesturePadding: gesturePadding,
+      showGestureHandlesOn: showGestureHandlesOn,
       child: Stack(
         fit: StackFit.passthrough,
         children: [
@@ -64,7 +67,7 @@ class MaterialImageCropperHandles extends StatelessWidget {
               ),
             ),
           ),
-          if (cropShape.type == CropShapeType.aabb)
+          if (showGestureHandlesOn.contains(cropShape.type))
             CustomPaint(
               painter: _MaterialImageCropperCornersPainter(
                 cropShape,

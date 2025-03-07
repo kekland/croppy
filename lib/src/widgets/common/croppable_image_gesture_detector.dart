@@ -16,6 +16,7 @@ class CroppableImageGestureDetector extends StatefulWidget {
     super.key,
     required this.gesturePadding,
     required this.controller,
+    required this.showGestureHandlesOn,
     required this.child,
   });
 
@@ -23,6 +24,10 @@ class CroppableImageGestureDetector extends StatefulWidget {
   /// [child] is padded by this amount on all sides. This is to ensure that
   /// it's easier to grab the corners of the crop shape.
   final double gesturePadding;
+
+  /// This list is used to decide if handles should be shown.
+  /// If [cropShape.type] is contained in this list, handles will be shown.
+  final List<CropShapeType> showGestureHandlesOn;
 
   /// The [CroppableImageController] that is used to handle the gestures.
   final CroppableImageController controller;
@@ -189,17 +194,17 @@ class _CroppableImageGestureDetectorState
         onScaleUpdate: isEnabled ? _onScaleUpdate : null,
         onScaleEnd: isEnabled ? _onScaleEnd : null,
         onDoubleTap: isEnabled ? _onDoubleTap : null,
-        // Don't use ResizableGestureDetector if we have a non-aabb crop shape
-        child: widget.controller.data.cropShape.type == CropShapeType.aabb
+        // Only show gesture handles when shape is specified in showGestureHandlesOn
+        child: widget.showGestureHandlesOn.contains(widget.controller.data.cropShape.type)
             ? ResizableGestureDetector(
-                controller: widget.controller,
-                gesturePadding: widget.gesturePadding,
-                child: widget.child,
-              )
+          controller: widget.controller,
+          gesturePadding: widget.gesturePadding,
+          child: widget.child,
+        )
             : Padding(
-                padding: EdgeInsets.all(widget.gesturePadding),
-                child: widget.child,
-              ),
+          padding: EdgeInsets.all(widget.gesturePadding),
+          child: widget.child,
+        ),
       ),
     );
   }

@@ -10,6 +10,7 @@ Future<CropImageResult?> showCustomCropper(
   CroppableImageData? initialData,
   Object? heroTag,
   Future<CropImageResult> Function(CropImageResult)? onCropped,
+  List<CropShapeType> showGestureHandlesOn = const [CropShapeType.aabb],
 }) async {
   // Before pushing the route, prepare the initial data. If it's null, populate
   // it with empty content. This is required for Hero animations.
@@ -27,6 +28,7 @@ Future<CropImageResult?> showCustomCropper(
             initialData: _initialData,
             heroTag: heroTag,
             onCropped: onCropped,
+            showGestureHandlesOn: showGestureHandlesOn,
           );
         },
       ),
@@ -41,6 +43,7 @@ class CustomCropper extends StatelessWidget {
     super.key,
     required this.imageProvider,
     required this.initialData,
+    required this.showGestureHandlesOn,
     this.heroTag,
     this.onCropped,
   });
@@ -49,6 +52,7 @@ class CustomCropper extends StatelessWidget {
   final CroppableImageData? initialData;
   final Object? heroTag;
   final Future<CropImageResult> Function(CropImageResult)? onCropped;
+  final List<CropShapeType> showGestureHandlesOn;
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +73,7 @@ class CustomCropper extends StatelessWidget {
                       child: const Text('Done'),
                       onPressed: () async {
                         // Enable the Hero animations
-                        CroppableImagePageAnimator.of(context)
-                            ?.setHeroesEnabled(true);
+                        CroppableImagePageAnimator.of(context)?.setHeroesEnabled(true);
 
                         // Crop the image
                         final result = await controller.crop();
@@ -88,10 +91,10 @@ class CustomCropper extends StatelessWidget {
                   padding: const EdgeInsets.all(32.0),
                   child: AnimatedCroppableImageViewport(
                     controller: controller,
-                    cropHandlesBuilder: (context) =>
-                        MaterialImageCropperHandles(
+                    cropHandlesBuilder: (context) => MaterialImageCropperHandles(
                       controller: controller,
                       gesturePadding: 16.0,
+                      showGestureHandlesOn: showGestureHandlesOn,
                     ),
                     overlayOpacityAnimation: overlayOpacityAnimation,
                     gesturePadding: 16.0,
