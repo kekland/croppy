@@ -1,6 +1,7 @@
 export './languages/croppy_ar.dart';
 export './languages/croppy_de.dart';
 export './languages/croppy_en.dart';
+export './languages/croppy_fa.dart';
 export './languages/croppy_kk.dart';
 export './languages/croppy_ru.dart';
 export './languages/croppy_vi.dart';

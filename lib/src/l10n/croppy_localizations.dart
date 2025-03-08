@@ -2,10 +2,7 @@ import 'package:croppy/src/src.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-enum LocalizationDirection {
-  vertical,
-  horizontal,
-}
+enum LocalizationDirection { vertical, horizontal }
 
 abstract class CroppyLocalizations {
   CroppyLocalizations(this.localeName);
@@ -16,8 +13,7 @@ abstract class CroppyLocalizations {
     return Localizations.of<CroppyLocalizations>(context, CroppyLocalizations);
   }
 
-  static const LocalizationsDelegate<CroppyLocalizations> delegate =
-      _CroppyLocalizationsDelegate();
+  static const LocalizationsDelegate<CroppyLocalizations> delegate = _CroppyLocalizationsDelegate();
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -31,6 +27,7 @@ abstract class CroppyLocalizations {
     Locale('he'),
     Locale('zh'),
     Locale('de'),
+    Locale('fa'),
   ];
 
   /// Defaults to °
@@ -81,15 +78,12 @@ abstract class CroppyLocalizations {
   String get cupertinoSquareAspectRatioLabel;
 }
 
-class _CroppyLocalizationsDelegate
-    extends LocalizationsDelegate<CroppyLocalizations> {
+class _CroppyLocalizationsDelegate extends LocalizationsDelegate<CroppyLocalizations> {
   const _CroppyLocalizationsDelegate();
 
   @override
   Future<CroppyLocalizations> load(Locale locale) {
-    return SynchronousFuture<CroppyLocalizations>(
-      lookupCroppyLocalizations(locale),
-    );
+    return SynchronousFuture<CroppyLocalizations>(lookupCroppyLocalizations(locale));
   }
 
   @override
@@ -122,6 +116,8 @@ CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
       return CroppyLocalizationsZh();
     case 'de':
       return CroppyLocalizationsDe();
+    case 'fa':
+      return CroppyLocalizationsFa();
   }
 
   if (kDebugMode) {
