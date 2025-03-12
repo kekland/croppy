@@ -1,3 +1,10 @@
+## 1.3.6
+
+* Added a parameter called `showGestureHandlesOn` to control for which crop shapes the gesture handles should be shown. This allows you to, for example, show the rectangular gesture handles on a circular crop shape. Thanks @denysbohatyrov!
+* Added Persian localization (thanks @mdpe-ir)!
+* Added an `showAdaptiveImageCropper` method that will automatically launch the correct cropper depending on the platform.
+* Fixed a couple of issues with multiple transformations being applied at the same time.
+
 ## 1.3.5
 
 * Added minimum crop dimension, which can be specified with the `minimumCropDimension` parameter. Defaults to 8.0. Any attempt to transform the crop rect to a size smaller than this will be ignored.

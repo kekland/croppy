@@ -17,7 +17,7 @@ class CupertinoRotationSlider extends StatefulWidget {
 
   final double value;
   final double extent;
-  final VoidCallback onStart;
+  final bool Function() onStart;
   final ValueChanged<double> onChanged;
   final VoidCallback onEnd;
   final bool isReversed;
@@ -33,16 +33,18 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
   double? _dragStartValue;
 
   void _onPanStart(DragStartDetails details) {
+    if (!widget.onStart()) return;
+
     _dragStartDetails = details;
     _dragStartValue = widget.value;
-    widget.onStart();
 
     setState(() {});
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    final delta = details.globalPosition - _dragStartDetails!.globalPosition;
+    if (_dragStartDetails == null) return;
 
+    final delta = details.globalPosition - _dragStartDetails!.globalPosition;
     var dx = delta.dx;
 
     if (!widget.isReversed) {
@@ -56,10 +58,11 @@ class _CupertinoRotationSliderState extends State<CupertinoRotationSlider> {
   }
 
   void _onPanEnd(DragEndDetails details) {
+    if (_dragStartDetails == null) return;
+
     _dragStartDetails = null;
     _dragStartValue = null;
     widget.onEnd();
-
     setState(() {});
   }
 

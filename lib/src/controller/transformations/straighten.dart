@@ -31,10 +31,15 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   }
 
   /// Called when the user starts rotating the crop rect around the Z axis.
+  ///
+  /// Returns `false` if the rotation operation should be cancelled.
   @mustCallSuper
-  void onStraightenStart() {
+  bool onStraightenStart() {
+    if (isTransforming) return false;
+
     onTransformationStart();
     _isRotatingZ = true;
+    return true;
   }
 
   /// Called when the user is rotating the crop rect around the Z axis.
@@ -42,6 +47,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   void onStraighten({
     required double angleRad,
   }) {
+    if (!_isRotatingZ) return;
+
     _performRotation(
       angleNew: angleRad,
       anglePrevious: _computeRotationZ(data.imageTransform),
@@ -52,6 +59,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   /// Called when the user stops rotating the crop rect around the Z axis.
   @mustCallSuper
   void onStraightenEnd() {
+    if (!_isRotatingZ) return;
+
     _isRotatingZ = false;
     onTransformationEnd();
   }
@@ -62,10 +71,15 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   bool _isRotatingY = false;
 
   /// Called when the user starts rotating the crop rect around the Y axis.
+  ///
+  /// Returns `false` if the rotation operation should be cancelled.
   @mustCallSuper
-  void onRotateYStart() {
+  bool onRotateYStart() {
+    if (isTransforming) return false;
+
     onTransformationStart();
     _isRotatingY = true;
+    return true;
   }
 
   /// Called when the user is rotating the crop rect around the Y axis.
@@ -73,6 +87,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   void onRotateY({
     required double angleRad,
   }) {
+    if (!_isRotatingY) return;
+
     data = data.copyWith(
       baseTransformations: data.baseTransformations.copyWith(
         rotationY: angleRad,
@@ -85,6 +101,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   /// Called when the user stops rotating the crop rect around the Y axis.
   @mustCallSuper
   void onRotateYEnd() {
+    if (!_isRotatingY) return;
+
     _isRotatingY = false;
     onTransformationEnd();
   }
@@ -96,9 +114,12 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
 
   /// Called when the user starts rotating the crop rect around the X axis.
   @mustCallSuper
-  void onRotateXStart() {
+  bool onRotateXStart() {
+    if (isTransforming) return false;
+
     onTransformationStart();
     _isRotatingX = true;
+    return true;
   }
 
   /// Called when the user is rotating the crop rect around the X axis.
@@ -106,6 +127,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   void onRotateX({
     required double angleRad,
   }) {
+    if (!_isRotatingX) return;
+
     data = data.copyWith(
       baseTransformations: data.baseTransformations.copyWith(
         rotationX: angleRad,
@@ -118,6 +141,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   /// Called when the user stops rotating the crop rect around the X axis.
   @mustCallSuper
   void onRotateXEnd() {
+    if (!_isRotatingX) return;
+
     _isRotatingX = false;
     onTransformationEnd();
   }

@@ -195,16 +195,17 @@ class _CroppableImageGestureDetectorState
         onScaleEnd: isEnabled ? _onScaleEnd : null,
         onDoubleTap: isEnabled ? _onDoubleTap : null,
         // Only show gesture handles when shape is specified in showGestureHandlesOn
-        child: widget.showGestureHandlesOn.contains(widget.controller.data.cropShape.type)
+        child: widget.showGestureHandlesOn
+                .contains(widget.controller.data.cropShape.type)
             ? ResizableGestureDetector(
-          controller: widget.controller,
-          gesturePadding: widget.gesturePadding,
-          child: widget.child,
-        )
+                controller: widget.controller,
+                gesturePadding: widget.gesturePadding,
+                child: widget.child,
+              )
             : Padding(
-          padding: EdgeInsets.all(widget.gesturePadding),
-          child: widget.child,
-        ),
+                padding: EdgeInsets.all(widget.gesturePadding),
+                child: widget.child,
+              ),
       ),
     );
   }

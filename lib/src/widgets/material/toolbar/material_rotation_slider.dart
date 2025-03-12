@@ -26,14 +26,17 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
   double? _dragStartValue;
 
   void _onPanStart(DragStartDetails details) {
+    if (!widget.controller.onStraightenStart()) return;
+
     _dragStartDetails = details;
     _dragStartValue = widget.controller.rotationZNotifier.value;
-    widget.controller.onStraightenStart();
 
     setState(() {});
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
+    if (_dragStartDetails == null) return;
+
     final delta = details.globalPosition - _dragStartDetails!.globalPosition;
     final dx = delta.dx;
 
@@ -45,6 +48,8 @@ class _MaterialRotationSliderState extends State<MaterialRotationSlider> {
   }
 
   void _onPanEnd(DragEndDetails details) {
+    if (_dragStartDetails == null) return;
+
     _dragStartDetails = null;
     _dragStartValue = null;
     widget.controller.onStraightenEnd();

@@ -94,6 +94,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
 
   /// Whether the controller is currently transforming.
   final isTransformingNotifier = ValueNotifier<bool>(false);
+  bool get isTransforming => isTransformingNotifier.value;
 
   /// Sets the size of the available viewport.
   @mustCallSuper
