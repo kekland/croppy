@@ -13,7 +13,8 @@ abstract class CroppyLocalizations {
     return Localizations.of<CroppyLocalizations>(context, CroppyLocalizations);
   }
 
-  static const LocalizationsDelegate<CroppyLocalizations> delegate = _CroppyLocalizationsDelegate();
+  static const LocalizationsDelegate<CroppyLocalizations> delegate =
+      _CroppyLocalizationsDelegate();
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -78,12 +79,15 @@ abstract class CroppyLocalizations {
   String get cupertinoSquareAspectRatioLabel;
 }
 
-class _CroppyLocalizationsDelegate extends LocalizationsDelegate<CroppyLocalizations> {
+class _CroppyLocalizationsDelegate
+    extends LocalizationsDelegate<CroppyLocalizations> {
   const _CroppyLocalizationsDelegate();
 
   @override
   Future<CroppyLocalizations> load(Locale locale) {
-    return SynchronousFuture<CroppyLocalizations>(lookupCroppyLocalizations(locale));
+    return SynchronousFuture<CroppyLocalizations>(
+      lookupCroppyLocalizations(locale),
+    );
   }
 
   @override

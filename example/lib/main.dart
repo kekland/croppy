@@ -158,6 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 imageProvider: _imageProviders[page],
                 heroTag: 'image-$page',
                 initialData: _data[page],
+                showGestureHandlesOn: _cropSettings.showGestureHandlesOn,
                 cropPathFn: _cropSettings.cropShapeFn,
                 showLoadingIndicatorOnSubmit: false,
                 enabledTransformations: _cropSettings.enabledTransformations,

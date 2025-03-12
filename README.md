@@ -85,6 +85,7 @@ For a complete runnable example, see `./example`. For the full in-depth document
 - Chinese (thanks @yohom and @zhushenwudi)
 - Hebrew (thanks @kfiross)
 - German (thanks @jkoenig134)
+- Persian (thanks @mdpe-ir)
 
 If there's a language that you would like to add, please see the [localization](./doc/localization.md) guide.
 

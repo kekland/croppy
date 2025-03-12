@@ -7,6 +7,7 @@ class CropSettings {
     required this.cropShapeFn,
     required this.enabledTransformations,
     required this.forcedAspectRatio,
+    required this.showGestureHandlesOn,
     this.locale = const Locale('en'),
   });
 
@@ -14,18 +15,21 @@ class CropSettings {
       : this(
           cropShapeFn: aabbCropShapeFn,
           enabledTransformations: Transformation.values,
+          showGestureHandlesOn: [CropShapeType.aabb],
           forcedAspectRatio: null,
         );
 
   final CropShapeFn cropShapeFn;
   final List<Transformation> enabledTransformations;
   final CropAspectRatio? forcedAspectRatio;
+  final List<CropShapeType> showGestureHandlesOn;
   final Locale locale;
 
   CropSettings copyWith({
     CropShapeFn? cropShapeFn,
     List<Transformation>? enabledTransformations,
     CropAspectRatio? forcedAspectRatio,
+    List<CropShapeType>? showGestureHandlesOn,
     Locale? locale,
   }) {
     return CropSettings(
@@ -33,6 +37,7 @@ class CropSettings {
       enabledTransformations:
           enabledTransformations ?? this.enabledTransformations,
       forcedAspectRatio: forcedAspectRatio ?? this.forcedAspectRatio,
+      showGestureHandlesOn: showGestureHandlesOn ?? this.showGestureHandlesOn,
       locale: locale ?? this.locale,
     );
   }
@@ -41,6 +46,7 @@ class CropSettings {
     return CropSettings(
       cropShapeFn: cropShapeFn,
       enabledTransformations: enabledTransformations,
+      showGestureHandlesOn: showGestureHandlesOn,
       forcedAspectRatio: null,
       locale: locale,
     );
@@ -205,6 +211,34 @@ class _SettingsModalWidgetState extends State<SettingsModalWidget> {
                 onChanged: (value) {
                   setState(() {
                     _settings = _settings.copyWith(forcedAspectRatio: value);
+                  });
+                },
+              ),
+            ),
+            const ListTile(
+              enabled: false,
+              title: Text('Show gesture handles on'),
+            ),
+            ...CropShapeType.values.map(
+              (v) => CheckboxListTile(
+                title: Text(v.toString()),
+                value: _settings.showGestureHandlesOn.contains(v),
+                onChanged: (value) {
+                  setState(() {
+                    if (value == true) {
+                      _settings = _settings.copyWith(
+                        showGestureHandlesOn: [
+                          ..._settings.showGestureHandlesOn,
+                          v,
+                        ],
+                      );
+                    } else {
+                      _settings = _settings.copyWith(
+                        showGestureHandlesOn: _settings.showGestureHandlesOn
+                            .where((e) => e != v)
+                            .toList(),
+                      );
+                    }
                   });
                 },
               ),
