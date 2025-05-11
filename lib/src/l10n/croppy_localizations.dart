@@ -29,6 +29,13 @@ abstract class CroppyLocalizations {
     Locale('zh'),
     Locale('de'),
     Locale('fa'),
+    Locale('it'),
+    Locale('fr'),
+    Locale('hi'),
+    Locale('bn'),
+    Locale('ta'),
+    Locale('te'),
+    Locale('mr'),
   ];
 
   /// Defaults to °
@@ -122,6 +129,20 @@ CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
       return CroppyLocalizationsDe();
     case 'fa':
       return CroppyLocalizationsFa();
+      case 'it':
+      return CroppyLocalizationsIt();
+    case 'fr':
+      return CroppyLocalizationsFr();
+    case 'hi':
+      return CroppyLocalizationsHi();
+    case 'bn':
+      return CroppyLocalizationsBn();
+    case 'ta':
+      return CroppyLocalizationsTa();
+    case 'te':
+      return CroppyLocalizationsTe();
+    case 'mr':
+      return CroppyLocalizationsMr();
   }
 
   if (kDebugMode) {
