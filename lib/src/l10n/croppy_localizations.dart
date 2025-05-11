@@ -1,7 +1,6 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'l10n_exports.dart';
 
 enum LocalizationDirection { vertical, horizontal }
 
