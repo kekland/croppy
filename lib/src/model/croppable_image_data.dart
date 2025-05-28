@@ -13,11 +13,13 @@ class CroppableImageData extends Equatable {
     required this.baseTransformations,
     required this.imageTransform,
     required this.currentImageTransform,
+    this.overlayColor,
   });
 
   CroppableImageData.initial({
     required this.imageSize,
     required this.cropShape,
+    this.overlayColor,
   })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
@@ -26,6 +28,7 @@ class CroppableImageData extends Equatable {
   CroppableImageData.initialWithCropPathFn({
     required this.imageSize,
     required CropShapeFn cropPathFn,
+    this.overlayColor,
   })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
         cropShape = cropPathFn(
           vg.globalPathBuilder,
@@ -38,6 +41,7 @@ class CroppableImageData extends Equatable {
   static Future<CroppableImageData> fromImageProvider(
     ImageProvider imageProvider, {
     CropShapeFn cropPathFn = aabbCropShapeFn,
+    Color? overlayColor,
   }) async {
     final image = await obtainImage(imageProvider);
     return CroppableImageData.initialWithCropPathFn(
@@ -46,6 +50,7 @@ class CroppableImageData extends Equatable {
         image.height.toDouble(),
       ),
       cropPathFn: cropPathFn,
+      overlayColor: overlayColor,
     );
   }
 
@@ -75,6 +80,10 @@ class CroppableImageData extends Equatable {
   ///
   /// This is set to [Matrix.identity] once a transformation is finished.
   final Matrix4 currentImageTransform;
+
+  /// The color to use for the overlay outside the crop area.
+  /// If null, a default color based on brightness will be used.
+  final Color? overlayColor;
 
   /// Translates the given [transformation] to the center of the image.
   Matrix4 translateTransformation(Matrix4 transformation) {
@@ -127,6 +136,7 @@ class CroppableImageData extends Equatable {
     BaseTransformations? baseTransformations,
     Matrix4? imageTransform,
     Matrix4? currentImageTransform,
+    Color? overlayColor,
   }) {
     return CroppableImageData(
       imageSize: imageSize ?? this.imageSize,
@@ -136,6 +146,7 @@ class CroppableImageData extends Equatable {
       currentImageTransform:
           currentImageTransform ?? this.currentImageTransform,
       baseTransformations: baseTransformations ?? this.baseTransformations,
+      overlayColor: overlayColor ?? this.overlayColor,
     );
   }
 

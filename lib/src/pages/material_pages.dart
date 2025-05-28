@@ -36,7 +36,7 @@ import 'package:flutter/material.dart';
 ///
 /// The [locale] is used to localize the UI. If not provided, the locale from
 /// the [WidgetsApp] is used.
-/// 
+///
 /// /// [showGestureHandlesOn] controls which crop shape types should show crop
 /// handles. By default, only AABB (rectangular) crop shapes show crop handles.
 ///
@@ -59,6 +59,9 @@ Future<CropImageResult?> showMaterialImageCropper(
   List<CropShapeType> showGestureHandlesOn = const [CropShapeType.aabb],
 }) async {
   late final CroppableImageData _initialData;
+  
+  // Verwende eine Overlay-Farbe basierend auf dem Theme, wenn verfügbar
+  final overlayColor = themeData?.scaffoldBackgroundColor.withOpacity(0.98);
 
   if (initialData != null) {
     _initialData = initialData;
@@ -66,6 +69,7 @@ Future<CropImageResult?> showMaterialImageCropper(
     _initialData = await CroppableImageData.fromImageProvider(
       imageProvider,
       cropPathFn: cropPathFn ?? aabbCropShapeFn,
+      overlayColor: overlayColor,
     );
   }
 
@@ -79,6 +83,7 @@ Future<CropImageResult?> showMaterialImageCropper(
         cropShapeFn: cropPathFn,
         allowedAspectRatios: allowedAspectRatios,
         enabledTransformations: enabledTransformations,
+        overlayColor: overlayColor, // Übergebe die Theme-basierte Overlay-Farbe
         builder: (context, controller) => MaterialImageCropperPage(
           heroTag: heroTag,
           controller: controller,
