@@ -29,6 +29,24 @@ abstract class CroppyLocalizations {
     Locale('zh'),
     Locale('de'),
     Locale('fa'),
+    Locale('it'),
+    Locale('sl'),
+    Locale('hr'),
+    Locale('fr'),
+    Locale('pl'),
+    Locale('sk'),
+    Locale('cs'),
+    Locale('bs'),
+    Locale('sr'),
+    Locale('tr'),
+    Locale('uk'),
+    Locale('sv'),
+    Locale('no'),
+    Locale('hu'),
+    Locale('nl'),
+    Locale('ja'),
+    Locale('hi'),
+    Locale('ko'),
   ];
 
   /// Defaults to °
@@ -122,6 +140,42 @@ CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
       return CroppyLocalizationsDe();
     case 'fa':
       return CroppyLocalizationsFa();
+    case 'it':
+      return CroppyLocalizationsIt();
+    case 'sl':
+      return CroppyLocalizationsSl();
+    case 'hr':
+      return CroppyLocalizationsHr();
+    case 'fr':
+      return CroppyLocalizationsFr();
+    case 'pl':
+      return CroppyLocalizationsPl();
+    case 'sk':
+      return CroppyLocalizationsSk();
+    case 'cs':
+      return CroppyLocalizationsCs();
+    case 'bs':
+      return CroppyLocalizationsBs();
+    case 'sr':
+      return CroppyLocalizationsSr();
+    case 'tr':
+      return CroppyLocalizationsTr();
+    case 'uk':
+      return CroppyLocalizationsUk();
+    case 'sv':
+      return CroppyLocalizationsSv();
+    case 'no':
+      return CroppyLocalizationsNo();
+    case 'hu':
+      return CroppyLocalizationsHu();
+    case 'nl':
+      return CroppyLocalizationsNl();
+    case 'ja':
+      return CroppyLocalizationsJa();
+    case 'hi':
+      return CroppyLocalizationsHi();
+    case 'ko':
+      return CroppyLocalizationsKo();
   }
 
   if (kDebugMode) {
