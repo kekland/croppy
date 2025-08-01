@@ -19,7 +19,10 @@ mixin AspectRatioMixin on CroppableImageController {
     super.onResize(offsetDelta: offsetDelta, direction: direction);
     if (currentAspectRatio == null) return;
 
-    data = transformationInitialData!.copyWith(
+    final initialData = transformationInitialData;
+    if (initialData == null) return;
+
+    data = initialData.copyWith(
       cropRect: onResizeCorrectAspectRatio(
         rect: data.cropRect,
         direction: direction,
