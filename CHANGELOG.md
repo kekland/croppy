@@ -1,3 +1,11 @@
+## 1.4.0
+
+* Updated `compileSdkVersion` to `36`
+* Updated `Gradle` to `8.13`
+* Updated `ndkVersion` to `27.0.12077973`
+* Updated `minSdkVersion` to `23`
+
+
 ## 1.3.6
 
 * Added a parameter called `showGestureHandlesOn` to control for which crop shapes the gesture handles should be shown. This allows you to, for example, show the rectangular gesture handles on a circular crop shape. Thanks @denysbohatyrov!
