@@ -36,7 +36,7 @@ import 'package:flutter/cupertino.dart';
 ///
 /// The [locale] is used to localize the UI. If not provided, the locale from
 /// the [WidgetsApp] is used.
-/// 
+///
 /// [showGestureHandlesOn] controls which crop shape types should show crop
 /// handles. By default, only AABB (rectangular) crop shapes show crop handles.
 ///
@@ -60,12 +60,17 @@ Future<CropImageResult?> showCupertinoImageCropper(
 }) async {
   late final CroppableImageData _initialData;
 
+  // Verwende eine Overlay-Farbe basierend auf dem Theme, wenn verfügbar
+  // 98% Opazität für stärkere Abdunkelung
+  final overlayColor = themeData?.scaffoldBackgroundColor.withOpacity(0.98);
+
   if (initialData != null) {
     _initialData = initialData;
   } else {
     _initialData = await CroppableImageData.fromImageProvider(
       imageProvider,
       cropPathFn: cropPathFn ?? aabbCropShapeFn,
+      overlayColor: overlayColor,
     );
   }
 
@@ -79,6 +84,7 @@ Future<CropImageResult?> showCupertinoImageCropper(
         cropShapeFn: cropPathFn,
         allowedAspectRatios: allowedAspectRatios,
         enabledTransformations: enabledTransformations,
+        overlayColor: overlayColor, // Übergebe die Theme-basierte Overlay-Farbe
         builder: (context, controller) => CupertinoImageCropperPage(
           heroTag: heroTag,
           showLoadingIndicatorOnSubmit: showLoadingIndicatorOnSubmit,

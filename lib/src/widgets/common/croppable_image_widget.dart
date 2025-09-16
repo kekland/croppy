@@ -3,6 +3,7 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/cupertino.dart';
 
 /// TODO: Document this
 class CroppableImageWidget
@@ -232,8 +233,11 @@ class CroppableImageRenderObject extends RenderBox
               // Avoids some anti-aliasing artifacts
               (offset & imageData.imageSize).inflate(0.5),
               Paint()
-                ..color = Colors.black.withOpacity(backgroundOpacity)
-                ..blendMode = BlendMode.multiply,
+                ..color =
+                    imageData.overlayColor?.withOpacity(backgroundOpacity) ??
+                        const Color(0xFF000000)
+                            .withOpacity(backgroundOpacity * 0.98)
+                ..blendMode = BlendMode.srcOver,
             );
           },
           oldLayer: _backgroundTransformLayer.layer,
