@@ -6,6 +6,7 @@
 * Updated `minSdkVersion` to `23` (thanks @jimmyff and @kaiquecruz)!
 * Ensured 16kb memory page size compatibility on Android
 * Added Turkish localization (thanks @BayramYARIM)!
+* Fix a null-check operator issue on resize (thanks @tusharbhambere)!
 
 ## 1.3.6
 
