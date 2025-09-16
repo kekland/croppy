@@ -1,10 +1,11 @@
 ## 1.4.0
 
-* Updated `compileSdkVersion` to `36`
-* Updated `Gradle` to `8.13`
-* Updated `ndkVersion` to `27.0.12077973`
-* Updated `minSdkVersion` to `23`
-
+* Updated `compileSdkVersion` to `36` (thanks @jimmyff and @kaiquecruz)!
+* Updated `Gradle` to `8.13` (thanks @jimmyff and @kaiquecruz)!
+* Updated `ndkVersion` to `27.0.12077973` (thanks @jimmyff and @kaiquecruz)!
+* Updated `minSdkVersion` to `23` (thanks @jimmyff and @kaiquecruz)!
+* Ensured 16kb memory page size compatibility on Android
+* Added Turkish localization (thanks @BayramYARIM)!
 
 ## 1.3.6
 
