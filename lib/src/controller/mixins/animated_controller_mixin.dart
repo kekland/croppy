@@ -13,6 +13,9 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
   RectTween? _staticCropRectTween;
   Tween<double>? _viewportScaleTween;
 
+  bool get isAnimating => imageDataAnimationController.isAnimating ||
+      viewportScaleAnimationController.isAnimating;
+
   void initAnimationControllers(TickerProvider vsync) {
     imageDataAnimationController = AnimationController(
       vsync: vsync,
@@ -236,6 +239,12 @@ mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
 
   void setStaticCropRectTweenEnd(Rect? end) {
     _staticCropRectTween?.end = end;
+  }
+
+  @override
+  void onRotateCCW() {
+    if (isAnimating) return;
+    super.onRotateCCW();
   }
 
   @override

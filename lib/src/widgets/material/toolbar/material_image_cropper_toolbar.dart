@@ -68,9 +68,7 @@ class MaterialImageCropperToolbar extends StatelessWidget {
                           child: ValueListenableBuilder(
                             valueListenable: controller.baseRotationZNotifier,
                             builder: (context, rotationZ, _) => IconButton(
-                              onPressed: () {
-                                controller.onRotateCCW();
-                              },
+                              onPressed: controller.onRotateCCW,
                               isSelected: clampAngle(rotationZ) > epsilon,
                               icon: const Icon(
                                 Icons.rotate_90_degrees_ccw_rounded,
