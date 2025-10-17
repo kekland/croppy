@@ -1,3 +1,8 @@
+## 1.4.1 (upcoming!)
+
+* Fixed a bug where tapping on the "rotate 90 degrees" button rapidly would result in a non-90 degree rotation (thanks @AdrianSima for reporting!)
+* Added Polish localization (thanks @mekkolodziejski!)
+
 ## 1.4.0
 
 * Updated `compileSdkVersion` to `36` (thanks @jimmyff and @kaiquecruz)!
