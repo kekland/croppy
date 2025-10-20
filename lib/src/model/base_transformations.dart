@@ -12,10 +12,18 @@ class BaseTransformations extends Equatable {
     required this.rotationZ,
     required this.scaleX,
     required this.scaleY,
+    required this.perspectiveDepth,
   });
 
-  const BaseTransformations.initial()
-      : this(rotationX: 0, rotationY: 0, rotationZ: 0, scaleX: 1, scaleY: 1);
+  BaseTransformations.initial(Size imageSize)
+      : this(
+          rotationX: 0,
+          rotationY: 0,
+          rotationZ: 0,
+          scaleX: 1,
+          scaleY: 1,
+          perspectiveDepth: 0.001 / (imageSize.longestSide / 1000.0),
+        );
 
   final double rotationX;
   final double rotationY;
@@ -23,13 +31,23 @@ class BaseTransformations extends Equatable {
   final double scaleX;
   final double scaleY;
 
+  /// Perspective depth is computed as follows:
+  /// For an image with width W and height H:
+  /// - dimension = max(W, H)
+  /// - depth = 0.001 / (dimension / 1000)
+  /// 
+  /// This ensures that larger images have a smaller perspective effect,
+  /// while smaller images have a more pronounced effect. As a result,
+  /// the perspective effect appears consistent across different image sizes.
+  final double perspectiveDepth;
+
   /// Returns a [Matrix4] representing all of the transformations.
   Matrix4 get matrix => scaleMatrix * rotationMatrix;
 
   /// Returns a [Matrix4] representing the rotation transformations.
   Matrix4 get rotationMatrix {
     final matrix = Matrix4.identity();
-    matrix.setEntry(3, 2, 0.001);
+    matrix.setEntry(3, 2, perspectiveDepth);
     matrix.rotateZ(rotationZ);
     matrix.rotateY(rotationY);
     matrix.rotateX(rotationX);
@@ -50,6 +68,7 @@ class BaseTransformations extends Equatable {
     double? rotationZ,
     double? scaleX,
     double? scaleY,
+    double? perspectiveDepth,
   }) {
     return BaseTransformations(
       rotationX: rotationX ?? this.rotationX,
@@ -57,6 +76,7 @@ class BaseTransformations extends Equatable {
       rotationZ: rotationZ ?? this.rotationZ,
       scaleX: scaleX ?? this.scaleX,
       scaleY: scaleY ?? this.scaleY,
+      perspectiveDepth: perspectiveDepth ?? this.perspectiveDepth,
     );
   }
 
@@ -84,6 +104,7 @@ class BaseTransformations extends Equatable {
       rotationZ: lerpDouble(a.rotationZ, b.rotationZ, t)!,
       scaleX: lerpDouble(a.scaleX, b.scaleX, t)!,
       scaleY: lerpDouble(a.scaleY, b.scaleY, t)!,
+      perspectiveDepth: lerpDouble(a.perspectiveDepth, b.perspectiveDepth, t)!,
     );
   }
 
@@ -94,5 +115,6 @@ class BaseTransformations extends Equatable {
         rotationZ,
         scaleX,
         scaleY,
+        perspectiveDepth,
       ];
 }

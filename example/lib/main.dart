@@ -80,8 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
       viewportFraction: 0.9,
     );
 
-    _imageProviders.add(const AssetImage('assets/4by3.png'));
-
     final random = Random();
     for (var i = 0; i < 80; i++) {
       final image = NetworkImage(

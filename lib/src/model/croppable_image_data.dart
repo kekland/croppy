@@ -21,7 +21,7 @@ class CroppableImageData extends Equatable {
   })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
-        baseTransformations = const BaseTransformations.initial();
+        baseTransformations = BaseTransformations.initial(imageSize);
 
   CroppableImageData.initialWithCropPathFn({
     required this.imageSize,
@@ -33,7 +33,7 @@ class CroppableImageData extends Equatable {
         ),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
-        baseTransformations = const BaseTransformations.initial();
+        baseTransformations = BaseTransformations.initial(imageSize);
 
   static Future<CroppableImageData> fromImageProvider(
     ImageProvider imageProvider, {
