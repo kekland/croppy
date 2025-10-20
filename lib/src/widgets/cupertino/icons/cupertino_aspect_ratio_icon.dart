@@ -22,7 +22,7 @@ class CupertinoAspectRatioIcon extends StatelessWidget {
           height: size * 0.7815940210098449,
           child: CustomPaint(
             painter: _CupertinoAspectRatioIconPainter(
-              color ?? CupertinoColors.white,
+              color ?? CupertinoTheme.of(context).primaryContrastingColor,
             ),
           ),
         ),

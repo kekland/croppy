@@ -22,7 +22,7 @@ class CupertinoPerspectiveYIcon extends StatelessWidget {
           height: size * 0.7310248486644371,
           child: CustomPaint(
             painter: _CupertinoPerspectiveYIconPainter(
-              color ?? CupertinoColors.white,
+              color ?? CupertinoTheme.of(context).primaryContrastingColor,
             ),
           ),
         ),

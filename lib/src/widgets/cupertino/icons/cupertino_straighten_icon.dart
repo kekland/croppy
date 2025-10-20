@@ -21,7 +21,7 @@ class CupertinoStraightenIcon extends StatelessWidget {
           height: size * 0.7284062960242369,
           child: CustomPaint(
             painter: _CupertinoStraightenIconPainter(
-              color ?? CupertinoColors.white,
+              color ?? CupertinoTheme.of(context).primaryContrastingColor,
             ),
           ),
         ),

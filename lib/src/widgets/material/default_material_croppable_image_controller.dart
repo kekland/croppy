@@ -11,6 +11,7 @@ class DefaultMaterialCroppableImageController extends StatefulWidget {
     this.postProcessFn,
     this.cropShapeFn,
     this.enabledTransformations,
+    this.overlayColor,
   });
 
   final ImageProvider imageProvider;
@@ -19,6 +20,7 @@ class DefaultMaterialCroppableImageController extends StatefulWidget {
   final CropShapeFn? cropShapeFn;
   final List<CropAspectRatio?>? allowedAspectRatios;
   final List<Transformation>? enabledTransformations;
+  final Color? overlayColor;
 
   final Widget Function(
     BuildContext context,
@@ -45,11 +47,20 @@ class _DefaultMaterialCroppableImageControllerState
     late final CroppableImageData initialData;
 
     if (widget.initialData != null) {
-      initialData = widget.initialData!;
+      initialData = CroppableImageData(
+        imageSize: widget.initialData!.imageSize,
+        cropRect: widget.initialData!.cropRect,
+        cropShape: widget.initialData!.cropShape,
+        baseTransformations: widget.initialData!.baseTransformations,
+        imageTransform: widget.initialData!.imageTransform,
+        currentImageTransform: widget.initialData!.currentImageTransform,
+        overlayColor: widget.overlayColor,
+      );
     } else {
       initialData = await CroppableImageData.fromImageProvider(
         widget.imageProvider,
         cropPathFn: widget.cropShapeFn ?? aabbCropShapeFn,
+        overlayColor: widget.overlayColor,
       );
     }
 
