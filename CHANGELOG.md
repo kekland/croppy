@@ -3,6 +3,7 @@
 * Fixed a bug where tapping on the "rotate 90 degrees" button rapidly would result in a non-90 degree rotation (thanks @AdrianSima for reporting!)
 * Added Polish localization (thanks @mekkolodziejski!)
 * Added Romanian localization (thanks @AdrianSima!)
+* Fixed a bug with perspective transformation being extremely exaggerated on large images. Now the perspective factor is scaled according to the image size. Please report if you find any issues with this new behavior! (thanks @AdrianSima for reporting!)
 
 ## 1.4.0
 
