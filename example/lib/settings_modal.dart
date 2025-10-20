@@ -74,6 +74,7 @@ const _forceableAspectRatios = [
   CropAspectRatio(width: 16, height: 9),
   CropAspectRatio(width: 4, height: 3),
   CropAspectRatio(width: 3, height: 2),
+  CropAspectRatio(width: 15, height: 10),
 ];
 
 class SettingsModalWidget extends StatefulWidget {

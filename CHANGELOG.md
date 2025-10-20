@@ -2,6 +2,7 @@
 
 * Fixed a bug where tapping on the "rotate 90 degrees" button rapidly would result in a non-90 degree rotation (thanks @AdrianSima for reporting!)
 * Added Polish localization (thanks @mekkolodziejski!)
+* Added Romanian localization (thanks @AdrianSima!)
 
 ## 1.4.0
 

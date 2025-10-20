@@ -13,12 +13,12 @@ import 'dart:ui' as ui;
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  if (!kIsWeb) {
-    // For some reason, the C++ implementation of the Cassowary solver is super
-    // slow in debug mode. So we force the Dart implementation to be used in
-    // debug mode. This only applies to Windows.
-    croppyForceUseCassowaryDartImpl = true;
-  }
+  // if (!kIsWeb) {
+  //   // For some reason, the C++ implementation of the Cassowary solver is super
+  //   // slow in debug mode. So we force the Dart implementation to be used in
+  //   // debug mode. This only applies to Windows.
+  //   croppyForceUseCassowaryDartImpl = true;
+  // }
 
   runApp(const MyApp());
 }
@@ -79,6 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _pageController = PageController(
       viewportFraction: 0.9,
     );
+
+    _imageProviders.add(const AssetImage('assets/4by3.png'));
 
     final random = Random();
     for (var i = 0; i < 80; i++) {
