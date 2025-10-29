@@ -32,6 +32,7 @@ abstract class CroppyLocalizations {
     Locale('tr'),
     Locale('pl'),
     Locale('ro'),
+    Locale('ky'),
   ];
 
   /// Defaults to °
@@ -131,6 +132,8 @@ CroppyLocalizations lookupCroppyLocalizations(Locale locale) {
       return CroppyLocalizationsPl();
     case 'ro':
       return CroppyLocalizationsRo();
+    case 'ky':
+      return CroppyLocalizationsKy();
   }
 
   if (kDebugMode) {

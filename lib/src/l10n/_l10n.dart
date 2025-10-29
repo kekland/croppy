@@ -12,5 +12,6 @@ export './languages/croppy_zh.dart';
 export './languages/croppy_tr.dart';
 export './languages/croppy_pl.dart';
 export './languages/croppy_ro.dart';
+export './languages/croppy_ky.dart';
 export './croppy_localizations.dart';
 export './l10n_provider.dart';
