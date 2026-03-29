@@ -151,6 +151,66 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
   /// direction.
   bool get isRotating => isRotatingX || isRotatingY || isRotatingZ;
 
+  // ---------------------------------------------------------------------------
+  // Stretch X (horizontal scale)
+  // ---------------------------------------------------------------------------
+
+  bool get isStretchingX => _isStretchingX;
+  bool _isStretchingX = false;
+
+  @mustCallSuper
+  bool onStretchXStart() {
+    if (isTransforming) return false;
+    onTransformationStart();
+    _isStretchingX = true;
+    return true;
+  }
+
+  void onStretchX({required double scaleX}) {
+    if (!_isStretchingX) return;
+    data = data.copyWith(
+      baseTransformations: data.baseTransformations.copyWith(scaleX: scaleX),
+    );
+    onTransformation(scaleX);
+  }
+
+  @mustCallSuper
+  void onStretchXEnd() {
+    if (!_isStretchingX) return;
+    _isStretchingX = false;
+    onTransformationEnd();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Stretch Y (vertical scale)
+  // ---------------------------------------------------------------------------
+
+  bool get isStretchingY => _isStretchingY;
+  bool _isStretchingY = false;
+
+  @mustCallSuper
+  bool onStretchYStart() {
+    if (isTransforming) return false;
+    onTransformationStart();
+    _isStretchingY = true;
+    return true;
+  }
+
+  void onStretchY({required double scaleY}) {
+    if (!_isStretchingY) return;
+    data = data.copyWith(
+      baseTransformations: data.baseTransformations.copyWith(scaleY: scaleY),
+    );
+    onTransformation(scaleY);
+  }
+
+  @mustCallSuper
+  void onStretchYEnd() {
+    if (!_isStretchingY) return;
+    _isStretchingY = false;
+    onTransformationEnd();
+  }
+
   /// The rotation around X axis of the image in radians.
   final rotationXNotifier = ValueNotifier(0.0);
 
@@ -159,6 +219,12 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
 
   /// The rotation around Z axis of the image in radians.
   final rotationZNotifier = ValueNotifier(0.0);
+
+  /// The horizontal scale factor (1.0 = no stretch).
+  final scaleXNotifier = ValueNotifier(1.0);
+
+  /// The vertical scale factor (1.0 = no stretch).
+  final scaleYNotifier = ValueNotifier(1.0);
 
   Quaternion _computeRotation([Matrix4? transform]) {
     final Matrix4 _transform =
@@ -181,6 +247,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
     rotationXNotifier.value = data.baseTransformations.rotationX;
     rotationYNotifier.value = data.baseTransformations.rotationY;
     rotationZNotifier.value = rotation.yaw;
+    scaleXNotifier.value = data.baseTransformations.scaleX;
+    scaleYNotifier.value = data.baseTransformations.scaleY;
   }
 
   @override
@@ -188,6 +256,8 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
     rotationXNotifier.dispose();
     rotationYNotifier.dispose();
     rotationZNotifier.dispose();
+    scaleXNotifier.dispose();
+    scaleYNotifier.dispose();
     super.dispose();
   }
 }

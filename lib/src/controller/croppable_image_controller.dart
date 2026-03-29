@@ -232,7 +232,8 @@ abstract class CroppableImageController extends BaseCroppableImageController
         ResizeTransformation,
         StraightenAndPerspectiveTransformation,
         RotateTransformation,
-        MirrorTransformation {
+        MirrorTransformation,
+        HomographyCorrectionTransformation {
   CroppableImageController({
     required super.imageProvider,
     required super.data,

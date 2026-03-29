@@ -29,7 +29,7 @@ NOTE: see https://github.com/kekland/croppy/issues/38. Currently I'm very busy w
 
 - Material image cropper (similar to Google Photos)
 - iOS Photos app-like image cropper
-- Support for any linear transformations on the image: scaling, rotating, skewing, flipping, etc
+- Support for a wide range of image transformations: scaling, rotating, skewing, flipping, perspective correction, homography (quad warp), and independent horizontal/vertical stretch
 - Completely customizable (will create documentation with later releases)
 - Fixed aspect ratios
 - Custom cropping shapes

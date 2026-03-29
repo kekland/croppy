@@ -1,9 +1,13 @@
+export 'handles/cupertino_homography_handles.dart';
 export 'handles/cupertino_image_crop_handles.dart';
 export 'icons/cupertino_aspect_ratio_icon.dart';
+export 'icons/cupertino_homography_icon.dart';
 export 'icons/cupertino_flip_horizontal_icon.dart';
 export 'icons/cupertino_perspective_y_icon.dart';
 export 'icons/cupertino_perspective_x_icon.dart';
 export 'icons/cupertino_straighten_icon.dart';
+export 'icons/cupertino_stretch_x_icon.dart';
+export 'icons/cupertino_stretch_y_icon.dart';
 export 'route/cupertino_image_cropper_route.dart';
 export 'theme/cupertino_image_cropper_theme.dart';
 export 'toolbar/cupertino_image_aspect_ratio_toolbar.dart';

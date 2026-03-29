@@ -64,10 +64,25 @@ class CupertinoImageCropperPage extends StatelessWidget {
                           gesturePadding: gesturePadding,
                           heroTag: heroTag,
                           cropHandlesBuilder: (context) =>
-                              CupertinoImageCropHandles(
+                              ValueListenableBuilder<List<Offset>?>(
+                            valueListenable:
+                                controller.correctionHandlesNotifier,
+                            builder: (context, handles, _) {
+                              if (handles != null) {
+                                // Hide the crop box while homography tool is active.
+                                return const SizedBox.expand();
+                              }
+                              return CupertinoImageCropHandles(
+                                controller: controller,
+                                gesturePadding: gesturePadding,
+                                showGestureHandlesOn: showGestureHandlesOn,
+                              );
+                            },
+                          ),
+                          overlayBuilder: (context) =>
+                              CupertinoHomographyHandles(
                             controller: controller,
                             gesturePadding: gesturePadding,
-                            showGestureHandlesOn: showGestureHandlesOn,
                           ),
                         ),
                       ),
@@ -83,6 +98,7 @@ class CupertinoImageCropperPage extends StatelessWidget {
                                 height: 96.0,
                                 child: CupertinoToolbar(
                                   controller: controller,
+                                  gesturePadding: gesturePadding,
                                 ),
                               ),
                               CupertinoImageCropperBottomAppBar(

@@ -4,6 +4,9 @@ class CroppyLocalizationsKk extends CroppyLocalizations {
   CroppyLocalizationsKk() : super('kk');
 
   @override
+  String get applyLabel => 'Қолдану';
+
+  @override
   String get cancelLabel => 'Бас тарту';
 
   @override

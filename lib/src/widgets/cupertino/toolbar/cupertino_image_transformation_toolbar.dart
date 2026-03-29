@@ -8,9 +8,14 @@ class CupertinoImageTransformationToolbar extends StatefulWidget {
   const CupertinoImageTransformationToolbar({
     super.key,
     required this.controller,
+    this.gesturePadding = 16.0,
   });
 
   final CroppableImageController controller;
+
+  /// Must match the [gesturePadding] used by the viewport so that homography
+  /// handle coordinates are computed correctly.
+  final double gesturePadding;
 
   @override
   State<CupertinoImageTransformationToolbar> createState() =>
@@ -21,6 +26,9 @@ enum _Knob {
   rotateZ,
   rotateY,
   rotateX,
+  stretchX,
+  stretchY,
+  homography,
 }
 
 class _CupertinoImageTransformationToolbarState
@@ -39,9 +47,33 @@ class _CupertinoImageTransformationToolbarState
         _Knob.rotateX,
       if (widget.controller.isTransformationEnabled(Transformation.rotateY))
         _Knob.rotateY,
+      if (widget.controller.isTransformationEnabled(Transformation.stretchX))
+        _Knob.stretchX,
+      if (widget.controller.isTransformationEnabled(Transformation.stretchY))
+        _Knob.stretchY,
+      if (widget.controller.isTransformationEnabled(Transformation.homography))
+        _Knob.homography,
     ];
 
     _activeKnob = _knobs.isNotEmpty ? _knobs.first : null;
+  }
+
+  void _selectKnob(_Knob knob) {
+    if (_activeKnob == knob) return;
+
+    // Deactivate the homography tool when switching away from it.
+    if (_activeKnob == _Knob.homography) {
+      widget.controller.onDeactivateHomographyCorrection();
+    }
+
+    setState(() => _activeKnob = knob);
+
+    // Activate the homography tool when switching to it.
+    if (knob == _Knob.homography) {
+      widget.controller.onActivateHomographyCorrection(
+        gesturePadding: widget.gesturePadding,
+      );
+    }
   }
 
   Widget _buildRotationSlider(BuildContext context) {
@@ -94,6 +126,75 @@ class _CupertinoImageTransformationToolbarState
       );
     }
 
+    if (_activeKnob == _Knob.stretchX) {
+      return ValueListenableBuilder(
+        key: const Key('stretchX'),
+        valueListenable: widget.controller.scaleXNotifier,
+        builder: (context, scaleX, _) => CupertinoRotationSlider(
+          value: scaleX - 1.0,
+          extent: 0.5,
+          onStart: widget.controller.onStretchXStart,
+          onEnd: widget.controller.onStretchXEnd,
+          onChanged: (v) => widget.controller.onStretchX(scaleX: 1.0 + v),
+        ),
+      );
+    }
+
+    if (_activeKnob == _Knob.stretchY) {
+      return ValueListenableBuilder(
+        key: const Key('stretchY'),
+        valueListenable: widget.controller.scaleYNotifier,
+        builder: (context, scaleY, _) => CupertinoRotationSlider(
+          value: scaleY - 1.0,
+          extent: 0.5,
+          onStart: widget.controller.onStretchYStart,
+          onEnd: widget.controller.onStretchYEnd,
+          onChanged: (v) => widget.controller.onStretchY(scaleY: 1.0 + v),
+        ),
+      );
+    }
+
+    if (_activeKnob == _Knob.homography) {
+      final l10n = CroppyLocalizations.of(context)!;
+      final primaryColor = CupertinoTheme.of(context).primaryColor;
+      return Row(
+        key: const Key('homography'),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CupertinoButton(
+            onPressed: () {
+              widget.controller.onApplyHomographyCorrection(
+                gesturePadding: widget.gesturePadding,
+              );
+              widget.controller.onDeactivateHomographyCorrection();
+              final fallback = _knobs.firstWhere(
+                (k) => k != _Knob.homography,
+                orElse: () => _Knob.rotateZ,
+              );
+              setState(() => _activeKnob = fallback);
+            },
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(
+              l10n.applyLabel,
+              style: TextStyle(color: primaryColor),
+            ),
+          ),
+          CupertinoButton(
+            onPressed: () {
+              widget.controller.onDeactivateHomographyCorrection();
+              final fallback = _knobs.firstWhere(
+                (k) => k != _Knob.homography,
+                orElse: () => _Knob.rotateZ,
+              );
+              setState(() => _activeKnob = fallback);
+            },
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(l10n.cancelLabel),
+          ),
+        ],
+      );
+    }
+
     return const SizedBox.shrink();
   }
 
@@ -105,7 +206,7 @@ class _CupertinoImageTransformationToolbarState
           notifier: widget.controller.rotationZNotifier,
           extent: 45.0,
           isActive: _activeKnob == _Knob.rotateZ,
-          onSelected: () => setState(() => _activeKnob = _Knob.rotateZ),
+          onSelected: () => _selectKnob(_Knob.rotateZ),
           onChanged: (v) => widget.controller.onStraighten(angleRad: v),
           inactiveChild: const CupertinoStraightenIcon(
             color: CupertinoColors.white,
@@ -118,7 +219,7 @@ class _CupertinoImageTransformationToolbarState
           extent: 30.0,
           isReversed: true,
           isActive: _activeKnob == _Knob.rotateX,
-          onSelected: () => setState(() => _activeKnob = _Knob.rotateX),
+          onSelected: () => _selectKnob(_Knob.rotateX),
           onChanged: (v) => widget.controller.onRotateX(angleRad: v),
           inactiveChild: const CupertinoPerspectiveXIcon(
             color: CupertinoColors.white,
@@ -130,11 +231,39 @@ class _CupertinoImageTransformationToolbarState
           notifier: widget.controller.rotationYNotifier,
           extent: 30.0,
           isActive: _activeKnob == _Knob.rotateY,
-          onSelected: () => setState(() => _activeKnob = _Knob.rotateY),
+          onSelected: () => _selectKnob(_Knob.rotateY),
           onChanged: (v) => widget.controller.onRotateY(angleRad: v),
           inactiveChild: const CupertinoPerspectiveYIcon(
             color: CupertinoColors.white,
           ),
+        ),
+      if (widget.controller.isTransformationEnabled(Transformation.stretchX))
+        _CupertinoStretchKnobWidget(
+          key: const Key('stretchX'),
+          notifier: widget.controller.scaleXNotifier,
+          isActive: _activeKnob == _Knob.stretchX,
+          onSelected: () => _selectKnob(_Knob.stretchX),
+          onChanged: (v) => widget.controller.onStretchX(scaleX: v),
+          inactiveChild: const CupertinoStretchXIcon(
+            color: CupertinoColors.white,
+          ),
+        ),
+      if (widget.controller.isTransformationEnabled(Transformation.stretchY))
+        _CupertinoStretchKnobWidget(
+          key: const Key('stretchY'),
+          notifier: widget.controller.scaleYNotifier,
+          isActive: _activeKnob == _Knob.stretchY,
+          onSelected: () => _selectKnob(_Knob.stretchY),
+          onChanged: (v) => widget.controller.onStretchY(scaleY: v),
+          inactiveChild: const CupertinoStretchYIcon(
+            color: CupertinoColors.white,
+          ),
+        ),
+      if (widget.controller.isTransformationEnabled(Transformation.homography))
+        _CupertinoHomographyKnobWidget(
+          key: const Key('homography'),
+          isActive: _activeKnob == _Knob.homography,
+          onSelected: () => _selectKnob(_Knob.homography),
         ),
     ];
   }
@@ -154,11 +283,13 @@ class _CupertinoImageTransformationToolbarState
           children: _buildKnobs(context),
         ),
         const SizedBox(height: 8.0),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          switchInCurve: Curves.easeInOut,
-          switchOutCurve: Curves.easeInOut,
-          child: _buildRotationSlider(context),
+        Expanded(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            child: _buildRotationSlider(context),
+          ),
         ),
       ],
     );
@@ -254,6 +385,68 @@ class _CupertinoImageTransformationToolbarKnobsState
                 padding: const EdgeInsets.symmetric(horizontal: 8.0), child: v))
             .toList(),
       ),
+    );
+  }
+}
+
+/// A knob for the stretch X / stretch Y tools. Displays the scale as a
+/// percentage offset from 1.0 (e.g. +25 for 1.25, -10 for 0.90).
+class _CupertinoStretchKnobWidget extends StatelessWidget {
+  const _CupertinoStretchKnobWidget({
+    super.key,
+    required this.notifier,
+    required this.isActive,
+    required this.onSelected,
+    required this.onChanged,
+    required this.inactiveChild,
+  });
+
+  final ValueListenable<double> notifier;
+  final bool isActive;
+  final VoidCallback onSelected;
+  final ValueChanged<double> onChanged;
+  final Widget inactiveChild;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: notifier,
+      builder: (context, v, _) => CupertinoKnob(
+        // Display as percentage offset: 1.25 → +25, 0.80 → -20
+        value: (v - 1.0) * 100.0,
+        extent: 50.0,
+        onChanged: (pct) {
+          if (!isActive) {
+            onSelected();
+            return;
+          }
+          onChanged(1.0 + pct / 100.0);
+        },
+        inactiveChild: inactiveChild,
+      ),
+    );
+  }
+}
+
+/// A simple button knob for the homography tool. Unlike the rotation knobs,
+/// it has no draggable value — tapping it activates the tool.
+class _CupertinoHomographyKnobWidget extends StatelessWidget {
+  const _CupertinoHomographyKnobWidget({
+    super.key,
+    required this.isActive,
+    required this.onSelected,
+  });
+
+  final bool isActive;
+  final VoidCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoKnobButton(
+      isActive: isActive,
+      isPositive: isActive,
+      onPressed: onSelected,
+      child: const CupertinoHomographyIcon(color: CupertinoColors.white),
     );
   }
 }

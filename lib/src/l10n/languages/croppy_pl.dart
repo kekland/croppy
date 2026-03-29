@@ -4,6 +4,9 @@ class CroppyLocalizationsPl extends CroppyLocalizations {
   CroppyLocalizationsPl() : super('pl');
 
   @override
+  String get applyLabel => 'Zastosuj';
+
+  @override
   String get cancelLabel => 'Anuluj';
 
   @override

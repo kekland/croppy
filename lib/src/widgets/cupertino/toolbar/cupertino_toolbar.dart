@@ -5,14 +5,19 @@ class CupertinoToolbar extends StatelessWidget {
   const CupertinoToolbar({
     super.key,
     required this.controller,
+    this.gesturePadding = 16.0,
   });
 
   final CroppableImageController controller;
+  final double gesturePadding;
 
   @override
   Widget build(BuildContext context) {
     if (controller is! CupertinoCroppableImageController) {
-      return CupertinoImageTransformationToolbar(controller: controller);
+      return CupertinoImageTransformationToolbar(
+        controller: controller,
+        gesturePadding: gesturePadding,
+      );
     }
 
     return ValueListenableBuilder(
@@ -23,7 +28,10 @@ class CupertinoToolbar extends StatelessWidget {
 
         switch (toolbar) {
           case CupertinoCroppableImageToolbar.transform:
-            child = CupertinoImageTransformationToolbar(controller: controller);
+            child = CupertinoImageTransformationToolbar(
+              controller: controller,
+              gesturePadding: gesturePadding,
+            );
             break;
           case CupertinoCroppableImageToolbar.aspectRatio:
             child = CupertinoImageAspectRatioToolbar(
