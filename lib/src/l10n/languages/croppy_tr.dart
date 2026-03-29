@@ -4,6 +4,9 @@ class CroppyLocalizationsTr extends CroppyLocalizations {
   CroppyLocalizationsTr() : super('tr');
 
   @override
+  String get applyLabel => 'Uygula';
+
+  @override
   String get cancelLabel => 'İptal';
 
   @override

@@ -14,6 +14,7 @@ class AnimatedCroppableImageViewport extends StatefulWidget {
     this.lightenAnimationCurve = Curves.easeInOut,
     this.minBackgroundOpacity = 0.25,
     this.maxBackgroundOpacity = 0.85,
+    this.overlayBuilder,
   });
 
   final CroppableImageController controller;
@@ -29,6 +30,10 @@ class AnimatedCroppableImageViewport extends StatefulWidget {
   final double maxBackgroundOpacity;
 
   final WidgetBuilder cropHandlesBuilder;
+
+  /// Optional builder for a widget rendered above the image in the same
+  /// coordinate space (e.g. homography handles overlay).
+  final WidgetBuilder? overlayBuilder;
 
   @override
   State<AnimatedCroppableImageViewport> createState() =>
@@ -99,6 +104,9 @@ class _AnimatedCroppableImageViewportState
           child: Image(image: widget.controller.imageProvider),
         ),
       ),
+      overlay: widget.overlayBuilder != null
+          ? Builder(builder: widget.overlayBuilder!)
+          : null,
       child: AnimatedBuilder(
         animation: _backgroundOpacityAnimation,
         builder: (context, _) => AnimatedBuilder(

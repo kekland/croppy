@@ -21,6 +21,7 @@ If you're searching for a way to save the resulting `ui.Image` to a file, take a
     - [ResizeTransformation](#resizetransformation)
     - [RotateTransformation](#rotatetransformation)
     - [StraightenAndPerspectiveTransformation](#straightenandperspectivetransformation)
+    - [HomographyCorrectionTransformation](#homographycorrectiontransformation)
   - [Other mixins](#other-mixins)
   - [Default controllers](#default-controllers)
 - [Presentation](#presentation)
@@ -110,9 +111,10 @@ In case of a rectangle, the calculations are much simpler. For an ellipse, there
 The reason that this package is using `vector_graphics` instead of Dart's `Path` is that to properly do collision detection with custom shapes, we need to be able to "sample" the path at various points, but Dart's `Path` doesn't support that. `vector_graphics`'s Path does support that, so a slightly modified copy of the source code was included in this package.
   
 ### Transformations
-- `BaseTransformations baseTransformations` - an object that contains the "base" transformations applied to the image after any other transformations. 
+- `BaseTransformations baseTransformations` - an object that contains the "base" transformations applied to the image after any other transformations.
 - `Matrix4 imageTransform` - the transformation matrix that is applied to the image. This contains transformations like rotation, translation, etc.
 - `Matrix4 currentImageTransform` - the currently 'in-progress' transformation matrix. This is used, for example, when there's an ongoing transformation (such as rotation), and the transformation itself may get cancelled by the user. This matrix is used to store the current transformation state, and to restore the original state if the transformation gets cancelled.
+- `Matrix4 perspectiveCorrectionMatrix` - a projective (homography) matrix applied to the raw image pixels before any other transformation. Defaults to `Matrix4.identity()` (no correction). Set by the homography correction tool; cleared by the Reset button.
 
 A list of base transformations:
 - `double rotationX`, `double rotationY`, `double rotationZ` - the rotation applied to the image. This is used to rotate the image around the center of the image. The reason why this is kept as three separate fields is that firstly, it's easier to work with them in that way.
@@ -207,9 +209,9 @@ This transformation is used to apply a base image rotation (i.e. CW/CCW rotation
 
 ### StraightenAndPerspectiveTransformation
 
-This transformation is used to straighten or apply a perspective transformation to the image.
+This transformation is used to straighten, apply a perspective transformation, or stretch the image.
 
-- `onStragithenStart()`, `onStraightenEnd()`
+- `onStraightenStart()`, `onStraightenEnd()`
 - `void onStraighten(double angleRad)` - called when a straighten transformation is in progress. Rotates the image around Z axis.
 
 - `onRotateYStart()`, `onRotateYEnd()`
@@ -217,6 +219,23 @@ This transformation is used to straighten or apply a perspective transformation 
 
 - `onRotateXStart()`, `onRotateXEnd()`
 - `void onRotateX(double angleRad)` - called when a perspective transformation is in progress. Rotates the image around X axis. Applies a base transformation.
+
+- `onStretchXStart()`, `onStretchXEnd()`
+- `void onStretchX(double scaleX)` - scales the image horizontally around its center. `scaleX > 1.0` stretches the image wider; `scaleX < 1.0` compresses it. Sets `BaseTransformations.scaleX`.
+
+- `onStretchYStart()`, `onStretchYEnd()`
+- `void onStretchY(double scaleY)` - scales the image vertically around its center. Sets `BaseTransformations.scaleY`.
+
+### HomographyCorrectionTransformation
+
+This transformation applies a perspective correction (homography) to the raw image pixels, letting the user correct for keystoning or other projective distortion.
+
+- `void onActivateHomographyCorrection({required double gesturePadding})` - activates the tool and places four corner handles at the corners of the current crop rect. `gesturePadding` must match the value used by the viewport widget.
+- `void onMoveHomographyCorrectionHandle(int index, Offset newPosition)` - moves a single handle. Index order is TL=0, TR=1, BR=2, BL=3.
+- `void onApplyHomographyCorrection({required double gesturePadding})` - computes a homography from the four handle positions to the crop rect corners and stores it in `CroppableImageData.perspectiveCorrectionMatrix`. The handles are reset to the crop rect corners for a potential follow-up correction.
+- `void onDeactivateHomographyCorrection()` - hides the handles. The applied correction remains in the model; it is removed only by a Reset.
+- `bool get isHomographyActive` - whether the tool is currently active.
+- `ValueNotifier<List<Offset>?> correctionHandlesNotifier` - notifier for the current handle positions (null when inactive).
 
 ## Other mixins
 

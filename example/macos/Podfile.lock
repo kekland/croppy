@@ -1,20 +1,26 @@
 PODS:
   - croppy (0.0.1):
     - FlutterMacOS
+  - file_picker (0.0.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
 
 DEPENDENCIES:
   - croppy (from `Flutter/ephemeral/.symlinks/plugins/croppy/macos`)
+  - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
 
 EXTERNAL SOURCES:
   croppy:
     :path: Flutter/ephemeral/.symlinks/plugins/croppy/macos
+  file_picker:
+    :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
 
 SPEC CHECKSUMS:
-  croppy: 25a638bd7d05411d8c697f481568f261037694fc
+  croppy: d9bfc8c02f3cd1851f669a421df298a474b78f43
+  file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
 
 PODFILE CHECKSUM: 9ebaf0ce3d369aaa26a9ea0e159195ed94724cf3

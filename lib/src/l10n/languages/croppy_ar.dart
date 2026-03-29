@@ -4,6 +4,9 @@ class CroppyLocalizationsAr extends CroppyLocalizations {
   CroppyLocalizationsAr() : super('ar');
 
   @override
+  String get applyLabel => 'تطبيق';
+
+  @override
   String get cancelLabel => 'إلغاء';
 
   @override

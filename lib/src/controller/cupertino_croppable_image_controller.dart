@@ -88,6 +88,48 @@ class CupertinoCroppableImageController
   }
 
   @override
+  void onStretchX({required double scaleX}) {
+    if (isStretchingX) {
+      // Don't normalize or adjust viewport during the drag — normalizing
+      // causes the LP solver to shrink the crop proportionally, which changes
+      // the viewport scale and makes the image appear to stretch vertically.
+      // We normalize after the drag ends instead.
+      super.onStretchX(scaleX: scaleX);
+    } else {
+      animatedNormalizeAfterTransform(() {
+        super.onStretchX(scaleX: scaleX);
+        normalize();
+      });
+    }
+  }
+
+  @override
+  void onStretchXEnd() {
+    super.onStretchXEnd();
+    final normalizedRect = normalizeWithAnimation();
+    setViewportScaleWithAnimation(overrideCropRect: normalizedRect);
+  }
+
+  @override
+  void onStretchY({required double scaleY}) {
+    if (isStretchingY) {
+      super.onStretchY(scaleY: scaleY);
+    } else {
+      animatedNormalizeAfterTransform(() {
+        super.onStretchY(scaleY: scaleY);
+        normalize();
+      });
+    }
+  }
+
+  @override
+  void onStretchYEnd() {
+    super.onStretchYEnd();
+    final normalizedRect = normalizeWithAnimation();
+    setViewportScaleWithAnimation(overrideCropRect: normalizedRect);
+  }
+
+  @override
   void onPanAndScale({
     required double scaleDelta,
     required Offset offsetDelta,

@@ -13,6 +13,7 @@ class CroppableImageData extends Equatable {
     required this.baseTransformations,
     required this.imageTransform,
     required this.currentImageTransform,
+    required this.perspectiveCorrectionMatrix,
   });
 
   CroppableImageData.initial({
@@ -21,6 +22,7 @@ class CroppableImageData extends Equatable {
   })  : cropRect = Rect.fromLTWH(0, 0, imageSize.width, imageSize.height),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
+        perspectiveCorrectionMatrix = _identityMatrix,
         baseTransformations = BaseTransformations.initial(imageSize);
 
   CroppableImageData.initialWithCropPathFn({
@@ -33,6 +35,7 @@ class CroppableImageData extends Equatable {
         ),
         imageTransform = Matrix4.identity(),
         currentImageTransform = Matrix4.identity(),
+        perspectiveCorrectionMatrix = _identityMatrix,
         baseTransformations = BaseTransformations.initial(imageSize);
 
   static Future<CroppableImageData> fromImageProvider(
@@ -65,6 +68,14 @@ class CroppableImageData extends Equatable {
   /// - Perspective transformations
   final BaseTransformations baseTransformations;
 
+  /// A perspective correction homography applied to the raw image pixels,
+  /// computed by the homography correction tool.
+  ///
+  /// Defaults to [Matrix4.identity] (no correction). When set, this is the
+  /// innermost transform in [totalImageTransform], applied directly to raw
+  /// image coordinates before any pan/scale or base transformations.
+  final Matrix4 perspectiveCorrectionMatrix;
+
   /// The transformation applied to the image.
   final Matrix4 imageTransform;
 
@@ -95,8 +106,14 @@ class CroppableImageData extends Equatable {
       translateTransformation(baseTransformations.matrix);
 
   /// The total transformation applied to the image.
+  ///
+  /// The perspective correction matrix is the innermost transform, applied
+  /// directly to raw image pixels before pan/scale or base transformations.
   Matrix4 get totalImageTransform =>
-      translatedBaseTransformations * currentImageTransform * imageTransform;
+      translatedBaseTransformations *
+      currentImageTransform *
+      imageTransform *
+      perspectiveCorrectionMatrix;
 
   /// The original quad of the image, before any transformations are applied.
   Quad2 get originalImageQuad => Quad2.fromSize(imageSize);
@@ -127,6 +144,7 @@ class CroppableImageData extends Equatable {
     BaseTransformations? baseTransformations,
     Matrix4? imageTransform,
     Matrix4? currentImageTransform,
+    Matrix4? perspectiveCorrectionMatrix,
   }) {
     return CroppableImageData(
       imageSize: imageSize ?? this.imageSize,
@@ -136,6 +154,8 @@ class CroppableImageData extends Equatable {
       currentImageTransform:
           currentImageTransform ?? this.currentImageTransform,
       baseTransformations: baseTransformations ?? this.baseTransformations,
+      perspectiveCorrectionMatrix:
+          perspectiveCorrectionMatrix ?? this.perspectiveCorrectionMatrix,
     );
   }
 
@@ -183,6 +203,11 @@ class CroppableImageData extends Equatable {
       imageTransform: lerpMatrix4(a.imageTransform, b.imageTransform, t),
       currentImageTransform:
           lerpMatrix4(a.currentImageTransform, b.currentImageTransform, t),
+      perspectiveCorrectionMatrix: lerpMatrix4(
+        a.perspectiveCorrectionMatrix,
+        b.perspectiveCorrectionMatrix,
+        t,
+      ),
     );
   }
 
@@ -194,8 +219,12 @@ class CroppableImageData extends Equatable {
         baseTransformations,
         imageTransform.storage,
         currentImageTransform.storage,
+        perspectiveCorrectionMatrix.storage,
       ];
 }
+
+/// A cached identity matrix used as the default [CroppableImageData.perspectiveCorrectionMatrix].
+final _identityMatrix = Matrix4.identity();
 
 /// A tween that interpolates between two [CroppableImageData]s.
 class CroppableImageDataTween extends Tween<CroppableImageData> {

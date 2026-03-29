@@ -16,6 +16,7 @@ class CroppableImageViewport extends StatelessWidget {
     required this.gesturePadding,
     this.heroTag,
     this.heroChild,
+    this.overlay,
   });
 
   /// The controller that manages the state of the croppable image.
@@ -33,6 +34,11 @@ class CroppableImageViewport extends StatelessWidget {
 
   /// The child that is used for the Hero animation.
   final Widget? heroChild;
+
+  /// An optional overlay widget rendered above [child] in the same
+  /// [FittedBox] coordinate space. Used for tools that need to draw on top
+  /// of the image (e.g. the homography correction handles).
+  final Widget? overlay;
 
   /// The amount of padding that is applied to [child].
   Offset get _sizeDelta => Offset(
@@ -66,6 +72,8 @@ class CroppableImageViewport extends StatelessWidget {
                 ),
               ),
             Center(child: FittedBox(child: child)),
+            if (overlay != null)
+              Positioned.fill(child: overlay!),
           ],
         );
       },

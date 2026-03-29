@@ -7,4 +7,7 @@ enum Transformation {
   rotateZ,
   rotateY,
   rotateX,
+  stretchX,
+  stretchY,
+  homography,
 }

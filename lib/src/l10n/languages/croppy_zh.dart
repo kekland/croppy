@@ -4,6 +4,9 @@ class CroppyLocalizationsZh extends CroppyLocalizations {
   CroppyLocalizationsZh() : super('zh');
 
   @override
+  String get applyLabel => '应用';
+
+  @override
   String get cancelLabel => '取消';
 
   @override

@@ -4,6 +4,8 @@
 * Added Polish localization (thanks @mekkolodziejski!)
 * Added Romanian localization (thanks @AdrianSima!)
 * Fixed a bug with perspective transformation being extremely exaggerated on large images. Now the perspective factor is scaled according to the image size. Please report if you find any issues with this new behavior! (thanks @AdrianSima for reporting!)
+* Added a **homography correction** tool to the Cupertino cropper. Four draggable corner handles let you map any quadrilateral region of the image to a rectangle, correcting perspective distortion in a single step. The correction is stored in `CroppableImageData.perspectiveCorrectionMatrix` and is undone by the existing Reset button.
+* Added **Stretch Horizontal** and **Stretch Vertical** tools to the Cupertino cropper. These let you independently scale the image along the X or Y axis to correct for unusual aspect ratios.
 
 ## 1.4.0
 

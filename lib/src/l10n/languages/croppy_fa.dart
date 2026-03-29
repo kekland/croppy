@@ -4,6 +4,9 @@ class CroppyLocalizationsFa extends CroppyLocalizations {
   CroppyLocalizationsFa() : super('fa');
 
   @override
+  String get applyLabel => 'اعمال';
+
+  @override
   String get cancelLabel => 'لغو';
 
   @override

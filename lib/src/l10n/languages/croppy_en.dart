@@ -4,6 +4,9 @@ class CroppyLocalizationsEn extends CroppyLocalizations {
   CroppyLocalizationsEn() : super('en');
 
   @override
+  String get applyLabel => 'Apply';
+
+  @override
   String get cancelLabel => 'Cancel';
 
   @override
