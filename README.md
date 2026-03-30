@@ -56,6 +56,11 @@ Enjoy using it :)
 Currently `croppy` supports a Material (Google Photos-like) and a Cupertino (iOS Photos-like) image croppers:
 
 ```dart
+final result = await showAdaptiveImageCropper(
+    context,
+    imageProvider: const NetworkImage('MY_IMAGE_URL'), // Or any other image provider
+);
+
 final result = await showMaterialImageCropper(
   context,
   imageProvider: const NetworkImage('MY_IMAGE_URL'), // Or any other image provider
