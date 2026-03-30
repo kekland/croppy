@@ -1,3 +1,7 @@
+## 1.5.1
+
+* Fix minimum SDK constraint
+
 ## 1.5.0
 
 * Added Kyrgyz localization (thanks @warioddly!)
