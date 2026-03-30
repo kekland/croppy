@@ -1,4 +1,9 @@
-## 1.4.1 (upcoming!)
+## 1.5.0
+
+* Added Kyrgyz localization (thanks @warioddly!)
+* Dropped legacy FFI package template and switched over to hooks/code assets. Please report if there are any build failures. This should also support SPM/CocoaPods.
+
+## 1.4.1
 
 * Fixed a bug where tapping on the "rotate 90 degrees" button rapidly would result in a non-90 degree rotation (thanks @AdrianSima for reporting!)
 * Added Polish localization (thanks @mekkolodziejski!)
