@@ -23,7 +23,7 @@ class CupertinoFlipHorizontalIcon extends StatelessWidget {
           height: size * 0.8908227228633697,
           child: CustomPaint(
             painter: _CupertinoFlipHorizontalIconPainter(
-              color ?? CupertinoColors.white,
+              color ?? CupertinoTheme.of(context).primaryContrastingColor,
             ),
           ),
         ),

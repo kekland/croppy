@@ -174,16 +174,16 @@ class _CupertinoOrientationWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2.0),
               border: Border.all(
-                color: CupertinoColors.systemGrey,
+                color: CupertinoTheme.of(context).primaryColor.withOpacity(0.7),
               ),
               color: isSelected
-                  ? CupertinoColors.systemGrey
-                  : CupertinoColors.darkBackgroundGray,
+                  ? CupertinoTheme.of(context).primaryColor
+                  : CupertinoTheme.of(context).barBackgroundColor,
             ),
             child: isSelected
-                ? const Icon(
+                ? Icon(
                     CupertinoIcons.checkmark_alt,
-                    color: CupertinoColors.darkBackgroundGray,
+                    color: CupertinoTheme.of(context).barBackgroundColor,
                     size: 18.0,
                   )
                 : null,
@@ -218,7 +218,7 @@ class _AspectRatioChipWidget extends StatelessWidget {
         height: 24.0,
         decoration: BoxDecoration(
           color:
-              isSelected ? CupertinoColors.white.withOpacity(0.2) : null,
+              isSelected ? CupertinoTheme.of(context).primaryColor.withOpacity(0.2) : null,
           borderRadius: BorderRadius.circular(12.0),
         ),
         padding: const EdgeInsets.symmetric(
@@ -230,8 +230,8 @@ class _AspectRatioChipWidget extends StatelessWidget {
           aspectRatio,
           style: TextStyle(
             color: isSelected
-                ? CupertinoColors.white
-                : CupertinoColors.systemGrey2,
+                ? CupertinoTheme.of(context).primaryContrastingColor
+                : CupertinoTheme.of(context).primaryColor,
             fontSize: 14.0,
           ),
         ),

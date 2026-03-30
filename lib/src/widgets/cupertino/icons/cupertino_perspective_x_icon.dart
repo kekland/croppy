@@ -22,7 +22,7 @@ class CupertinoPerspectiveXIcon extends StatelessWidget {
           height: size,
           child: CustomPaint(
             painter: _CupertinoPerspectiveXIconPainter(
-              color ?? CupertinoColors.white,
+              color ?? CupertinoTheme.of(context).primaryContrastingColor,
             ),
           ),
         ),
