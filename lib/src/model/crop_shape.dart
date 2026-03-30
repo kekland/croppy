@@ -87,8 +87,10 @@ class CropShape extends Equatable {
 
   vg.Path getTransformedPath(Offset offset, double scale) {
     final translationTransform = Matrix4.identity()
-      ..translate(offset.dx, offset.dy);
-    final scaleTransform = Matrix4.identity()..scale(scale);
+      ..translateByDouble(offset.dx, offset.dy, 0.0, 1.0);
+
+    final scaleTransform = Matrix4.identity()
+      ..scaleByDouble(scale, scale, 1.0, 1.0);
 
     final transform = translationTransform * scaleTransform;
     return vgPath.transformed(transform);

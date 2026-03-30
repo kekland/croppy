@@ -29,7 +29,7 @@ class CupertinoKnobButton extends StatelessWidget {
     return CupertinoButton(
       onPressed: onPressed,
       padding: EdgeInsets.zero,
-      minSize: 48.0,
+      minimumSize: const Size.square(48.0),
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
@@ -45,7 +45,7 @@ class CupertinoKnobButton extends StatelessWidget {
               color: Colors.black54,
               border: Border.all(
                 width: 2.0,
-                color: color.withOpacity(0.35),
+                color: color.withValues(alpha: 0.35),
               ),
             ),
             child: child,

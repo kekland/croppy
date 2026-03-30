@@ -57,7 +57,7 @@ class BaseTransformations extends Equatable {
   /// Returns a [Matrix4] representing the scale transformations.
   Matrix4 get scaleMatrix {
     final matrix = Matrix4.identity();
-    matrix.scale(scaleX, scaleY);
+    matrix.scaleByDouble(scaleX, scaleY, 1.0, 1.0);
     return matrix;
   }
 

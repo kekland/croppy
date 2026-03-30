@@ -110,9 +110,7 @@ class _SettingsModalWidgetState extends State<SettingsModalWidget> {
               enabled: false,
               title: Text('Crop shape'),
             ),
-            RadioListTile(
-              title: const Text('Rectangle'),
-              value: aabbCropShapeFn,
+            RadioGroup(
               groupValue: _settings.cropShapeFn,
               onChanged: (value) {
                 setState(() {
@@ -121,45 +119,43 @@ class _SettingsModalWidgetState extends State<SettingsModalWidget> {
                   );
                 });
               },
-            ),
-            RadioListTile(
-              title: const Text('Ellipse'),
-              value: ellipseCropShapeFn,
-              groupValue: _settings.cropShapeFn,
-              onChanged: (value) {
-                setState(() {
-                  _settings = _settings.copyWith(
-                    cropShapeFn: value as CropShapeFn,
-                  );
-                });
-              },
-            ),
-            RadioListTile(
-              title: const Text('Star'),
-              value: starCropShapeFn,
-              groupValue: _settings.cropShapeFn,
-              onChanged: (value) {
-                setState(() {
-                  _settings = _settings.copyWith(
-                    cropShapeFn: value as CropShapeFn,
-                  );
-                });
-              },
+              child: const Column(
+                children: [
+                  RadioListTile(
+                    title: Text('Rectangle'),
+                    value: aabbCropShapeFn,
+                  ),
+                  RadioListTile(
+                    title: Text('Ellipse'),
+                    value: ellipseCropShapeFn,
+                  ),
+                  RadioListTile(
+                    title: Text('Star'),
+                    value: starCropShapeFn,
+                  ),
+                ],
+              ),
             ),
             const ListTile(
               enabled: false,
               title: Text('Locale'),
             ),
-            ...CroppyLocalizations.supportedLocales.map(
-              (v) => RadioListTile(
-                title: Text(v.toString()),
-                value: v,
-                groupValue: _settings.locale,
-                onChanged: (value) {
-                  setState(() {
-                    _settings = _settings.copyWith(locale: value as Locale);
-                  });
-                },
+            RadioGroup(
+              groupValue: _settings.locale,
+              onChanged: (value) {
+                setState(() {
+                  _settings = _settings.copyWith(locale: value as Locale);
+                });
+              },
+              child: Column(
+                children: [
+                  ...CroppyLocalizations.supportedLocales.map(
+                    (v) => RadioListTile(
+                      title: Text(v.toString()),
+                      value: v,
+                    ),
+                  ),
+                ],
               ),
             ),
             const ListTile(
@@ -194,26 +190,28 @@ class _SettingsModalWidgetState extends State<SettingsModalWidget> {
               enabled: false,
               title: Text('Forced aspect ratio'),
             ),
-            RadioListTile(
-              title: const Text('None'),
-              value: null,
+            RadioGroup<CropAspectRatio>(
               groupValue: _settings.forcedAspectRatio,
               onChanged: (value) {
                 setState(() {
-                  _settings = _settings.copyWithNoForcedAspectRatio();
+                  if (value == null) {
+                    _settings = _settings.copyWithNoForcedAspectRatio();
+                    return;
+                  }
+
+                  _settings = _settings.copyWith(forcedAspectRatio: value);
                 });
               },
-            ),
-            ..._forceableAspectRatios.map(
-              (v) => RadioListTile(
-                title: Text('${v.width}:${v.height}'),
-                value: v,
-                groupValue: _settings.forcedAspectRatio,
-                onChanged: (value) {
-                  setState(() {
-                    _settings = _settings.copyWith(forcedAspectRatio: value);
-                  });
-                },
+              child: Column(
+                children: [
+                  ..._forceableAspectRatios.map(
+                    (v) => RadioListTile(
+                      toggleable: true,
+                      title: Text('${v.width}:${v.height}'),
+                      value: v,
+                    ),
+                  ),
+                ],
               ),
             ),
             const ListTile(

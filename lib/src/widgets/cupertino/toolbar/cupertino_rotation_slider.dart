@@ -129,7 +129,7 @@ class _CupertinoSliderPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final dividerPaint = Paint()
-      ..color = CupertinoColors.white.withOpacity(0.75)
+      ..color = CupertinoColors.white.withValues(alpha: 0.75)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.0;
 
@@ -139,7 +139,7 @@ class _CupertinoSliderPainter extends CustomPainter {
       ..strokeWidth = 1.0;
 
     final outOfBoundsDividerPaint = Paint()
-      ..color = CupertinoColors.white.withOpacity(0.25)
+      ..color = CupertinoColors.white.withValues(alpha: 0.25)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.0;
 
@@ -161,7 +161,7 @@ class _CupertinoSliderPainter extends CustomPainter {
       opacity = sqrt(opacity);
 
       final paint = Paint()
-        ..color = _paint.color.withOpacity(_paint.color.opacity * opacity)
+        ..color = _paint.color.withValues(alpha: _paint.color.a * opacity)
         ..style = _paint.style
         ..strokeWidth = _paint.strokeWidth;
 

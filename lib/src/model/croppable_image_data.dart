@@ -79,13 +79,17 @@ class CroppableImageData extends Equatable {
   /// Translates the given [transformation] to the center of the image.
   Matrix4 translateTransformation(Matrix4 transformation) {
     return Matrix4.copy(transformation)
-      ..leftTranslate(
+      ..leftTranslateByDouble(
         imageSize.width / 2,
         imageSize.height / 2,
+        0.0,
+        1.0,
       )
-      ..translate(
+      ..translateByDouble(
         -imageSize.width / 2,
         -imageSize.height / 2,
+        0.0,
+        1.0,
       );
   }
 

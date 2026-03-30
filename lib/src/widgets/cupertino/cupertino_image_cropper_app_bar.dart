@@ -18,7 +18,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
         if (controller.isTransformationEnabled(Transformation.mirror))
           CupertinoButton(
             onPressed: controller.onMirrorHorizontal,
-            minSize: 44.0,
+            minimumSize: const Size.square(44.0),
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 10.0,
@@ -31,7 +31,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
         if (controller.isTransformationEnabled(Transformation.rotate))
           CupertinoButton(
             onPressed: controller.onRotateCCW,
-            minSize: 44.0,
+            minimumSize: const Size.square(44.0),
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 10.0,
@@ -60,7 +60,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
                   CupertinoCroppableImageToolbar.aspectRatio,
                 );
               },
-              minSize: 44.0,
+              minimumSize: const Size.square(44.0),
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
                 vertical: 10.0,
@@ -104,7 +104,7 @@ class CupertinoImageCropperAppBar extends StatelessWidget
                   ),
                   child: CupertinoButton(
                     onPressed: controller.reset,
-                    minSize: 44.0,
+                    minimumSize: const Size.square(44.0),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 10.0,

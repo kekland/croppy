@@ -22,9 +22,9 @@ mixin StraightenAndPerspectiveTransformation on BaseCroppableImageController {
       data.cropRect.center,
     );
 
-    transform.translate(pivot.dx, pivot.dy);
+    transform.translateByDouble(pivot.dx, pivot.dy, 0.0, 1.0);
     rotate(transform, angleNew - anglePrevious);
-    transform.translate(-pivot.dx, -pivot.dy);
+    transform.translateByDouble(-pivot.dx, -pivot.dy, 0.0, 1.0);
 
     data = data.copyWith(currentImageTransform: transform);
     onTransformation(angleNew);

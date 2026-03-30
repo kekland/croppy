@@ -162,7 +162,7 @@ class _CupertinoOrientationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton(
       onPressed: onTap,
-      minSize: 40.0,
+      minimumSize: const Size.square(40.0),
       padding: EdgeInsets.zero,
       child: SizedBox(
         width: 40.0,
@@ -209,7 +209,7 @@ class _AspectRatioChipWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton(
       onPressed: onTap,
-      minSize: 40.0,
+      minimumSize: const Size.square(40.0),
       padding: const EdgeInsets.symmetric(
         vertical: 8.0,
         horizontal: 8.0,
@@ -218,7 +218,7 @@ class _AspectRatioChipWidget extends StatelessWidget {
         height: 24.0,
         decoration: BoxDecoration(
           color:
-              isSelected ? CupertinoColors.white.withOpacity(0.2) : null,
+              isSelected ? CupertinoColors.white.withValues(alpha: 0.2) : null,
           borderRadius: BorderRadius.circular(12.0),
         ),
         padding: const EdgeInsets.symmetric(

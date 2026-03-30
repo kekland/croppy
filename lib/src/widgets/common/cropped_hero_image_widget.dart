@@ -163,9 +163,9 @@ class CroppedHeroImageRenderObject extends RenderBox
     final _offset = offset + Offset(gesturePadding, gesturePadding);
     final _layoutCropRect = staticCropRect ?? imageData.cropRect;
 
-    final scaleTransform = Matrix4.identity()..scale(viewportScale);
+    final scaleTransform = Matrix4.identity()..scaleByDouble(viewportScale, viewportScale, 1.0, 1.0);
     final translationTransform = Matrix4.identity()
-      ..translate(-_layoutCropRect.left, -_layoutCropRect.top);
+      ..translateByDouble(-_layoutCropRect.left, -_layoutCropRect.top, 0.0, 1.0);
 
     final Matrix4 matrix =
         scaleTransform * translationTransform * imageData.totalImageTransform;
