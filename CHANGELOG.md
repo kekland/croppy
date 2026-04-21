@@ -1,3 +1,7 @@
+## 1.5.3
+
+* Fixed missing C++ shared library on Android.
+
 ## 1.5.2
 
 * Fixed build issues where the FFI bindings' output names were C++ mangled, causing a runtime error when trying to lookup the functions.
