@@ -4,6 +4,9 @@ import 'package:native_toolchain_c/native_toolchain_c.dart';
 import 'package:logging/logging.dart';
 import 'package:hooks/hooks.dart';
 
+// ignore: unused_import
+import 'package:android_libcpp_shared/android_libcpp_shared.dart';
+
 void main(List<String> args) async {
   await build(args, (input, output) async {
     final packageName = input.packageName;
@@ -13,6 +16,7 @@ void main(List<String> args) async {
       sources: ['src/croppy.c', 'src/fit_polygon_in_quad.cpp'],
       includes: ['src', 'src/kiwi'],
       language: Language.cpp,
+      std: 'c++11',
       flags: [
         '-std=c++11',
         '-O3',
