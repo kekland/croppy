@@ -1,3 +1,9 @@
+## 1.5.4
+
+* Bumped native assets dependencies so croppy resolves with current Flutter/Dart toolchains:
+  `native_toolchain_c` `^0.19.4`, `hooks` `^2.2.0`, `code_assets` `^2.0.0`, and `android_libcpp_shared` `^0.3.0`.
+* Raised the Dart SDK lower bound to `3.9.0` to match `android_libcpp_shared`.
+
 ## 1.5.3
 
 * Fixed missing C++ shared library on Android.
