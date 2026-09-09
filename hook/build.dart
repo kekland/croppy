@@ -17,6 +17,8 @@ void main(List<String> args) async {
       includes: ['src', 'src/kiwi'],
       language: Language.cpp,
       std: 'c++11',
+      cppLinkStdLib:
+          input.config.code.targetOS == OS.android ? 'c++_static' : null,
       flags: [
         '-std=c++11',
         '-O3',
