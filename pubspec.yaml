@@ -16,8 +16,8 @@ dependencies:
   # ffi/native assets
   ffi: ^2.2.0
   code_assets: ^1.0.0
-  hooks: ^1.0.0
-  native_toolchain_c: ^0.18.0
+  hooks: ^2.0.2
+  native_toolchain_c: ^0.19.1
   android_libcpp_shared:
     git:
       url: https://github.com/AttalliAyoub/android_libcpp_shared.git
