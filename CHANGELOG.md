@@ -1,3 +1,7 @@
+## 1.5.4
+
+* Point `android_libcpp_shared` to a forked git repository to fix the Android NDK locator issue on Windows.
+
 ## 1.5.3
 
 * Fixed missing C++ shared library on Android.

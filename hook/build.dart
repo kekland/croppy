@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:code_assets/code_assets.dart';
 import 'package:native_toolchain_c/native_toolchain_c.dart';
 import 'package:logging/logging.dart';
 import 'package:hooks/hooks.dart';
@@ -17,6 +18,8 @@ void main(List<String> args) async {
       includes: ['src', 'src/kiwi'],
       language: Language.cpp,
       std: 'c++11',
+      cppLinkStdLib:
+          input.config.code.targetOS == OS.android ? 'c++_static' : null,
       flags: [
         '-std=c++11',
         '-O3',
