@@ -6,10 +6,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "5b7f25cd12a7f0726855669611d1e6f7effea614"
+      resolved-ref: f2224ce3ce45921383acaa3650945a8dcf3d2831
       url: "https://github.com/AttalliAyoub/android_libcpp_shared.git"
     source: git
-    version: "0.2.1"
+    version: "0.2.2"
   archive:
     dependency: transitive
     description:
