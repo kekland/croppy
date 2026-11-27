@@ -18,7 +18,7 @@ dependencies:
 
   image: ^4.5.3
   file_picker: ^9.0.2
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^2.0.0
   material_ui: ^1.11.1
   cupertino_ui: ^1.1.7
 
