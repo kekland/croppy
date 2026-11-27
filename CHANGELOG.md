@@ -1,3 +1,7 @@
+## 1.6.1
+
+* Added Italian translations (thanks @mauriziopinotti)!
+
 ## 1.6.0
 
 * Bumped minimum Flutter version to `3.44.0`, minimum Dart version to `3.12.0`
