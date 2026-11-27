@@ -33,3 +33,6 @@ build/
 .flutter-plugins-dependencies
 
 ephemeral
+
+# FVM Version Cache
+.fvm/

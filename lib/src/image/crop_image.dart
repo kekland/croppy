@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:croppy/src/model/_model.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Obtains an [ui.Image] from an [ImageProvider].
 Future<ui.Image> obtainImage(ImageProvider provider) {

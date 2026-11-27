@@ -6,15 +6,16 @@ import 'package:ffi/ffi.dart';
 import 'croppy_ffi_bindings_generated.dart';
 export 'croppy_ffi_bindings_generated.dart';
 
-Aabb2 fitPolygonInQuad(List<double> points) {
+Aabb2? fitPolygonInQuad(List<double> points) {
   final pointer = doubleListToPointer(points);
   final result = _bindings.fit_polygon_in_quad(pointer, points.length);
 
   malloc.free(pointer);
-  return result;
+  if (result.success) return result.aabb;
+  return null;
 }
 
-Aabb2 fitPolygonInQuadOnResize(
+Aabb2? fitPolygonInQuadOnResize(
   List<double> points, {
   required double aspectRatio,
   required bool isTopLeftStatic,
@@ -34,7 +35,8 @@ Aabb2 fitPolygonInQuadOnResize(
   );
 
   malloc.free(pointer);
-  return result;
+  if (result.success) return result.aabb;
+  return null;
 }
 
 const String _libName = 'croppy';

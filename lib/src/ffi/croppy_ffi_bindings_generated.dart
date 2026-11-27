@@ -27,7 +27,7 @@ class CroppyFfiBindings {
           lookup)
       : _lookup = lookup;
 
-  Aabb2 fit_polygon_in_quad(
+  FitResult fit_polygon_in_quad(
     ffi.Pointer<ffi.Double> points,
     int length,
   ) {
@@ -38,12 +38,14 @@ class CroppyFfiBindings {
   }
 
   late final _fit_polygon_in_quadPtr = _lookup<
-          ffi.NativeFunction<Aabb2 Function(ffi.Pointer<ffi.Double>, ffi.Int)>>(
-      'fit_polygon_in_quad');
+      ffi.NativeFunction<
+          FitResult Function(
+              ffi.Pointer<ffi.Double>, ffi.Int)>>('fit_polygon_in_quad');
   late final _fit_polygon_in_quad = _fit_polygon_in_quadPtr
-      .asFunction<Aabb2 Function(ffi.Pointer<ffi.Double>, int)>(isLeaf: true);
+      .asFunction<FitResult Function(ffi.Pointer<ffi.Double>, int)>(
+          isLeaf: true);
 
-  Aabb2 fit_polygon_in_quad_on_resize(
+  FitResult fit_polygon_in_quad_on_resize(
     ffi.Pointer<ffi.Double> points,
     int length,
     double aspectRatio,
@@ -65,11 +67,17 @@ class CroppyFfiBindings {
 
   late final _fit_polygon_in_quad_on_resizePtr = _lookup<
       ffi.NativeFunction<
-          Aabb2 Function(ffi.Pointer<ffi.Double>, ffi.Int, ffi.Double, ffi.Bool,
-              ffi.Bool, ffi.Bool, ffi.Bool)>>('fit_polygon_in_quad_on_resize');
+          FitResult Function(
+              ffi.Pointer<ffi.Double>,
+              ffi.Int,
+              ffi.Double,
+              ffi.Bool,
+              ffi.Bool,
+              ffi.Bool,
+              ffi.Bool)>>('fit_polygon_in_quad_on_resize');
   late final _fit_polygon_in_quad_on_resize =
       _fit_polygon_in_quad_on_resizePtr.asFunction<
-          Aabb2 Function(
+          FitResult Function(
               ffi.Pointer<ffi.Double>, int, double, bool, bool, bool, bool)>();
 }
 
@@ -85,4 +93,11 @@ final class Aabb2 extends ffi.Struct {
   external Vector2 min;
 
   external Vector2 max;
+}
+
+final class FitResult extends ffi.Struct {
+  external Aabb2 aabb;
+
+  @ffi.Bool()
+  external bool success;
 }

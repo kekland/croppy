@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:croppy/src/src.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Used for handling zoom with [PointerScrollEvent]
 const double _kZoomFactor = 0.001;

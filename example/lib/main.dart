@@ -7,10 +7,11 @@ import 'package:example/settings_modal.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    show GlobalWidgetsLocalizations;
+import 'package:material_ui/material_ui.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'dart:ui' as ui;
-
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   if (!kIsWeb) {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:croppy/croppy.dart';
 import 'package:croppy/src/widgets/material/toolbar/material_rotation_slider.dart';

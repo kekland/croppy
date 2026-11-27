@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:croppy/src/src.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
 
 class CupertinoImageTransformationToolbar extends StatefulWidget {

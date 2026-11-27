@@ -17,7 +17,7 @@ To override the default `CroppyLocalizations`, create a new `LocalizationsDelega
 ```dart
 import 'package:croppy/croppy.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MyCroppyLocalizationsDelegate
     extends LocalizationsDelegate<CroppyLocalizations> {

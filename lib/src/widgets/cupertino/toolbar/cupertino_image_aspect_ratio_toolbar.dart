@@ -1,5 +1,5 @@
 import 'package:croppy/src/src.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 class CupertinoImageAspectRatioToolbar extends StatelessWidget {
   const CupertinoImageAspectRatioToolbar({

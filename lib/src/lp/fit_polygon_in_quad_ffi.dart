@@ -13,14 +13,16 @@ List<double> _collectPointList(Polygon2 polygon, Quad2 normalizedQuad) {
   return points;
 }
 
-Aabb2 _decodeFfiResult(ffi.Aabb2 resultFfi) {
+Aabb2? _decodeFfiResult(ffi.Aabb2? resultFfi) {
+  if (resultFfi == null) return null;
+
   return Aabb2.minMax(
     Vector2(resultFfi.min.x, resultFfi.min.y),
     Vector2(resultFfi.max.x, resultFfi.max.y),
   );
 }
 
-Aabb2 fitPolygonInQuadImpl(Polygon2 polygon, Quad2 normalizedQuad) {
+Aabb2? fitPolygonInQuadImpl(Polygon2 polygon, Quad2 normalizedQuad) {
   if (croppyForceUseCassowaryDartImpl) {
     return web_impl.fitPolygonInQuadImpl(polygon, normalizedQuad);
   }
@@ -32,7 +34,7 @@ Aabb2 fitPolygonInQuadImpl(Polygon2 polygon, Quad2 normalizedQuad) {
   return _decodeFfiResult(resultFfi);
 }
 
-Aabb2 fitPolygonInQuadOnResizeImpl(
+Aabb2? fitPolygonInQuadOnResizeImpl(
   Polygon2 polygon,
   Quad2 normalizedQuad, {
   required List<Corner> staticCorners,

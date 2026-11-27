@@ -1,3 +1,10 @@
+## 1.6.0
+
+* Bumped minimum Flutter version to `3.44.0`, minimum Dart version to `3.12.0`
+* Bumped native dependency versions.
+* Migrated from `flutter/cupertino.dart`/`flutter/material.dart` to `cupertino_ui`/`material_ui`
+* Added a try-catch block in ffi handlers to avoid uncaught native exceptions, resulting in a crash.
+
 ## 1.5.3
 
 * Fixed missing C++ shared library on Android.

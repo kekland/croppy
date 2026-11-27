@@ -1,5 +1,5 @@
 //Copy this CustomPainter code to the Bottom of the File
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 /// A SFSymbols `trapezoid-and-line-horizontal-fill` icon.
 class CupertinoPerspectiveYIcon extends StatelessWidget {

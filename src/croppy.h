@@ -2,10 +2,10 @@
 #define CROPPY_H
 
 // Common includes
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 // Windows-specific includes
 #if defined(_WIN32)
@@ -24,36 +24,37 @@
 #endif
 
 #ifdef __cplusplus
-  #define EXTERNC extern "C"
+#define EXTERNC extern "C"
 #else
-  #define EXTERNC
+#define EXTERNC
 #endif
 
 #define FFI EXTERNC EXPORT
 
-struct Vector2
-{
+typedef struct Vector2 {
   double x;
   double y;
-};
+} Vector2;
 
-typedef struct Vector2 Vector2;
-
-struct Aabb2
-{
+typedef struct Aabb2 {
   struct Vector2 min;
   struct Vector2 max;
-};
+} Aabb2;
 
-typedef struct Aabb2 Aabb2;
+typedef struct FitResult {
+  struct Aabb2 aabb;
+  bool success;
+} FitResult;
 
-FFI struct Aabb2 fit_polygon_in_quad(double *points, int length);
+FFI FitResult fit_polygon_in_quad(double* points, int length);
 
-FFI struct Aabb2 fit_polygon_in_quad_on_resize(double *points,
-                                                      int length,
-                                                      double aspectRatio,
-                                                      bool isTopLeftStatic,
-                                                      bool isTopRightStatic,
-                                                      bool isBottomLeftStatic,
-                                                      bool isBottomRightStatic);
+FFI FitResult fit_polygon_in_quad_on_resize(
+  double* points,
+  int length,
+  double aspectRatio,
+  bool isTopLeftStatic,
+  bool isTopRightStatic,
+  bool isBottomLeftStatic,
+  bool isBottomRightStatic
+);
 #endif

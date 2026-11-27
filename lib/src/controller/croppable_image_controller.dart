@@ -163,6 +163,7 @@ abstract class BaseCroppableImageController extends ChangeNotifier {
       data.transformedImageQuad,
     );
 
+    if (normalizedAabb == null) return data.cropRect;
     return normalizedAabb.rect;
   }
 

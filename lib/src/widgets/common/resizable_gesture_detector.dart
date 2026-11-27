@@ -1,6 +1,6 @@
 import 'package:croppy/src/src.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A GestureDetector that allows resizing an AABB crop rect from its corners
 /// and sides.

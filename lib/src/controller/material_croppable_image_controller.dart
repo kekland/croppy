@@ -1,5 +1,5 @@
 import 'package:croppy/src/src.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MaterialCroppableImageController
     extends CroppableImageControllerWithMixins with AnimatedControllerMixin {
@@ -51,10 +51,9 @@ class MaterialCroppableImageController
       aspectRatio: currentAspectRatio?.ratio,
     );
 
-    newData = newData.copyWith(
-      cropRect: newAabb.rect,
-    );
+    if (newAabb == null) return newData;
 
+    newData = newData.copyWith(cropRect: newAabb.rect);
     return newData;
   }
 

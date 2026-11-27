@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 /// A SFSymbols `circle-and-line-horizontal-fill` icon.
 class CupertinoStraightenIcon extends StatelessWidget {

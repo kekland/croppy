@@ -36,7 +36,7 @@ Quad2 _normalizeQuad(Quad2 quad) {
 
 class FitPolygonInQuadSolver {
   // TODO: Solve for polygon's convex hull instead of the polygon itself.
-  static Aabb2 solve(Polygon2 polygon, Quad2 quad) {
+  static Aabb2? solve(Polygon2 polygon, Quad2 quad) {
     // If all vertices are in the quad, we don't need to do anything.
     if (!_shouldSolve(polygon, quad)) {
       return polygon.boundingBox;
@@ -51,7 +51,7 @@ class FitPolygonInQuadSolver {
     return fitPolygonInQuadImpl(polygon, normalizedQuad);
   }
 
-  static Aabb2 solveWithStaticPointsAndAspectRatio(
+  static Aabb2? solveWithStaticPointsAndAspectRatio(
     Polygon2 polygon,
     Quad2 quad, {
     required List<Corner> staticCorners,

@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:code_assets/code_assets.dart';
 import 'package:native_toolchain_c/native_toolchain_c.dart';
-import 'package:logging/logging.dart';
 import 'package:hooks/hooks.dart';
 
 // ignore: unused_import
@@ -9,6 +9,8 @@ import 'package:android_libcpp_shared/android_libcpp_shared.dart';
 
 void main(List<String> args) async {
   await build(args, (input, output) async {
+    if (!input.config.buildCodeAssets) return;
+
     final packageName = input.packageName;
     final cbuilder = CBuilder.library(
       name: packageName,
@@ -23,12 +25,6 @@ void main(List<String> args) async {
       ],
     );
 
-    await cbuilder.run(
-      input: input,
-      output: output,
-      logger: Logger('')
-        ..level = Level.ALL
-        ..onRecord.listen((record) => print(record.message)),
-    );
+    await cbuilder.run(input: input, output: output);
   });
 }

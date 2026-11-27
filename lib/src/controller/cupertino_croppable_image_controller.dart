@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:croppy/src/src.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A croppable image controller that is similar to the iOS Photos app.
 class CupertinoCroppableImageController

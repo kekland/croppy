@@ -1,5 +1,5 @@
 import 'package:croppy/croppy.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 mixin AnimatedControllerMixin on CroppableImageControllerWithMixins {
   late final AnimationController imageDataAnimationController;
